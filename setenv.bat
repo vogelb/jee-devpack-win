@@ -10,7 +10,7 @@ set BIN_DIR=%WORKING_DIR%bin
 set M2_HOME=%WORKING_DIR%tools\mvn
 
 set M2_HOME=%TOOLS_DIR%\mvn
-set FORGE_HOME=%TOOLS_DIR%\forge-distribution-1.0.0.Final
+set FORGE_HOME=%TOOLS_DIR%\forge
 set JAVA_HOME=%TOOLS_DIR%\jdk_8
 set JBOSS_HOME=%TOOLS_DIR%\wildfly
 
