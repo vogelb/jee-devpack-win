@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF8"?>
+<toolchains>
+
+<!--
+  <toolchain>
+     <type>jdk</type>
+     <provides>
+        <id>JavaSE-1.6</id>
+        <vendor>sun</vendor>
+        <version>1.6</version>
+     </provides>
+     <configuration>
+        <jdkHome>W:\tools\jdk_6</jdkHome>
+        <bootClassPath>
+            <includes>
+                <include>jre/lib/*.jar</include>
+            </includes>
+        </bootClassPath>
+     </configuration>
+  </toolchain>
+
+  <toolchain>
+     <type>jdk</type>
+     <provides>
+        <id>JavaSE-1.7</id>
+        <vendor>oracle</vendor>
+        <version>1.7</version>
+     </provides>
+     <configuration>
+        <jdkHome>W:\tools\jdk_7</jdkHome>
+        <bootClassPath>
+          <includes>
+            <include>jre/lib/*.jar</include>
+          </includes>
+        </bootClassPath>
+      </configuration>
+  </toolchain>
+-->
+
+  <toolchain>
+     <type>jdk</type>
+     <provides>
+        <id>JavaSE-1.8</id>
+        <vendor>oracle</vendor>
+        <version>1.8</version>
+     </provides>
+     <configuration>
+        <jdkHome>W:\tools\jdk1.8.0_40</jdkHome>
+        <bootClassPath>
+          <includes>
+            <include>jre/lib/*.jar</include>
+          </includes>
+        </bootClassPath>
+      </configuration>
+  </toolchain>
+
+</toolchains>
