@@ -1,10 +1,11 @@
-Eclipse / Wildfly Dev Pack for Windows
-======================================
+Eclipse / Wildfly based Java Enterprise Dev Pack for Windows
+============================================================
 
-This is a Java / Eclipse / Widlfly dev pack for windows.
+This is a Java / Eclipse / Wildfly dev pack for windows.
 It includes standard packages needed to develop in such an environment.
 
-General Idea:
+General Idea
+------------
 The idea of the dev pack is to provide a self contained local development environment in a seperate logical drive (W).
 The packages themselves are not included in the devPack but are downloaded during installation.
 
