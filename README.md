@@ -22,14 +22,18 @@ Use of 7-Zip
 ------------
 
 The devpack ships with a version of 7-Zip that is used for the portable installation of Oracle JDK.
+
 7-Zip is licensed under the GNU LGPL license.
+
 The source code can be obtained here: www.7-zip.org
 
 How to use
 ----------
 
-To start working, run open_workspace.bat
+To start working, run open_workspace.bat.
+
 A new logical drive "W" will be created and pop up containing your dev pack.
+
 Always work on the W drive because all settings rely on that.
 
 Tools:
