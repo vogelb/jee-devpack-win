@@ -1,7 +1,7 @@
 Eclipse / Wildfly based Java Enterprise Dev Pack for Windows
 ============================================================
 
-This is a Java / Eclipse / Wildfly [DevPack](http://blog.tknerr.de/blog/2014/10/09/devpack-philosophy-aka-works-on-your-machine/) for windows.
+This is a Java EE / Eclipse / Wildfly [DevPack](http://blog.tknerr.de/blog/2014/10/09/devpack-philosophy-aka-works-on-your-machine/) for windows.
 It includes standard packages needed to develop in such an environment.
 
 General Idea
