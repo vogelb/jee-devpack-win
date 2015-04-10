@@ -32,7 +32,7 @@ Installation
 ------------
 
 Check out the dev pack
-$ git clone --bare https://github.com/vogelb/jee-devpack-win
+$ git clone https://github.com/vogelb/jee-devpack-win
 
 Check the default configuration
 - Working drive is w:\                              -- conf/devpack.bat -> WORK_DRIVE
