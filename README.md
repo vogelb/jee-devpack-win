@@ -6,6 +6,7 @@ It includes standard packages needed to develop in such an environment.
 
 General Idea
 ------------
+
 The idea of the dev pack is to provide a self contained local development environment in a seperate logical drive (W).
 The packages themselves are not included in the devPack but are downloaded during installation.
 
@@ -27,27 +28,49 @@ The devpack ships with a version of 7-Zip that is used for the portable installa
 
 The source code can be obtained here: www.7-zip.org
 
+Installation
+------------
+
+Check out the dev pack
+$ git clone --bare https://github.com/vogelb/jee-devpack-win
+
+Check the default configuration
+- Working drive is w:\                              -- conf/devpack.bat -> WORK_DRIVE
+- Tools installation dir is w:\tools                -- conf/devpack.bat -> TOOLS_DIR
+- Workspace location is w:\workspace                -- conf/devpack.bat -> WORKSPACE
+
+- Packages will be downloaded to w:\tools\downloads -- install.bat -> DOWNLOADS_DIR
+- Installed packages will NOT be deleted            -- install.bat -> KEEP_PACKAGES
+
+Check the package versions in install.bat for updates.
+
+Run install.bat to download and install the software packages.
+
 How to use
 ----------
 
-To start working, run open_workspace.bat.
+To start working, run open_workspace.bat or start_eclipse.bat
 
-A new logical drive "W" will be created and pop up containing your dev pack.
+The configured logical drive will be created and pop up containing your dev pack.
 
-Always work on the W drive because all settings rely on that.
+Always work on the configured drive because all settings rely on that.
 
 Tools:
-- Run init_workspace.bat to create your eclipse workspace. By default, is does not really do much but there are some templates provided to tailor the workspce to your needs
+- Run init_workspace.bat to create your eclipse workspace. By default, is does not really do much but there are some templates provided to tailor the workspace to your needs
 - Run _Start Eclipse" to start the Eclipse IDE.
 - Run _Start Command Line to start a windows shell with the correct environment for maven.
-- maven is started by typing "mvn" on the command line (wrapped by w:\bin\mvn.bat in order to pass the location of the configuration files)
+- maven is started by typing "mvn" on the command line (wrapped by \bin\mvn.bat in order to pass the location of the configuration files)
 - You can edit a file with notepad++ by typing "edit <filename>" on the command line
 - Run start_h2_database to start the H2 Database included in the wildfly package
 
-Locations
----------
+Locations and shared usage
+--------------------------
 
-- Global maven settings are in W:\tools\mvn\conf
+- Global maven settings are in \tools\mvn\conf
 - Public and private maven settings are in W:\conf
-- The local maven repository is w:\tools\mvn-repo
-- The toolchains.xml is packaged in w:\conf and copied to the user/.m2 directory
+- The loval maven repository is \mvn-repo
+- The local maven repository is \tools\mvn-repo
+- The toolchains.xml is packaged in \conf and copied to the user/.m2 directory
+
+In order to share installed tools and local maven config & repository between several instances of the dev pack (e.g. one dev pack per project), configure TOOLS_DIR, PUBLIC_M2_CONFIG and PRIVATE_M2_CONFIG to point to a global location.
+

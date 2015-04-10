@@ -45,7 +45,7 @@
         <version>1.8</version>
      </provides>
      <configuration>
-        <jdkHome>W:\tools\jdk1.8.0_40</jdkHome>
+        <jdkHome>W:\tools\jdk_8</jdkHome>
         <bootClassPath>
           <includes>
             <include>jre/lib/*.jar</include>

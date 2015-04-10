@@ -3,6 +3,7 @@ rem ===================================================================
 rem JEE DevPack Installation Script
 rem - Download and install binary packages
 rem - To Update a package, remove the exploded folder from the dev pack
+rem - Adjust download paths in order to pick up another version
 rem
 rem Included packages:
 rem - Oracle JDK
@@ -13,14 +14,21 @@ rem - Notepad++
 rem - JBoss Forge
 rem ===================================================================
 
-set TOOLS_DIR=%~dp0tools
-set WGET=%~dp0bin\wget
-set WGET_OPTIONS=--no-check-certificate --no-cookies 
+rem Mount work drive and read configuration
+call %~dp0bin\w_mount_drive.bat
+
+cd /d %WORK_DRIVE%:\
+
+rem Set DOWNLOADS_DIR in order to reuse existing downloads  
 set DOWNLOADS_DIR=%TOOLS_DIR%\downloads
-set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
 
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
+
+set WGET=%~dp0bin\wget
+set WGET_OPTIONS=--no-check-certificate --no-cookies
+
+set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
 
 set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u40-b26/jdk-8u40-windows-x64.exe
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
@@ -117,7 +125,8 @@ for /r %%x in (*.pack) do (
 	.\bin\unpack200 -r %%x %%~dx%%~px%%~nx.jar
 )
 popd
-move %DOWNLOADS_DIR%\JDK %TOOLS_DIR%\jdk_8 >NUL
+xcopy /E %DOWNLOADS_DIR%\JDK %TOOLS_DIR%\jdk_8\ >NUL
+rmdir /S /Q %DOWNLOADS_DIR%\JDK >NUL
 if not "%KEEP_PACKAGES%" == "TRUE" del %DOWNLOADS_DIR%\%JDK8_PACKAGE%
 
 :install_packages
