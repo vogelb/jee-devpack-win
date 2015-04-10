@@ -1,0 +1,10 @@
+#!/bin/bash
+# =====================================
+# Maven Wrapper for JEE Devpack
+# - Use maven from the dev pack
+# - Use maven setting from the dev pack
+# =====================================
+export M2_SETTINGS="-gs $M2_HOME/conf/mvn-public-settings.xml -s $PRIVATE_M2_CONFIG"
+
+# call maven
+$M2_HOME/bin/mvn $M2_SETTINGS $*
