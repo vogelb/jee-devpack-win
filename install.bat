@@ -50,6 +50,10 @@ set NPP_URL=http://dl.notepad-plus-plus.org/downloads/6.x/6.7.5/npp.6.7.5.bin.zi
 set NPP_EXPLODED=npp.6.7.5.bin
 set NPP_PACKAGE=%NPP_EXPLODED%.zip
 
+set SUBLIME_URL=http://c758482.r82.cf2.rackcdn.com/Sublime%%20Text%%202.0.2%%20x64.zip
+set SUBLIME_EXPLODED=Sublime Text 2.0.2 x64
+set SUBLIME_PACKAGE=%SUBLIME_EXPLODED%.zip
+
 set FORGE_URL=https://repository.jboss.org/nexus/service/local/repositories/releases/content/org/jboss/forge/forge-distribution/2.15.2.Final/forge-distribution-2.15.2.Final-offline.zip
 set FORGE_EXPLODED=forge-distribution-2.15.2.Final
 set FORGE_PACKAGE=%FORGE_EXPLODED%-offline.zip
@@ -73,32 +77,37 @@ if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 
 :download_wildfly
 if exist tools\wildfly goto download_maven
-if exist %DOWNLOADS_DIR%\%WILDFLY_PACKAGE% goto download_maven
+if exist "%DOWNLOADS_DIR%\%WILDFLY_PACKAGE%" goto download_maven
 echo %WILDFLY_URL% >> %DOWNLOADS%
 
 :download_maven
 if exist tools\mvn goto download_eclipse
-if exist %DOWNLOADS_DIR%\%MAVEN_PACKAGE% goto download_eclipse
+if exist "%DOWNLOADS_DIR%\%MAVEN_PACKAGE%" goto download_eclipse
 echo %MAVEN_URL% >> %DOWNLOADS%
 
 :download_eclipse
 if exist tools\eclipse goto download_npp
-if exist %DOWNLOADS_DIR%\%ECLIPSE_PACKAGE% goto download_npp
+if exist "%DOWNLOADS_DIR%\%ECLIPSE_PACKAGE%" goto download_npp
 echo %ECLIPSE_URL% >> %DOWNLOADS%
 
 :download_npp
-if exist tools\npp goto download_forge
-if exist %DOWNLOADS_DIR%\%NPP_PACKAGE% goto download_forge
+if exist tools\npp goto download_sublime
+if exist "%DOWNLOADS_DIR%\%NPP_PACKAGE%" goto download_sublime
 echo %NPP_URL% >> %DOWNLOADS%
+
+:download_sublime
+if exist tools\sublime goto download_forge
+if exist "%DOWNLOADS_DIR%\%SUBLIME_PACKAGE%" goto download_forge
+echo %SUBLIME_URL% >> %DOWNLOADS%
 
 :download_forge
 if exist tools\forge goto download_jdk8
-if exist %DOWNLOADS_DIR%\%FORGE_PACKAGE% goto download_jdk8
+if exist "%DOWNLOADS_DIR%\%FORGE_PACKAGE%" goto download_jdk8
 echo %FORGE_URL% >> %DOWNLOADS%
 
 :download_jdk8
 if exist tools\jdk_8 goto execute_downloads
-if exist %DOWNLOADS_DIR%\%JDK8_PACKAGE% goto execute_downloads
+if exist "%DOWNLOADS_DIR%\%JDK8_PACKAGE%" goto execute_downloads
 echo Downloading JDK 8...
 %WGET% %JDK8_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK8_URL%
 
@@ -130,11 +139,12 @@ rmdir /S /Q %DOWNLOADS_DIR%\JDK >NUL
 if not "%KEEP_PACKAGES%" == "TRUE" del %DOWNLOADS_DIR%\%JDK8_PACKAGE%
 
 :install_packages
-call :install_package "Maven" %MAVEN_PACKAGE% %MAVEN_EXPLODED% mvn
-call :install_package "Eclipse JEE Luna" %ECLIPSE_PACKAGE% %ECLIPSE_EXPLODED% eclipse
-call :install_package "Wildfly 8.1" %WILDFLY_PACKAGE% %WILDFLY_EXPLODED% wildfly
-call :install_package "Notepad++ 6.7.5" %NPP_PACKAGE% --create-- npp
-call :install_package "JBoss Forge 2.15.2" %FORGE_PACKAGE% %FORGE_EXPLODED% forge
+call :install_package "Maven" "%MAVEN_PACKAGE%" "%MAVEN_EXPLODED%" mvn
+call :install_package "Eclipse JEE Luna" "%ECLIPSE_PACKAGE%" "%ECLIPSE_EXPLODED%" eclipse
+call :install_package "Wildfly 8.1" "%WILDFLY_PACKAGE%" "%WILDFLY_EXPLODED%" wildfly
+call :install_package "Notepad++ 6.7.5" "%NPP_PACKAGE%" --create-- npp
+call :install_package "Sublime 2.0.2 x64" "%SUBLIME_PACKAGE%" --create-- sublime
+call :install_package "JBoss Forge 2.15.2" "%FORGE_PACKAGE%" "%FORGE_EXPLODED%" forge
 
 echo All done.
 goto :done
@@ -148,20 +158,20 @@ set NAME=%~1
 set PACKAGE=%~2
 set UNZIPPED=%~3
 set TARGET=%~4
-if exist %DOWNLOADS_DIR%\%PACKAGE% if not exist %TOOLS_DIR%\%TARGET% (
+if exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
     echo Unpacking %NAME% to %TOOLS_DIR%\%TARGET%...
     pushd %TOOLS_DIR%
 	if "%UNZIPPED%" == "--create--" (
-		%TOOLS_DIR%\7-Zip\7z x %DOWNLOADS_DIR%\%PACKAGE% -o%TARGET% >NUL
+		%TOOLS_DIR%\7-Zip\7z x "%DOWNLOADS_DIR%\%PACKAGE%" -o%TARGET% >NUL
 		set UNZIPPED=%TARGET%
 	) else (
-		%TOOLS_DIR%\7-Zip\7z x %DOWNLOADS_DIR%\%PACKAGE% >NUL
+		%TOOLS_DIR%\7-Zip\7z x "%DOWNLOADS_DIR%\%PACKAGE%" >NUL
 	)
     if not "%UNZIPPED%" == "??" (
         if exist %UNZIPPED% if not exist %TARGET% (
             echo Renaming %UNZIPPED% to %TARGET%
             rename %UNZIPPED% %TARGET%
-            if not "%KEEP_PACKAGES%" == "TRUE" del %DOWNLOADS_DIR%\%PACKAGE%
+            if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
         )
   )
 
