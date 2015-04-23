@@ -42,7 +42,7 @@ The source code can be obtained here: www.7-zip.org
 
 - Add additional or remove packages as required.  
 
-### 3. Run install.bat to download and install the software package
+### 3. Run install.bat to download and install the software packages
 
 ### 4. Adapt the dev pack configuration to your needs
 
@@ -55,9 +55,7 @@ The source code can be obtained here: www.7-zip.org
 
 ## How to use
 
-To start working, run open_workspace.bat or start_eclipse.bat
-
-The configured logical drive will be created and pop up containing your dev pack.
+To start working, run `open_devpack.bat`, `open_workspace.bat` or `start_eclipse.bat`. The configured logical drive will be created and pop up containing your dev pack.
 
 Always work on the configured drive because all settings rely on that.
 

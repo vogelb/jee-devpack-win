@@ -14,10 +14,9 @@ rem - Notepad++
 rem - JBoss Forge
 rem ===================================================================
 
-rem Mount work drive and read configuration
-call %~dp0bin\w_mount_drive.bat
+call %~dp0conf\devpack.bat
 
-cd /d %WORK_DRIVE%:\
+rem ===== PACKAGE CONFIGURATION STARTS HERE =====
 
 rem Set DOWNLOADS_DIR in order to reuse existing downloads  
 set DOWNLOADS_DIR=%TOOLS_DIR%\downloads
@@ -25,14 +24,54 @@ set DOWNLOADS_DIR=%TOOLS_DIR%\downloads
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
 
+rem Set to TRUE if you want Java 8 installed
+set INSTALL_JDK8=TRUE
+
+rem Set to TRUE if you want Java 7 installed
+set INSTALL_JDK7=FALSE
+
+rem Set to TRUE if you want Java 6 installed
+rem Note: JDK 6 cannot be automatically downloaded because it requires to log into the oracle web site.
+rem Download it manually and place into the configured download folder (see DOWNLOADS_DIR above). 
+set INSTALL_JDK6=FALSE
+
+rem Set to TRUE if you want Sublime installed
+set INSTALL_SUBLIME=TRUE
+
+rem ===== END OF PACKAGE CONFIGURATION =====
+
+rem Unmount mounted drive. Might be another instance!
+call %~dp0bin\w_unmount_drive.bat
+
+if not exist %WORK_DRIVE%:\ goto mount_work_drive
+echo.
+echo The configured work drive (%WORK_DRIVE%) is already in use.
+echo Installation cancelled.
+goto done
+
+:mount_work_drive
+
+rem Mount work drive and read configuration
+call %~dp0bin\w_mount_drive.bat
+
+cd /d %WORK_DRIVE%:\
+
 set WGET=%~dp0bin\wget
 set WGET_OPTIONS=--no-check-certificate --no-cookies
 
 set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
 
-set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u40-b26/jdk-8u40-windows-x64.exe
+set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-windows-x64.exe
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK8_PACKAGE=jdk-8u40-windows-x64.exe
+set JDK8_PACKAGE=jdk-8u45-windows-x64.exe
+
+set JDK7_URL=http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-windows-x64.exe
+set JDK7_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
+set JDK7_PACKAGE=jdk-7u79-windows-x64.exe
+
+set JDK6_URL=http://download.oracle.com/otn/java/jdk/6u45-b06/jdk-6u45-windows-x64.exe
+set JDK6_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
+set JDK6_PACKAGE=jdk-6u45-windows-x64.exe
 
 set ECLIPSE_URL=http://mirror.switch.ch/eclipse/technology/epp/downloads/release/luna/SR2/eclipse-jee-luna-SR2-win32-x86_64.zip
 set ECLIPSE_EXPLODED=eclipse-jee-luna-SR2-win32-x86_64
@@ -50,7 +89,7 @@ set NPP_URL=http://dl.notepad-plus-plus.org/downloads/6.x/6.7.5/npp.6.7.5.bin.zi
 set NPP_EXPLODED=npp.6.7.5.bin
 set NPP_PACKAGE=%NPP_EXPLODED%.zip
 
-set SUBLIME_URL=http://c758482.r82.cf2.rackcdn.com/Sublime%%20Text%%202.0.2%%20x64.zip
+set SUBLIME_URL=http://c758482.r82.cf2.rackcdn.com/Sublime Text 2.0.2 x64.zip
 set SUBLIME_EXPLODED=Sublime Text 2.0.2 x64
 set SUBLIME_PACKAGE=%SUBLIME_EXPLODED%.zip
 
@@ -69,47 +108,48 @@ for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L
     set "SVN_USER=!SVN_USER:%%~a!" 
 )
 echo set SVN_USER=%SVN_USER% >> conf\devpack.bat
+endlocal
 
 :download
 if not exist %TOOLS_DIR% mkdir %TOOLS_DIR%
 if exist %DOWNLOADS% del %DOWNLOADS%
 if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 
-:download_wildfly
-if exist tools\wildfly goto download_maven
-if exist "%DOWNLOADS_DIR%\%WILDFLY_PACKAGE%" goto download_maven
-echo %WILDFLY_URL% >> %DOWNLOADS%
+call :download_package "%WILDFLY_PACKAGE%" "%WILDFLY_URL%" wildfly
+call :download_package "%MAVEN_PACKAGE%" "%MAVEN_URL%" mvn
+call :download_package "%ECLIPSE_PACKAGE%" "%ECLIPSE_URL%" eclipse
+call :download_package "%NPP_PACKAGE%" "%NPP_URL%" npp
+if "%INSTALL_SUBLIME%" == "TRUE" (
+	call :download_package "%SUBLIME_PACKAGE%" "%SUBLIME_URL%" sublime
+)
+call :download_package "%FORGE_PACKAGE%" "%FORGE_URL%" forge
 
-:download_maven
-if exist tools\mvn goto download_eclipse
-if exist "%DOWNLOADS_DIR%\%MAVEN_PACKAGE%" goto download_eclipse
-echo %MAVEN_URL% >> %DOWNLOADS%
+:download_jdk6
+if "%INSTALL_JDK6%" == "TRUE" (
+	if exist tools\jdk_6 goto download_jdk7
+	if exist "%DOWNLOADS_DIR%\%JDK6_PACKAGE%" goto download_jdk7
+	echo.
+	echo JDK 6 cannot be automatically downloaded because it requires an Oracle web account.
+	echo Please Download it manually and place into the configured download folder %DOWNLOADS_DIR%.
+	echo Installation cancelled.
+	goto done 
+)
 
-:download_eclipse
-if exist tools\eclipse goto download_npp
-if exist "%DOWNLOADS_DIR%\%ECLIPSE_PACKAGE%" goto download_npp
-echo %ECLIPSE_URL% >> %DOWNLOADS%
-
-:download_npp
-if exist tools\npp goto download_sublime
-if exist "%DOWNLOADS_DIR%\%NPP_PACKAGE%" goto download_sublime
-echo %NPP_URL% >> %DOWNLOADS%
-
-:download_sublime
-if exist tools\sublime goto download_forge
-if exist "%DOWNLOADS_DIR%\%SUBLIME_PACKAGE%" goto download_forge
-echo %SUBLIME_URL% >> %DOWNLOADS%
-
-:download_forge
-if exist tools\forge goto download_jdk8
-if exist "%DOWNLOADS_DIR%\%FORGE_PACKAGE%" goto download_jdk8
-echo %FORGE_URL% >> %DOWNLOADS%
+:download_jdk7
+if "%INSTALL_JDK7%" == "TRUE" (
+	if exist tools\jdk_7 goto download_jdk8
+	if exist "%DOWNLOADS_DIR%\%JDK7_PACKAGE%" goto download_jdk8
+	echo Downloading JDK 7...
+	%WGET% %JDK7_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK7_URL%
+)
 
 :download_jdk8
-if exist tools\jdk_8 goto execute_downloads
-if exist "%DOWNLOADS_DIR%\%JDK8_PACKAGE%" goto execute_downloads
-echo Downloading JDK 8...
-%WGET% %JDK8_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK8_URL%
+if "%INSTALL_JDK8%" == "TRUE" (
+	if exist tools\jdk_8 goto execute_downloads
+	if exist "%DOWNLOADS_DIR%\%JDK8_PACKAGE%" goto execute_downloads
+	echo Downloading JDK 8...
+	%WGET% %JDK8_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK8_URL%
+)
 
 :execute_downloads
 if not exist %DOWNLOADS% goto install
@@ -123,28 +163,28 @@ rem wget --directory-prefix %TOOLS_DIR% --http-user=%SVN_USER% --ask-password -i
 
 del %DOWNLOADS%
 
-:install
-if not exist %DOWNLOADS_DIR%\%JDK8_PACKAGE% goto install_packages
-if exist %TOOLS_DIR%\jdk_8 goto install_packages
-echo Installing JDK 8 ..
-%TOOLS_DIR%\7-Zip\7z e %DOWNLOADS_DIR%\%JDK8_PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
-pushd %DOWNLOADS_DIR%\JDK
-%TOOLS_DIR%\7-Zip\7z x tools.zip >NUL
-for /r %%x in (*.pack) do (
-	.\bin\unpack200 -r %%x %%~dx%%~px%%~nx.jar
+: install
+if "%INSTALL_JDK6%" == "TRUE" (
+	call :install_jdk_6 "Oracle JDK 6" "%DOWNLOADS_DIR%\%JDK6_PACKAGE%" "%TOOLS_DIR%\jdk_6"
 )
-popd
-xcopy /E %DOWNLOADS_DIR%\JDK %TOOLS_DIR%\jdk_8\ >NUL
-rmdir /S /Q %DOWNLOADS_DIR%\JDK >NUL
-if not "%KEEP_PACKAGES%" == "TRUE" del %DOWNLOADS_DIR%\%JDK8_PACKAGE%
+if "%INSTALL_JDK7%" == "TRUE" (
+	call :install_jdk "Oracle JDK 7" "%DOWNLOADS_DIR%\%JDK7_PACKAGE%" "%TOOLS_DIR%\jdk_7"
+)
+if "%INSTALL_JDK8%" == "TRUE" (
+	call :install_jdk "Oracle JDK 8" "%DOWNLOADS_DIR%\%JDK8_PACKAGE%" "%TOOLS_DIR%\jdk_8"
+)
 
 :install_packages
 call :install_package "Maven" "%MAVEN_PACKAGE%" "%MAVEN_EXPLODED%" mvn
 call :install_package "Eclipse JEE Luna" "%ECLIPSE_PACKAGE%" "%ECLIPSE_EXPLODED%" eclipse
 call :install_package "Wildfly 8.1" "%WILDFLY_PACKAGE%" "%WILDFLY_EXPLODED%" wildfly
 call :install_package "Notepad++ 6.7.5" "%NPP_PACKAGE%" --create-- npp
-call :install_package "Sublime 2.0.2 x64" "%SUBLIME_PACKAGE%" --create-- sublime
+if "%INSTALL_SUBLIME%" == "TRUE" (
+	call :install_package "Sublime 2.0.2 x64" "%SUBLIME_PACKAGE%" --create-- sublime
+)
 call :install_package "JBoss Forge 2.15.2" "%FORGE_PACKAGE%" "%FORGE_EXPLODED%" forge
+
+call %WORK_DRIVE%:\setenv.bat
 
 echo All done.
 goto :done
@@ -177,5 +217,77 @@ if exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
 
   popd
 )
+goto done
+
+:download_package
+set PACKAGE=%~1
+set PACKAGE_URL=%~2
+set TARGET=%~3
+if not exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
+	echo %PACKAGE_URL% >> %DOWNLOADS%
+)
+goto done
+
+:install_jdk_6
+set PACKAGE_NAME=%~1
+set PACKAGE=%~2
+set TARGET=%~3
+if not exist %PACKAGE% goto done
+if exist %TARGET% goto done
+
+echo Installing %PACKAGE_NAME% ...
+echo ... extracting package ...
+%TOOLS_DIR%\7-Zip\7z x -y %PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
+pushd %DOWNLOADS_DIR%\JDK
+
+rem extract tools.zip
+extrac32 .rsrc\JAVA_CAB10\111
+
+echo ... extracting tools ...
+%TOOLS_DIR%\7-Zip\7z x tools.zip -otools >NUL
+
+echo ... unpacking jars ...
+cd tools
+for /r %%x in (*.pack) do (
+  .\bin\unpack200 -r "%%x" "%%~dx%%~px%%~nx.jar"
+) 
+popd
+
+echo ... copying files ...
+xcopy /E %DOWNLOADS_DIR%\JDK\tools %TARGET%\ >NUL
+rmdir /S /Q %DOWNLOADS_DIR%\JDK >NUL
+if not "%KEEP_PACKAGES%" == "TRUE" del %PACKAGE%
+echo ... done.
+echo.
+goto done
+
+
+:install_jdk
+set PACKAGE_NAME=%~1
+set PACKAGE=%~2
+set TARGET=%~3
+if not exist %PACKAGE% goto done
+if exist %TARGET% goto done
+
+echo Installing %PACKAGE_NAME% ...
+echo ... extracting package ...
+%TOOLS_DIR%\7-Zip\7z e -y %PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
+pushd %DOWNLOADS_DIR%\JDK
+
+echo ... extracting tools ...
+%TOOLS_DIR%\7-Zip\7z x tools.zip >NUL
+
+echo ... unpacking jars ...
+for /r %%x in (*.pack) do (
+	.\bin\unpack200 -r %%x %%~dx%%~px%%~nx.jar >NUL
+)
+popd
+
+echo ... copying files ...
+xcopy /E %DOWNLOADS_DIR%\JDK %TARGET%\ >NUL
+rmdir /S /Q %DOWNLOADS_DIR%\JDK >NUL
+if not "%KEEP_PACKAGES%" == "TRUE" del %PACKAGE%
+echo ... done.
+echo.
 
 :done
