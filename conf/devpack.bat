@@ -3,6 +3,8 @@ rem ===================================================================
 rem JEE DevPack Configuration
 rem ===================================================================
 
+call %~dp0devbase.bat
+
 rem Set the working drive letter here. The default is W.
 set WORK_DRIVE=W
 

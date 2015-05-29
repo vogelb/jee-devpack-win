@@ -1,6 +1,6 @@
 @echo off
 rem ===================================================================
-rem DevPack: Start H2 database
+rem JEE DevPack: Start Glassfish server
 rem ===================================================================
 call setenv.bat
 
@@ -11,4 +11,4 @@ if not exist %JBOSS_HOME% (
 	goto :EOF
 )
 
-java -cp %JBOSS_HOME%\modules\system\layers\base\com\h2database\h2\main\h2-1.3.173.jar org.h2.tools.Server
+call %JBOSS_HOME%\bin\standalone.bat

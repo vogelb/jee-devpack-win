@@ -9,10 +9,13 @@ The idea of the dev pack is to provide a self contained local development enviro
 The packages themselves are not included in the devPack but are downloaded during installation.
 
 The Dev Pack includes the following:
+- Oracle JDK 6
+- Oracle JDK 7
 - Oracle JDK 8
 - Apache Maven
 - Eclipse JEE
 - RedHat WildFly
+- Oracle GlassFish
 - Notepad++
 - Sublime Text
 - 7-Zip

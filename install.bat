@@ -14,8 +14,6 @@ rem - Notepad++
 rem - JBoss Forge
 rem ===================================================================
 
-call %~dp0conf\devpack.bat
-
 rem ===== PACKAGE CONFIGURATION STARTS HERE =====
 
 rem Set DOWNLOADS_DIR in order to reuse existing downloads  
@@ -35,12 +33,28 @@ rem Note: JDK 6 cannot be automatically downloaded because it requires to log in
 rem Download it manually and place into the configured download folder (see DOWNLOADS_DIR above). 
 set INSTALL_JDK6=FALSE
 
+rem Set to TRUE if you want Wildfly installed
+set INSTALL_WILDFLY=TRUE
+
+rem Set to TRUE if you want Glassfish installed
+set INSTALL_GLASSFISH=FALSE
+
 rem Set to TRUE if you want Sublime installed
 set INSTALL_SUBLIME=TRUE
 
 rem ===== END OF PACKAGE CONFIGURATION =====
 
 rem Unmount mounted drive. Might be another instance!
+call %~dp0conf\devpack.bat
+
+rem If installation is started from running devpack, restart from base dir.
+if "%WORK_DRIVE%:" == "%~d0" (
+	echo Restarting installation from base dir %DEVPACK_BASE%...
+	cd /d %DEVPACK_BASE%
+	%DEVPACK_BASE%\install.bat
+	goto EOF
+)
+
 call %~dp0bin\w_unmount_drive.bat
 
 if not exist %WORK_DRIVE%:\ goto mount_work_drive
@@ -85,6 +99,10 @@ set WILDFLY_URL=http://download.jboss.org/wildfly/8.2.0.Final/wildfly-8.2.0.Fina
 set WILDFLY_EXPLODED=wildfly-8.2.0.Final
 set WILDFLY_PACKAGE=%WILDFLY_EXPLODED%.zip
 
+set GLASSFISH_URL=http://download.java.net/glassfish/4.1/release/glassfish-4.1.zip
+set GLASSFISH_EXPLODED=glassfish-4
+set GLASSFISH_PACKAGE=glassfish-4.1.zip
+
 set NPP_URL=http://dl.notepad-plus-plus.org/downloads/6.x/6.7.5/npp.6.7.5.bin.zip
 set NPP_EXPLODED=npp.6.7.5.bin
 set NPP_PACKAGE=%NPP_EXPLODED%.zip
@@ -115,7 +133,12 @@ if not exist %TOOLS_DIR% mkdir %TOOLS_DIR%
 if exist %DOWNLOADS% del %DOWNLOADS%
 if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 
-call :download_package "%WILDFLY_PACKAGE%" "%WILDFLY_URL%" wildfly
+if "%INSTALL_WILDFLY%" == "TRUE" (
+	call :download_package "%WILDFLY_PACKAGE%" "%WILDFLY_URL%" wildfly
+)
+if "%INSTALL_GLASSFISH%" == "TRUE" (
+	call :download_package "%GLASSFISH_PACKAGE%" "%GLASSFISH_URL%" glassfish
+)
 call :download_package "%MAVEN_PACKAGE%" "%MAVEN_URL%" mvn
 call :download_package "%ECLIPSE_PACKAGE%" "%ECLIPSE_URL%" eclipse
 call :download_package "%NPP_PACKAGE%" "%NPP_URL%" npp
@@ -126,7 +149,7 @@ call :download_package "%FORGE_PACKAGE%" "%FORGE_URL%" forge
 
 :download_jdk6
 if "%INSTALL_JDK6%" == "TRUE" (
-	if exist tools\jdk_6 goto download_jdk7
+	if exist %TOOLS_DIR%\jdk_6 goto download_jdk7
 	if exist "%DOWNLOADS_DIR%\%JDK6_PACKAGE%" goto download_jdk7
 	echo.
 	echo JDK 6 cannot be automatically downloaded because it requires an Oracle web account.
@@ -137,7 +160,7 @@ if "%INSTALL_JDK6%" == "TRUE" (
 
 :download_jdk7
 if "%INSTALL_JDK7%" == "TRUE" (
-	if exist tools\jdk_7 goto download_jdk8
+	if exist %TOOLS_DIR%\jdk_7 goto download_jdk8
 	if exist "%DOWNLOADS_DIR%\%JDK7_PACKAGE%" goto download_jdk8
 	echo Downloading JDK 7...
 	%WGET% %JDK7_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK7_URL%
@@ -145,7 +168,7 @@ if "%INSTALL_JDK7%" == "TRUE" (
 
 :download_jdk8
 if "%INSTALL_JDK8%" == "TRUE" (
-	if exist tools\jdk_8 goto execute_downloads
+	if exist %TOOLS_DIR%\jdk_8 goto execute_downloads
 	if exist "%DOWNLOADS_DIR%\%JDK8_PACKAGE%" goto execute_downloads
 	echo Downloading JDK 8...
 	%WGET% %JDK8_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK8_URL%
@@ -177,12 +200,17 @@ if "%INSTALL_JDK8%" == "TRUE" (
 :install_packages
 call :install_package "Maven" "%MAVEN_PACKAGE%" "%MAVEN_EXPLODED%" mvn
 call :install_package "Eclipse JEE Luna" "%ECLIPSE_PACKAGE%" "%ECLIPSE_EXPLODED%" eclipse
-call :install_package "Wildfly 8.1" "%WILDFLY_PACKAGE%" "%WILDFLY_EXPLODED%" wildfly
-call :install_package "Notepad++ 6.7.5" "%NPP_PACKAGE%" --create-- npp
-if "%INSTALL_SUBLIME%" == "TRUE" (
-	call :install_package "Sublime 2.0.2 x64" "%SUBLIME_PACKAGE%" --create-- sublime
+if "%INSTALL_WILDFLY%" == "TRUE" (
+	call :install_package "Wildfly" "%WILDFLY_PACKAGE%" "%WILDFLY_EXPLODED%" wildfly
 )
-call :install_package "JBoss Forge 2.15.2" "%FORGE_PACKAGE%" "%FORGE_EXPLODED%" forge
+if "%INSTALL_GLASSFISH%" == "TRUE" (
+	call :install_package "Glassfish" "%GLASSFISH_PACKAGE%" "%GLASSFISH_EXPLODED%" glassfish
+)
+call :install_package "Notepad++" "%NPP_PACKAGE%" --create-- npp
+if "%INSTALL_SUBLIME%" == "TRUE" (
+	call :install_package "Sublime Text" "%SUBLIME_PACKAGE%" --create-- sublime
+)
+call :install_package "JBoss Forge" "%FORGE_PACKAGE%" "%FORGE_EXPLODED%" forge
 
 call %WORK_DRIVE%:\setenv.bat
 
