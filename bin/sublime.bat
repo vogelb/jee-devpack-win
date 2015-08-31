@@ -13,4 +13,4 @@ shift
 goto startInit
 :endInit
 
-start %TOOLS_DIR%\sublime\sublime_text %EDIT_CMD_LINE_ARGS%
+start %WORKING_DIR%\tools\sublime\sublime_text %EDIT_CMD_LINE_ARGS%

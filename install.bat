@@ -24,6 +24,8 @@ set KEEP_PACKAGES=TRUE
 
 rem Set to TRUE if you want Java 8 installed
 set INSTALL_JDK8=TRUE
+rem Set to TRUE if you want Java 8 32bit installed
+set INSTALL_JDK8_32=FALSE
 
 rem Set to TRUE if you want Java 7 installed
 set INSTALL_JDK7=FALSE
@@ -40,7 +42,7 @@ rem Set to TRUE if you want Glassfish installed
 set INSTALL_GLASSFISH=FALSE
 
 rem Set to TRUE if you want Sublime installed
-set INSTALL_SUBLIME=TRUE
+set INSTALL_SUBLIME=FALSE
 
 rem ===== END OF PACKAGE CONFIGURATION =====
 
@@ -75,9 +77,13 @@ set WGET_OPTIONS=--no-check-certificate --no-cookies
 
 set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
 
-set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-windows-x64.exe
+set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-windows-x64.exe
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK8_PACKAGE=jdk-8u45-windows-x64.exe
+set JDK8_PACKAGE=jdk-8u60-windows-x64.exe
+
+set JDK8_32_URL=http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-windows-i586.exe
+set JDK8_32_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
+set JDK8_32_PACKAGE=jdk-8u60-windows-i586.exe
 
 set JDK7_URL=http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-windows-x64.exe
 set JDK7_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
@@ -168,10 +174,18 @@ if "%INSTALL_JDK7%" == "TRUE" (
 
 :download_jdk8
 if "%INSTALL_JDK8%" == "TRUE" (
-	if exist %TOOLS_DIR%\jdk_8 goto execute_downloads
-	if exist "%DOWNLOADS_DIR%\%JDK8_PACKAGE%" goto execute_downloads
+	if exist %TOOLS_DIR%\jdk_8 goto download_jdk8_32
+	if exist "%DOWNLOADS_DIR%\%JDK8_PACKAGE%" goto download_jdk8_32
 	echo Downloading JDK 8...
 	%WGET% %JDK8_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK8_URL%
+)
+
+:download_jdk8_32
+if "%INSTALL_JDK8_32%" == "TRUE" (
+	if exist %TOOLS_DIR%\jdk_8_32 goto execute_downloads
+	if exist "%DOWNLOADS_DIR%\%JDK8_32_PACKAGE%" goto execute_downloads
+	echo Downloading JDK 8...
+	%WGET% %JDK8_32_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK8_32_URL%
 )
 
 :execute_downloads
@@ -196,6 +210,9 @@ if "%INSTALL_JDK7%" == "TRUE" (
 if "%INSTALL_JDK8%" == "TRUE" (
 	call :install_jdk "Oracle JDK 8" "%DOWNLOADS_DIR%\%JDK8_PACKAGE%" "%TOOLS_DIR%\jdk_8"
 )
+if "%INSTALL_JDK8_32%" == "TRUE" (
+	call :install_jdk "Oracle JDK 8 32bit" "%DOWNLOADS_DIR%\%JDK8_32_PACKAGE%" "%TOOLS_DIR%\jdk_8_32"
+)
 
 :install_packages
 call :install_package "Maven" "%MAVEN_PACKAGE%" "%MAVEN_EXPLODED%" mvn
@@ -206,11 +223,11 @@ if "%INSTALL_WILDFLY%" == "TRUE" (
 if "%INSTALL_GLASSFISH%" == "TRUE" (
 	call :install_package "Glassfish" "%GLASSFISH_PACKAGE%" "%GLASSFISH_EXPLODED%" glassfish
 )
-call :install_package "Notepad++" "%NPP_PACKAGE%" --create-- npp
+call :install_package "Notepad++ 6.7.5" "%NPP_PACKAGE%" --create-- npp
 if "%INSTALL_SUBLIME%" == "TRUE" (
-	call :install_package "Sublime Text" "%SUBLIME_PACKAGE%" --create-- sublime
+	call :install_package "Sublime 2.0.2 x64" "%SUBLIME_PACKAGE%" --create-- sublime
 )
-call :install_package "JBoss Forge" "%FORGE_PACKAGE%" "%FORGE_EXPLODED%" forge
+call :install_package "JBoss Forge 2.15.2" "%FORGE_PACKAGE%" "%FORGE_EXPLODED%" forge
 
 call %WORK_DRIVE%:\setenv.bat
 
