@@ -12,12 +12,13 @@ The Dev Pack includes the following:
 - Oracle JDK 6
 - Oracle JDK 7
 - Oracle JDK 8
+- Oracle JDK 7 + 6 (optional)
 - Apache Maven
 - Eclipse JEE
 - RedHat WildFly
 - Oracle GlassFish
 - Notepad++
-- Sublime Text
+- Sublime Text (optional)
 - 7-Zip
 - Some scripts to help you get going. All scripts are designed to work out of the explorer (double click).
 
@@ -42,6 +43,8 @@ The source code can be obtained here: www.7-zip.org
 - Installed packages will NOT be deleted            -- install.bat -> KEEP_PACKAGES
 
 - Check the package versions in install.bat for updates.
+ 
+- Check optional packages in install.bat.
 
 - Add additional or remove packages as required.  
 
