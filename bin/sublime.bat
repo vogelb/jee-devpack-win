@@ -2,15 +2,12 @@
 rem ************************************************
 rem JEE DevPack: Start sublime editor
 rem ************************************************
-call %~dp0w_mount_drive.bat
 
-rem Initialise command line...
-set EDIT_CMD_LINE_ARGS=
-:startInit
-if %1a==a goto endInit
-set EDIT_CMD_LINE_ARGS=%EDIT_CMD_LINE_ARGS% %1
-shift
-goto startInit
-:endInit
+if not exist %TOOLS_DIR%\sublime (
+	echo.
+	echo Sublime text is not installed.
+	echo Please set INSTALL_SUBLIME to TRUE in install.bat and start the installation.
+	goto :EOF
+)
 
-start %WORKING_DIR%\tools\sublime\sublime_text %EDIT_CMD_LINE_ARGS%
+start %TOOLS_DIR%\sublime\sublime_text %*

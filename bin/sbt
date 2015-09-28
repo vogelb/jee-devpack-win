@@ -1,0 +1,13 @@
+#!/bin/bash
+# =====================================
+# sbt Wrapper for JEE Devpack
+# =====================================
+
+if [ not -d $TOOLS_DIR/sbt
+then
+	echo
+	echo "Scala / sbt is not installed."
+	echo "Please set INSTALL_SCALA to TRUE in install.bat and start the installation."
+	exit 1
+fi
+$TOOLS_DIR/sbt/bin/sbt $*

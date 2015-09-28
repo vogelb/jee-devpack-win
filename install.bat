@@ -35,8 +35,11 @@ rem Note: JDK 6 cannot be automatically downloaded because it requires to log in
 rem Download it manually and place into the configured download folder (see DOWNLOADS_DIR above). 
 set INSTALL_JDK6=FALSE
 
+rem Set to TRUE if you want TomEE Plus installed
+set INSTALL_TOMEE=TRUE
+
 rem Set to TRUE if you want Wildfly installed
-set INSTALL_WILDFLY=TRUE
+set INSTALL_WILDFLY=FALSE
 
 rem Set to TRUE if you want Glassfish installed
 set INSTALL_GLASSFISH=FALSE
@@ -44,7 +47,16 @@ set INSTALL_GLASSFISH=FALSE
 rem Set to TRUE if you want Sublime installed
 set INSTALL_SUBLIME=FALSE
 
+rem Set to TRUE if you want Scala (and sbt) installed
+set INSTALL_SCALA=FALSE
+
 rem ===== END OF PACKAGE CONFIGURATION =====
+
+set DEBUG=FALSE
+if "%1" == "-debug" (
+	set DEBUG=TRUE
+	echo on
+)
 
 rem Unmount mounted drive. Might be another instance!
 call %~dp0conf\devpack.bat
@@ -53,7 +65,7 @@ rem If installation is started from running devpack, restart from base dir.
 if "%WORK_DRIVE%:" == "%~d0" (
 	echo Restarting installation from base dir %DEVPACK_BASE%...
 	cd /d %DEVPACK_BASE%
-	%DEVPACK_BASE%\install.bat
+	%DEVPACK_BASE%\install.bat %*
 	goto EOF
 )
 
@@ -101,6 +113,10 @@ set MAVEN_URL=http://mirror.switch.ch/mirror/apache/dist/maven/maven-3/3.3.1/bin
 set MAVEN_EXPLODED=apache-maven-3.3.1
 set MAVEN_PACKAGE=%MAVEN_EXPLODED%-bin.zip
 
+set TOMEE_URL=http://apache.openmirror.de/tomee/tomee-1.7.2/apache-tomee-1.7.2-plus.zip
+set TOMEE_EXPLODED=apache-tomee-plus-1.7.2
+set TOMEE_PACKAGE=apache-tomee-1.7.2-plus.zip
+
 set WILDFLY_URL=http://download.jboss.org/wildfly/8.2.0.Final/wildfly-8.2.0.Final.zip
 set WILDFLY_EXPLODED=wildfly-8.2.0.Final
 set WILDFLY_PACKAGE=%WILDFLY_EXPLODED%.zip
@@ -121,6 +137,18 @@ set FORGE_URL=https://repository.jboss.org/nexus/service/local/repositories/rele
 set FORGE_EXPLODED=forge-distribution-2.15.2.Final
 set FORGE_PACKAGE=%FORGE_EXPLODED%-offline.zip
 
+set SCALA_URL=http://downloads.typesafe.com/scala/2.11.7/scala-2.11.7.zip?_ga=1.251179782.1811953383.1443169031
+set SCALA_EXPLODED=scala-2.11.7
+set SCALA_PACKAGE=%SCALA_EXPLODED%.zip
+
+set SBT_URL=https://dl.bintray.com/sbt/native-packages/sbt/0.13.9/sbt-0.13.9.zip
+set SBT_EXPLODED=sbt-0.13.9
+set SBT_PACKAGE=%SBT_EXPLODED%.zip
+
+set CONSOLE_URL=http://downloads.sourceforge.net/project/console/console-devel/2.00/Console-2.00b148-Beta_32bit.zip
+set CONSOLE_EXPLODED=Console2
+set CONSOLE_PACKAGE=Console-2.00b148-Beta_32bit.zip
+
 echo Start Installation of JEE DevPack
 echo.
 
@@ -139,6 +167,9 @@ if not exist %TOOLS_DIR% mkdir %TOOLS_DIR%
 if exist %DOWNLOADS% del %DOWNLOADS%
 if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 
+if "%INSTALL_TOMEE%" == "TRUE" (
+	call :download_package "%TOMEE_PACKAGE%" "%TOMEE_URL%" tomee
+)
 if "%INSTALL_WILDFLY%" == "TRUE" (
 	call :download_package "%WILDFLY_PACKAGE%" "%WILDFLY_URL%" wildfly
 )
@@ -152,6 +183,11 @@ if "%INSTALL_SUBLIME%" == "TRUE" (
 	call :download_package "%SUBLIME_PACKAGE%" "%SUBLIME_URL%" sublime
 )
 call :download_package "%FORGE_PACKAGE%" "%FORGE_URL%" forge
+if "%INSTALL_SCALA%" == "TRUE" (
+	call :download_package "%SCALA_PACKAGE%" "%SCALA_URL%" scala
+	call :download_package "%SBT_PACKAGE%" "%SBT_URL%" sbt
+)
+call :download_package "%CONSOLE_PACKAGE%" "%CONSOLE_URL%" console2
 
 :download_jdk6
 if "%INSTALL_JDK6%" == "TRUE" (
@@ -217,6 +253,9 @@ if "%INSTALL_JDK8_32%" == "TRUE" (
 :install_packages
 call :install_package "Maven" "%MAVEN_PACKAGE%" "%MAVEN_EXPLODED%" mvn
 call :install_package "Eclipse JEE Luna" "%ECLIPSE_PACKAGE%" "%ECLIPSE_EXPLODED%" eclipse
+if "%INSTALL_TOMEE%" == "TRUE" (
+	call :install_package "%TOMEE_EXPLODED%" "%TOMEE_PACKAGE%" "%TOMEE_EXPLODED%" tomee
+)
 if "%INSTALL_WILDFLY%" == "TRUE" (
 	call :install_package "Wildfly" "%WILDFLY_PACKAGE%" "%WILDFLY_EXPLODED%" wildfly
 )
@@ -228,6 +267,11 @@ if "%INSTALL_SUBLIME%" == "TRUE" (
 	call :install_package "Sublime 2.0.2 x64" "%SUBLIME_PACKAGE%" --create-- sublime
 )
 call :install_package "JBoss Forge 2.15.2" "%FORGE_PACKAGE%" "%FORGE_EXPLODED%" forge
+if "%INSTALL_SUBLIME%" == "TRUE" (
+	call :install_package "%SCALA_EXPLODED%" "%SCALA_PACKAGE%" "%SCALA_EXPLODED%" scala
+	call :install_package "%SBT_EXPLODED%" "%SBT_PACKAGE%" "%SBT_EXPLODED%" sbt
+)
+call :install_package "%CONSOLE_EXPLODED%" "%CONSOLE_PACKAGE%" "%CONSOLE_EXPLODED%" console
 
 call %WORK_DRIVE%:\setenv.bat
 
@@ -245,12 +289,14 @@ set UNZIPPED=%~3
 set TARGET=%~4
 if exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
     echo Unpacking %NAME% to %TOOLS_DIR%\%TARGET%...
-    pushd %TOOLS_DIR%
+	
+	pushd %TOOLS_DIR%
+	
 	if "%UNZIPPED%" == "--create--" (
-		%TOOLS_DIR%\7-Zip\7z x "%DOWNLOADS_DIR%\%PACKAGE%" -o%TARGET% >NUL
+		%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%TARGET% >NUL
 		set UNZIPPED=%TARGET%
 	) else (
-		%TOOLS_DIR%\7-Zip\7z x "%DOWNLOADS_DIR%\%PACKAGE%" >NUL
+		%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" >NUL
 	)
     if not "%UNZIPPED%" == "??" (
         if exist %UNZIPPED% if not exist %TARGET% (
