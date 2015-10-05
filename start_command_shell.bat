@@ -6,4 +6,4 @@ rem ===================================================================
 call bin\w_mount_drive.bat
 cd /d %WORK_DRIVE%:\
 call setenv.bat
-start console -w "JEE Console" -d "%WORKSPACE%"
+console -w "JEE Console" -d "%WORKSPACE%"

@@ -3,7 +3,7 @@
 # sbt Wrapper for JEE Devpack
 # =====================================
 
-if [ not -d $TOOLS_DIR/sbt
+if  [ ! -d $TOOLS_DIR/sbt ]
 then
 	echo
 	echo "Scala / sbt is not installed."

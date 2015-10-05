@@ -2,7 +2,7 @@
 rem ************************************************
 rem JEE DevPack: Start sublime editor
 rem ************************************************
-
+call %~dp0\..\setenv
 if not exist %TOOLS_DIR%\sublime (
 	echo.
 	echo Sublime text is not installed.
