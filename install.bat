@@ -89,13 +89,13 @@ set WGET_OPTIONS=--no-check-certificate --no-cookies
 
 set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
 
-set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-windows-x64.exe
+set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u66-b17/jdk-8u66-windows-x64.exe
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK8_PACKAGE=jdk-8u60-windows-x64.exe
+set JDK8_PACKAGE=jdk-8u66-windows-x64.exe
 
-set JDK8_32_URL=http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-windows-i586.exe
+set JDK8_32_URL=http://download.oracle.com/otn-pub/java/jdk/8u66-b17/jdk-8u66-windows-i586.exe
 set JDK8_32_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK8_32_PACKAGE=jdk-8u60-windows-i586.exe
+set JDK8_32_PACKAGE=jdk-8u66-windows-i586.exe
 
 set JDK7_URL=http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-windows-x64.exe
 set JDK7_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
@@ -125,8 +125,8 @@ set GLASSFISH_URL=http://download.java.net/glassfish/4.1/release/glassfish-4.1.z
 set GLASSFISH_EXPLODED=glassfish-4
 set GLASSFISH_PACKAGE=glassfish-4.1.zip
 
-set NPP_URL=http://dl.notepad-plus-plus.org/downloads/6.x/6.7.5/npp.6.7.5.bin.zip
-set NPP_EXPLODED=npp.6.7.5.bin
+set NPP_URL=http://notepad-plus-plus.org/repository/6.x/6.8.5/npp.6.8.5.bin.zip
+set NPP_EXPLODED=npp.6.8.5.bin
 set NPP_PACKAGE=%NPP_EXPLODED%.zip
 
 set SUBLIME_URL=http://c758482.r82.cf2.rackcdn.com/Sublime Text 2.0.2 x64.zip
@@ -156,7 +156,7 @@ findstr /m "SET SVN_USER" conf\devpack.bat > NUL
 if %errorlevel%==0 goto download
 set SVN_USER=%USERNAME%
 setlocal enabledelayedexpansion 
-for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L=l" "M=m" "N=n" "O=o" "P=p" "Q=q" "R=r" "S=s" "T=t" "U=u" "V=v" "W=w" "X=x" "Y=y" "Z=z" "Ä=ä" "Ö=ö" "Ü=ü") do ( 
+for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L=l" "M=m" "N=n" "O=o" "P=p" "Q=q" "R=r" "S=s" "T=t" "U=u" "V=v" "W=w" "X=x" "Y=y" "Z=z" "Ã„=Ã¤" "Ã–=Ã¶" "Ãœ=Ã¼") do ( 
     set "SVN_USER=!SVN_USER:%%~a!" 
 )
 echo set SVN_USER=%SVN_USER% >> conf\devpack.bat
