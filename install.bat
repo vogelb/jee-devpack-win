@@ -267,7 +267,7 @@ if "%INSTALL_SUBLIME%" == "TRUE" (
 	call :install_package "Sublime 2.0.2 x64" "%SUBLIME_PACKAGE%" --create-- sublime
 )
 call :install_package "JBoss Forge 2.15.2" "%FORGE_PACKAGE%" "%FORGE_EXPLODED%" forge
-if "%INSTALL_SUBLIME%" == "TRUE" (
+if "%INSTALL_SCALA%" == "TRUE" (
 	call :install_package "%SCALA_EXPLODED%" "%SCALA_PACKAGE%" "%SCALA_EXPLODED%" scala
 	call :install_package "%SBT_EXPLODED%" "%SBT_PACKAGE%" "%SBT_EXPLODED%" sbt
 )
