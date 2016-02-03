@@ -1,7 +1,7 @@
 # Eclipse / TomEE based Java Enterprise Dev Pack for Windows
 
 This is a lightweight Java EE / Eclipse / TomEE [DevPack](http://blog.tknerr.de/blog/2014/10/09/devpack-philosophy-aka-works-on-your-machine/) for windows.
-It includes standard packages needed to develop in such an environment and is based on a simple installation folder SUBSTed into a self contained work drive (no VM).
+It includes standard packages needed to develop in such an environment and is based either on an installation into a virtual HD or a substed folder mounted as working drive (no VM).
 
 
 ## General Idea
@@ -40,17 +40,19 @@ The source code can be obtained here: www.7-zip.org
 	
 ### 2. Configure installation
 	
-- Packages will be downloaded to w:\tools\downloads -- install.bat -> DOWNLOADS_DIR
+- Select whether or not you want a VHD to be created for your dev pack  -- conf/devpack.bat -> DEVPACK_VHD
+	
+- Packages will be downloaded to <installation folder>\downloads        -- setup.bat -> DOWNLOADS_DIR
 
-- Installed packages will NOT be deleted            -- install.bat -> KEEP_PACKAGES
+- Installed packages will NOT be deleted                                -- setup.bat -> KEEP_PACKAGES
 
-- Check the package versions in install.bat for updates.
+- Check the package versions in setup.bat for updates.
  
-- Check optional packages in install.bat.
+- Check optional packages in setup.bat.
 
 - Add additional or remove packages as required.  
 
-### 3. Run install.bat to download and install the software packages
+### 3. Run setup.bat to download and install the software packages
 
 ### 4. Adapt the dev pack configuration to your needs
 

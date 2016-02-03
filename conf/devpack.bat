@@ -6,6 +6,10 @@ rem ===================================================================
 rem Load base config
 call %~dp0devbase.bat
 
+rem Use virtual harddisk
+rem Set to true to install DevPack in a virtual disk
+set DEVPACK_VHD=TRUE
+
 rem Set the working drive letter here. The default is W.
 set WORK_DRIVE=W
 
@@ -27,3 +31,4 @@ rem set EDITOR=%WORK_DRIVE%:\tools\sublime\sublime_text.exe
 set EDITOR=%WORK_DRIVE%:\tools\npp\notepad++.exe
 
 rem The default SVN and GIT user name is the system account name.
+set SVN_USER=benno vogel 
