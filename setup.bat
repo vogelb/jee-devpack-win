@@ -14,13 +14,18 @@ rem - Notepad++
 rem - JBoss Forge
 rem ===================================================================
 
-rem ===== PACKAGE CONFIGURATION STARTS HERE =====
+rem ===== DEVPACK CONFIGURATION STARTS HERE =====
 
-rem Set DOWNLOADS_DIR in order to reuse existing downloads  
-set DOWNLOADS_DIR=%TOOLS_DIR%\downloads
+rem Load basic configuration
+call %~dp0conf\devpack.bat
+
+rem Set DOWNLOADS_DIR in order to reuse existing downloads
+set DOWNLOADS_DIR=%~dp0downloads
 
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
+
+rem ===== PACKAGE CONFIGURATION STARTS HERE =====
 
 rem Set to TRUE if you want Java 8 installed
 set INSTALL_JDK8=TRUE
@@ -79,7 +84,7 @@ goto done
 
 :mount_work_drive
 
-if not exist %~dp0devpack.vhd (
+if "%DEVPACK_VHD%" == "TRUE" if not exist %~dp0devpack.vhd (
 	echo Initialising DevPack virtual disk...
 	
 	call :create_virtual_disk %~dp0devpack.vhd 5000 DevPack
@@ -88,6 +93,7 @@ if not exist %~dp0devpack.vhd (
 	echo devpack.vhd > %~dp0exclude.txt
 	echo .git >> %~dp0exclude.txt
 	echo .gitignore >> %~dp0exclude.txt
+	echo downloads >> %~dp0exclude.txt
 	echo exclude.txt >> %~dp0exclude.txt
 	xcopy /E /Q /EXCLUDE:%~dp0exclude.txt %~dp0* %WORK_DRIVE%:\
 	del exclude.txt
@@ -103,9 +109,9 @@ set WGET_OPTIONS=--no-check-certificate --no-cookies
 
 set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
 
-set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u66-b17/jdk-8u66-windows-x64.exe
+set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u72-b15/jdk-8u72-windows-x64.exe
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK8_PACKAGE=jdk-8u66-windows-x64.exe
+set JDK8_PACKAGE=jdk-8u72-windows-x64.exe
 
 set JDK8_32_URL=http://download.oracle.com/otn-pub/java/jdk/8u66-b17/jdk-8u66-windows-i586.exe
 set JDK8_32_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
@@ -246,10 +252,9 @@ type %DOWNLOADS%
 rem Provide user and prompt for password if required (e.g. download from internal nexus or web space)
 rem echo Please provide your nexus credentials.
 rem wget --directory-prefix %TOOLS_DIR% --http-user=%SVN_USER% --ask-password -i %DOWNLOADS%
-echo %WGET% %WGET_OPTIONS% --directory-prefix %DOWNLOADS_DIR% -i %DOWNLOADS%
 %WGET% %WGET_OPTIONS% --directory-prefix %DOWNLOADS_DIR% -i %DOWNLOADS%
 
-rem del %DOWNLOADS%
+del %DOWNLOADS%
 
 : install
 if "%INSTALL_JDK6%" == "TRUE" (
@@ -397,11 +402,15 @@ if exist %TARGET% goto done
 
 echo Installing %PACKAGE_NAME% ...
 echo ... extracting package ...
+if "%DEBUG%" == "TRUE" (
+  echo %TOOLS_DIR%\7-Zip\7z e -y %PACKAGE% -o%DOWNLOADS_DIR%\JDK
+)
+
 %TOOLS_DIR%\7-Zip\7z e -y %PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
 pushd %DOWNLOADS_DIR%\JDK
 
 echo ... extracting tools ...
-%TOOLS_DIR%\7-Zip\7z x tools.zip >NUL
+%TOOLS_DIR%\7-Zip\7z x -y tools.zip >NUL
 
 echo ... unpacking jars ...
 for /r %%x in (*.pack) do (
