@@ -25,6 +25,9 @@ set DOWNLOADS_DIR=%~dp0downloads
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
 
+rem VHD size in MB (use of VHD is configured in conf/devpack.bat)
+set DEVPACK_VHD_SIZE=5000
+
 rem ===== PACKAGE CONFIGURATION STARTS HERE =====
 
 rem Set to TRUE if you want Java 8 installed
@@ -87,7 +90,7 @@ goto done
 if "%DEVPACK_VHD%" == "TRUE" if not exist %~dp0devpack.vhd (
 	echo Initialising DevPack virtual disk...
 	
-	call :create_virtual_disk %~dp0devpack.vhd 5000 DevPack
+	call %~dp0bin\create_vhd.bat %~dp0devpack.vhd %DEVPACK_VHD_SIZE% DevPack
 			
 	echo Copying DevPack base to virtual disk...
 	echo devpack.vhd > %~dp0exclude.txt
@@ -297,26 +300,6 @@ call %WORK_DRIVE%:\setenv.bat
 
 echo All done.
 goto :done
-
-
-:create_virtual_disk
-set VHD_CONTAINER=%1
-set VHD_SIZE=%2
-set VHD_LABEL=%3
-
-set VHD_SCRIPT=%~dp0create_vhd.txt
-
-echo create vdisk file=%VHD_CONTAINER% type=expandable maximum=%VHD_SIZE% > %VHD_SCRIPT%
-echo select vdisk file=%VHD_CONTAINER% >> %VHD_SCRIPT%
-echo attach vdisk >> %VHD_SCRIPT%
-echo create partition primary >> %VHD_SCRIPT%
-echo format FS=NTFS LABEL="%VHD_LABEL%" >> %VHD_SCRIPT%
-echo assign letter=%WORK_DRIVE% >> %VHD_SCRIPT%
-diskpart /s %VHD_SCRIPT%
-del %VHD_SCRIPT%
-
-goto :done
-
 
 rem -------------------------------------------------
 rem Installation routine
