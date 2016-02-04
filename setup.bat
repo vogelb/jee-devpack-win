@@ -66,6 +66,25 @@ if "%1" == "-debug" (
 	echo on
 )
 
+if "%1" == "install" goto install_devpack
+if "%1" == "download" goto download
+if "%1" == "purge" goto purge
+
+echo.
+echo J2EE Devpack setup
+echo.
+echo Available commands:
+echo   install   - Install DevPack / configured packages
+echo   download  - Only download packages
+echo   purge     - Remove disabled packages
+echo.
+echo To uninstall, just delete the devpack folder %~dp0
+echo.
+
+goto :done
+
+:init_setup
+
 rem Unmount mounted drive. Might be another instance!
 call %~dp0conf\devpack.bat
 
@@ -74,7 +93,7 @@ if "%WORK_DRIVE%:" == "%~d0" (
 	echo Restarting installation from base dir %DEVPACK_BASE%...
 	cd /d %DEVPACK_BASE%
 	%DEVPACK_BASE%\setup.bat %*
-	goto EOF
+	goto done
 )
 
 call %~dp0bin\w_unmount_drive.bat
@@ -186,23 +205,12 @@ set CONSOLE_URL=http://downloads.sourceforge.net/project/console/console-devel/2
 set CONSOLE_EXPLODED=Console2
 set CONSOLE_PACKAGE=Console-2.00b148-Beta_32bit.zip
 
-if "%1" == "install" goto install_devpack
-if "%1" == "download" goto download
-if "%1" == "purge" goto purge
-if "%1" == "uninstall" goto uninstall
-
-echo.
-echo J2EE Devpack setup
-echo.
-echo Available commands:
-echo   install   - Install DevPack / configured packages
-echo   download  - Only download packages
-echo   purge     - Remove disabled packages
-echo   uninstall - Uninstall DevPack
-
-goto done
+goto :done
 
 :install_devpack
+
+call :init_setup
+
 echo.
 echo Start Installation of JEE DevPack
 echo =================================
@@ -219,7 +227,7 @@ echo set SVN_USER=%SVN_USER% >> conf\devpack.bat
 endlocal
 
 :install_devpack_do
-call :download
+call :download_do
 call :install
 
 echo.
@@ -228,6 +236,11 @@ echo All done.
 goto done
 
 :download
+
+call :init_setup
+
+:download_do
+
 echo.
 echo -^> Downloading packages...
 
@@ -379,6 +392,7 @@ call %WORK_DRIVE%:\setenv.bat
 goto :done
 
 :purge
+call :init_setup
 echo.
 echo -^> Purging disabled packages...
 if "%INSTALL_BABUN%" == "FALSE" (
@@ -414,16 +428,6 @@ if "%INSTALL_JDK8%" == "FALSE" (
 if "%INSTALL_JDK8_32%" == "FALSE" (
 	call :uninstall_package "Oracle JDK 8 32bit" jdk_8_32
 )
-
-echo.
-echo All done.
-
-goto :done
-
-:uninstall
-echo.
-echo -^> Uninstalling DevPack...
-
 
 echo.
 echo All done.
