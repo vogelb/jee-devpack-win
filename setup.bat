@@ -79,19 +79,25 @@ if "%WORK_DRIVE%:" == "%~d0" (
 
 call %~dp0bin\w_unmount_drive.bat
 
-if not exist %WORK_DRIVE%:\ goto mount_work_drive
-echo.
-echo The configured work drive (%WORK_DRIVE%) is already in use.
-echo Installation cancelled.
-goto done
-
-:mount_work_drive
+if exist %WORK_DRIVE%:\ (
+	echo.
+	echo The configured work drive ^(%WORK_DRIVE%^) is already in use.
+	echo Installation cancelled.
+	goto done
+)
 
 if "%DEVPACK_VHD%" == "TRUE" if not exist %~dp0devpack.vhd (
-	echo Initialising DevPack virtual disk...
+	echo | set /p=Initialising DevPack virtual disk... 
 	
 	call %~dp0bin\create_vhd.bat %~dp0devpack.vhd %DEVPACK_VHD_SIZE% DevPack
-			
+	if errorlevel 1 (
+		echo.
+		echo Error creating virtual disk. Exiting.
+		goto :done
+	)
+	
+	echo ok.
+	echo.
 	echo Copying DevPack base to virtual disk...
 	echo devpack.vhd > %~dp0exclude.txt
 	echo .git >> %~dp0exclude.txt
@@ -104,6 +110,10 @@ if "%DEVPACK_VHD%" == "TRUE" if not exist %~dp0devpack.vhd (
 
 rem Mount work drive and read configuration
 call %~dp0bin\w_mount_drive.bat
+if errorlevel 1 (
+	echo Error mounting virtual drive. Exiting.
+	goto :done
+)
 
 cd /d %WORK_DRIVE%:\
 

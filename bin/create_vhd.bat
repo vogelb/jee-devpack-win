@@ -16,4 +16,6 @@ echo create partition primary >> %VHD_SCRIPT%
 echo format FS=NTFS LABEL="%VHD_LABEL%" >> %VHD_SCRIPT%
 echo assign letter=%WORK_DRIVE% >> %VHD_SCRIPT%
 diskpart /s %VHD_SCRIPT%
+set VHD_ERROR=%ERRORLEVEL%
 del %VHD_SCRIPT%
+EXIT /B %VHD_ERROR%

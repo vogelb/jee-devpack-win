@@ -5,10 +5,9 @@ rem The drive letter can be configured in conf/devpack.bat
 rem ===================================================================
 call %~dp0..\conf\devpack.bat
 
-if exist %WORK_DRIVE%:\ goto EOF
+if exist %WORK_DRIVE%:\ goto done
 
-echo Mounting Work Container as drive %WORK_DRIVE%...
-rem subst %WORK_DRIVE%: %~dp0..
+echo | set /p=Mounting Work Container as drive %WORK_DRIVE%... 
 
 cd /d %~dp0..
 
@@ -21,9 +20,14 @@ if "%DEVPACK_VHD%" == "TRUE" (
 ) else (
 	subst %WORK_DRIVE%: %cd%
 )
+set MOUNT_ERROR=%ERRORLEVEL%
+if errorlevel 1 goto done
+
+echo ok.
 	
 rem Store base dir in configuration...
 echo|set /p="set DEVPACK_BASE=" > %~dp0..\conf\devbase.bat
 cd >> %~dp0..\conf\devbase.bat
 
-:EOF
+:done
+EXIT /B %MOUNT_ERROR%
