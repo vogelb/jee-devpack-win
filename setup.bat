@@ -538,7 +538,6 @@ echo ... done.
 echo.
 goto done
 
-
 :install_jdk
 set PACKAGE_NAME=%~1
 set PACKAGE=%~2
