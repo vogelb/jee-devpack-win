@@ -182,11 +182,30 @@ set CONSOLE_URL=http://downloads.sourceforge.net/project/console/console-devel/2
 set CONSOLE_EXPLODED=Console2
 set CONSOLE_PACKAGE=Console-2.00b148-Beta_32bit.zip
 
+if "%1" == "install" goto install_devpack
+if "%1" == "download" goto download
+if "%1" == "purge" goto purge
+if "%1" == "uninstall" goto uninstall
+
+echo.
+echo J2EE Devpack setup
+echo.
+echo Available commands:
+echo   install   - Install DevPack / configured packages
+echo   download  - Only download packages
+echo   purge     - Remove disabled packages
+echo   uninstall - Uninstall DevPack
+
+goto done
+
+:install_devpack
+echo.
 echo Start Installation of JEE DevPack
+echo =================================
 echo.
 
 findstr /m "SET SVN_USER" conf\devpack.bat > NUL
-if %errorlevel%==0 goto download
+if %errorlevel%==0 goto install_devpack_do
 set SVN_USER=%USERNAME%
 setlocal enabledelayedexpansion 
 for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L=l" "M=m" "N=n" "O=o" "P=p" "Q=q" "R=r" "S=s" "T=t" "U=u" "V=v" "W=w" "X=x" "Y=y" "Z=z" "Ä=ä" "Ö=ö" "Ü=ü") do ( 
@@ -195,7 +214,19 @@ for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L
 echo set SVN_USER=%SVN_USER% >> conf\devpack.bat
 endlocal
 
+:install_devpack_do
+call :download
+call :install
+
+echo.
+echo All done.
+
+goto done
+
 :download
+echo.
+echo -^> Downloading packages...
+
 if not exist %TOOLS_DIR% mkdir %TOOLS_DIR%
 if exist %DOWNLOADS% del %DOWNLOADS%
 if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
@@ -269,7 +300,12 @@ rem wget --directory-prefix %TOOLS_DIR% --http-user=%SVN_USER% --ask-password -i
 
 del %DOWNLOADS%
 
-: install
+goto done
+
+:install
+echo.
+echo -^> Installing packages...
+
 if "%INSTALL_JDK6%" == "TRUE" (
 	call :install_jdk_6 "Oracle JDK 6" "%DOWNLOADS_DIR%\%JDK6_PACKAGE%" "%TOOLS_DIR%\jdk_6"
 )
@@ -308,7 +344,58 @@ call :install_package "%CONSOLE_EXPLODED%" "%CONSOLE_PACKAGE%" "%CONSOLE_EXPLODE
 
 call %WORK_DRIVE%:\setenv.bat
 
+goto :done
+
+:purge
+echo.
+echo -^> Purging disabled packages...
+if "%INSTALL_BABUN%" == "FALSE" (
+	call :uninstall_package "Babun" ".babun"
+)
+
+if "%INSTALL_TOMEE%" == "FALSE" (
+	call :install_package "TomEE" "%TOMEE_PACKAGE%" "%TOMEE_EXPLODED%" tomee
+)
+if "%INSTALL_WILDFLY%" == "TRUE" (
+	call :uninstall_package "Wildfly" "%WILDFLY_PACKAGE%"
+)
+if "%INSTALL_GLASSFISH%" == "FALSE" (
+	call :uninstall_package "Glassfish" "%GLASSFISH_PACKAGE%"
+)
+if "%INSTALL_SUBLIME%" == "FALSE" (
+	call :uninstall_package "Sublime" "%SUBLIME_PACKAGE%"
+)
+if "%INSTALL_SCALA%" == "FALSE" (
+	call :uninstall_package "Scala" "%SCALA_PACKAGE%"
+	call :uninstall_package "sbt" "%SBT_PACKAGE%"
+)
+
+if "%INSTALL_JDK6%" == "FALSE" (
+	call :uninstall_package "Oracle JDK 6" jdk_6
+)
+if "%INSTALL_JDK7%" == "FALSE" (
+	call :uninstall_package "Oracle JDK 7" jdk_7
+)
+if "%INSTALL_JDK8%" == "FALSE" (
+	call :uninstall_package "Oracle JDK 8" jdk_8
+)
+if "%INSTALL_JDK8_32%" == "FALSE" (
+	call :uninstall_package "Oracle JDK 8 32bit" jdk_8_32
+)
+
+echo.
 echo All done.
+
+goto :done
+
+:uninstall
+echo.
+echo -^> Uninstalling DevPack...
+
+
+echo.
+echo All done.
+
 goto :done
 
 rem -------------------------------------------------
@@ -321,8 +408,7 @@ set PACKAGE=%~2
 set UNZIPPED=%~3
 set TARGET=%~4
 if exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
-    echo Unpacking %NAME% to %TOOLS_DIR%\%TARGET%...
-	
+  echo Unpacking %NAME% to %TOOLS_DIR%\%TARGET%...
 	pushd %TOOLS_DIR%
 	
 	if "%UNZIPPED%" == "--create--" (
@@ -331,25 +417,57 @@ if exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
 	) else (
 		%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" >NUL
 	)
-    if not "%UNZIPPED%" == "??" (
-        if exist %UNZIPPED% if not exist %TARGET% (
-            echo Renaming %UNZIPPED% to %TARGET%
-            rename %UNZIPPED% %TARGET%
-            if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
-        )
-  )
+	
+	if not "%UNZIPPED%" == "??" (
+			if exist %UNZIPPED% if not exist %TARGET% (
+				echo Renaming %UNZIPPED% to %TARGET%
+				rename %UNZIPPED% %TARGET%
+				if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
+			)
+	)
 
   popd
+  goto done
 )
+echo Package %NAME% is already installed.
 goto done
 
+rem -------------------------------------------------
+rem Deinstallation routine
+rem Remove target folder.
+rem -------------------------------------------------
+:uninstall_package
+set NAME=%~1
+set TARGET=%~2
+if exist "%TOOLS_DIR%\%TARGET%" (
+  echo | set /p=Uninstalling %NAME%... 
+	pushd %TOOLS_DIR%
+	
+	rmdir /Q /S "%TARGET%"
+	echo done.
+
+  popd
+  goto done
+)
+echo Package %NAME% is not installed.
+goto done
+
+rem -------------------------------------------------
+rem Download routine
+rem Add download package to download list
+rem -------------------------------------------------
 :download_package
 set PACKAGE=%~1
 set PACKAGE_URL=%~2
 set TARGET=%~3
+echo | set /p=Package %NAME%... 
 if not exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
 	echo %PACKAGE_URL% >> %DOWNLOADS%
+	echo marked for download.
+	goto done
 )
+
+echo already available.
 goto done
 
 :install_jdk_6
@@ -357,7 +475,10 @@ set PACKAGE_NAME=%~1
 set PACKAGE=%~2
 set TARGET=%~3
 if not exist %PACKAGE% goto done
-if exist %TARGET% goto done
+if exist %TARGET% (
+	echo Package %PACKAGE_NAME% is already installed.
+	goto done
+)
 
 echo Installing %PACKAGE_NAME% ...
 echo ... extracting package ...
@@ -391,7 +512,10 @@ set PACKAGE_NAME=%~1
 set PACKAGE=%~2
 set TARGET=%~3
 if not exist %PACKAGE% goto done
-if exist %TARGET% goto done
+if exist %TARGET% (
+	echo Package %PACKAGE_NAME% is already installed.
+	goto done
+)
 
 echo Installing %PACKAGE_NAME% ...
 echo ... extracting package ...
