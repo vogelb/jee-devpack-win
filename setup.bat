@@ -93,14 +93,14 @@ set BABUN_EXPLODED=babun-1.2.0
 set BABUN_PACKAGE=babun-1.2.0-dist.zip
 set BABUN_FOLDER=.babun
 
-set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-windows-x64.exe
+set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u92-b14/jdk-8u92-windows-x64.exe
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK8_PACKAGE=jdk-8u60-windows-x64.exe
+set JDK8_PACKAGE=jdk-8u92-windows-x64.exe
 set JDK8_FOLDER=jdk_8
 
-set JDK8_32_URL=http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-windows-i586.exe
+set JDK8_32_URL=http://download.oracle.com/otn-pub/java/jdk/8u92-b14/jdk-8u92-windows-i586.exe
 set JDK8_32_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK8_32_PACKAGE=jdk-8u60-windows-i586.exe
+set JDK8_32_PACKAGE=jdk-8u92-windows-i586.exe
 set JDK8_32_FOLDER=jdk_8_32
 
 set JDK7_URL=http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-windows-x64.exe
@@ -115,7 +115,7 @@ set JDK6_FOLDER=jdk_6
 
 rem set ECLIPSE_URL=http://mirror.switch.ch/eclipse/technology/epp/downloads/release/luna/SR2/eclipse-jee-luna-SR2-win32-x86_64.zip
 set ECLIPSE_URL=http://mirror.switch.ch/eclipse/technology/epp/downloads/release/neon/M6/eclipse-jee-neon-M6-win32-x86_64.zip
-set ECLIPSE_EXPLODED=eclipse-jee-luna-SR2-win32-x86_64
+set ECLIPSE_EXPLODED=eclipse-jee-neon-M6-win32-x86_64
 set ECLIPSE_PACKAGE=%ECLIPSE_EXPLODED%.zip
 set ECLIPSE_FOLDER=eclipse
 
@@ -141,8 +141,8 @@ set GLASSFISH_PACKAGE=glassfish-4.1.zip
 set GLASSFISH_FOLDER=glassfish
 
 set NPP_URL=http://dl.notepad-plus-plus.org/downloads/6.x/6.7.5/npp.6.7.5.bin.zip
-set NPP_EXPLODED=npp.6.7.5.bin
-set NPP_PACKAGE=%NPP_EXPLODED%.zip
+set NPP_EXPLODED=--create--
+set NPP_PACKAGE=npp.6.7.5.bin.zip
 set NPP_FOLDER=npp
 
 set SUBLIME_URL=http://c758482.r82.cf2.rackcdn.com/Sublime Text 2.0.2 x64.zip

@@ -82,6 +82,8 @@ Tools:
 
 - Run `start_h2_database.bat` to start the H2 Database included in the wildfly package
 
+- Run `eclipse_settings` to store, backup or restore your eclipse settings. Settings will be stored in the devpack's conf folder.
+
 - Maven is started by typing `mvn` on the command line (wrapped by \bin\mvn.bat in order to pass the location of the configuration files)
 
 - You can edit a file in notepad++ / sublime by typing `edit <filename>` resp. `sublime <filename>` on the command line

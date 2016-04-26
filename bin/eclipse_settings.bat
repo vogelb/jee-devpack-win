@@ -10,12 +10,12 @@ if "%2" == "-w" set WORKSPACE_LOCATION=%3
 
 call :normalize_path %WORKSPACE_LOCATION% WORKSPACE_LOCATION
 
+if "%WORKSPACE_LOCATION%" == "" set WORKSPACE_LOCATION=%WORKSPACE%
+
 set SETTINGS_ROOT=%WORKSPACE_LOCATION%\.metadata\.plugins\
 set WORKBENCH_SETTINGS=%SETTINGS_ROOT%\org.eclipse.e4.workbench
 set RUNTIME_SETTINGS=%SETTINGS_ROOT%\org.eclipse.core.runtime
 
-rem if "%WORKSPACE_LOCATION%" == "." set WORKSPACE_LOCATION=%CD%
-rem if "%WORKSPACE_LOCATION%" == "" set WORKSPACE_LOCATION=%WORKSPACE%
 
 if "%COMMAND%" == "store" goto store_settings
 if "%COMMAND%" == "restore" goto restore_settings

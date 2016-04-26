@@ -11,7 +11,7 @@ echo %WORKSPACE% already exists. Please backup / delete / rename.
 goto workspace_done
 
 :create_workspace
-mkdir %WORKSPACE%
+mkdir %WORKSPACE%\.metadata
 
 :workspace_done
 
