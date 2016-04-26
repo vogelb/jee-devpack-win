@@ -16,14 +16,7 @@ mkdir %WORKSPACE%
 :workspace_done
 
 rem echo.
-rem echo Installing toolchains.xml...
-rem if not exist %HOMEDRIVE%%HOMEPATH%\.m2\toolchains.xml goto toolchains
-rem echo File %HOMEDRIVE%%HOMEPATH%\.m2\toolchains.xml already exists. Left it alone.
-rem goto svn_roots
-
-rem :toolchains
-rem copy %~dp0\conf\toolchains.xml %HOMEDRIVE%\%HOMEPATH%\.m2
-rem echo Copied toolchains.xml to %HOMEDRIVE%\%HOMEPATH%\.m2
+rem call %~dp0bin\install_maven_toolchain.bat
 
 rem Initialize SVN repositories for the new workspace.
 rem Copy %WORKSPACE%\.metadata\.plugins\org.tigris.subversion.subclipse.core\.svnProviderState to %CONF_DIR%/svn_roots to save your SVN repos.

@@ -3,8 +3,12 @@ rem ===================================================================
 rem JEE DevPack Configuration
 rem ===================================================================
 
-rem Load base config
-call %~dp0devbase.bat
+rem Load base config.
+if exist %~dp0devbase.bat call %~dp0devbase.bat
+
+if "%DEVPACK_BASE%" == "" (
+	set DEVPACK_BASE=c:\dev\devpack
+)
 
 rem Set the working drive letter here. The default is W.
 set WORK_DRIVE=W

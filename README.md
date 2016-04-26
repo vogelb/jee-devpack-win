@@ -1,6 +1,6 @@
-# Eclipse / TomEE based Java Enterprise Dev Pack for Windows
+# Eclipse based Java Enterprise Dev Pack for Windows
 
-This is a lightweight Java EE / Eclipse / TomEE [DevPack](http://blog.tknerr.de/blog/2014/10/09/devpack-philosophy-aka-works-on-your-machine/) for windows.
+This is a lightweight Java EE [DevPack](http://blog.tknerr.de/blog/2014/10/09/devpack-philosophy-aka-works-on-your-machine/) for windows.
 It includes standard packages needed to develop in such an environment and is based on a simple installation folder SUBSTed into a self contained work drive (no VM).
 
 
@@ -9,18 +9,18 @@ It includes standard packages needed to develop in such an environment and is ba
 The idea of the dev pack is to provide a self contained local development environment in a separate logical drive (W).
 The packages themselves are not included in the devPack but are downloaded during installation.
 
-The Dev Pack includes the following:
+The Dev Pack supports the following packages:
 - Oracle JDK 8 x64
-- Oracle JDK 8 x86 (optional)
-- Oracle JDK 7 + 6 (optional)
-- Scala and sbt (optional)
+- Oracle JDK 8 x86
+- Oracle JDK 7 + 6
+- Scala and sbt
 - Apache Maven
 - Eclipse JEE
 - TomEE Plus
-- RedHat WildFly (optional)
-- Oracle GlassFish (optional)
+- RedHat WildFly
+- Oracle GlassFish
 - Notepad++
-- Sublime Text (optional)
+- Sublime Text
 - 7-Zip
 - Some scripts to help you get going. All scripts are designed to work out of the explorer (double click).
 
@@ -38,19 +38,22 @@ The source code can be obtained here: www.7-zip.org
 
 	$ git clone https://github.com/vogelb/jee-devpack-win
 	
-### 2. Configure installation
+### 2. Configure installation and template
 	
-- Packages will be downloaded to w:\tools\downloads -- install.bat -> DOWNLOADS_DIR
+- Packages will be downloaded to w:\tools\downloads -- setup.bat -> DOWNLOADS_DIR
 
-- Installed packages will NOT be deleted            -- install.bat -> KEEP_PACKAGES
+- Installed packages will NOT be deleted            -- setup.bat -> KEEP_PACKAGES
 
-- Check the package versions in install.bat for updates.
+- Check the package versions in setup.bat for updates.
  
-- Check optional packages in install.bat.
+- Select a template or create a new one -- templates/default.bat.
 
 - Add additional or remove packages as required.  
 
-### 3. Run install.bat to download and install the software packages
+### 3. To download and install the configured software packages, run
+
+	$ setup.bat install
+	
 
 ### 4. Adapt the dev pack configuration to your needs
 
