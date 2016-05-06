@@ -255,7 +255,7 @@ if "%INSTALL_SCALA%" == "TRUE" (
 	call :download_package sbt "%SBT_PACKAGE%" "%SBT_URL%" %SBT_FOLDER%
 )
 
-if "%INSTALL_CONSLE%" == "TRUE" (
+if "%INSTALL_CONSOLE%" == "TRUE" (
 	call :download_package Console2 "%CONSOLE_PACKAGE%" "%CONSOLE_URL%" %CONSOLE_FOLDER%
 )
 
@@ -483,7 +483,13 @@ set UNZIPPED=!%NAME%_EXPLODED!
 set TARGET=!%NAME%_FOLDER!
 set VERSION=!%NAME%_VERSION!
 
-if exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
+if not exist "%TOOLS_DIR%\%TARGET%" (
+
+  if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+  	echo Error: Package %PACKAGE% was not downloaded!
+	goto done
+  )
+
   echo Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%...
 	pushd %TOOLS_DIR%
 	
