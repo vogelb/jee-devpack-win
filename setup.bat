@@ -56,16 +56,16 @@ call %TEMPLATE%
 
 rem ===== END OF PACKAGE CONFIGURATION =====
 
-
 rem Unmount mounted drive. Might be another instance!
 call %~dp0conf\devpack.bat
 
 rem If installation is started from running devpack, restart from base dir.
 if "%WORK_DRIVE%:" == "%~d0" (
 	echo Restarting installation from base dir %DEVPACK_BASE%...
+	echo on
 	cd /d %DEVPACK_BASE%
 	%DEVPACK_BASE%\setup.bat %*
-	goto EOF
+	goto :EOF
 )
 
 call %~dp0bin\w_unmount_drive.bat
@@ -114,13 +114,14 @@ set JDK6_PACKAGE=jdk-6u45-windows-x64.exe
 set JDK6_FOLDER=jdk_6
 
 rem set ECLIPSE_URL=http://mirror.switch.ch/eclipse/technology/epp/downloads/release/luna/SR2/eclipse-jee-luna-SR2-win32-x86_64.zip
-set ECLIPSE_URL=http://mirror.switch.ch/eclipse/technology/epp/downloads/release/neon/M6/eclipse-jee-neon-M6-win32-x86_64.zip
-set ECLIPSE_EXPLODED=eclipse-jee-neon-M6-win32-x86_64
+rem set ECLIPSE_URL=http://mirror.switch.ch/eclipse/technology/epp/downloads/release/neon/M6/eclipse-jee-neon-M6-win32-x86_64.zip
+set ECLIPSE_URL=http://www.mirrorservice.org/sites/download.eclipse.org/eclipseMirror/technology/epp/downloads/release/neon/R/eclipse-jee-neon-R-win32-x86_64.zip
+set ECLIPSE_EXPLODED=eclipse-jee-neon-R-win32-x86_64
 set ECLIPSE_PACKAGE=%ECLIPSE_EXPLODED%.zip
 set ECLIPSE_FOLDER=eclipse
 
-set MAVEN_URL=http://mirror.switch.ch/mirror/apache/dist/maven/maven-3/3.3.1/binaries/apache-maven-3.3.1-bin.zip
-set MAVEN_EXPLODED=apache-maven-3.3.1
+set MAVEN_URL=http://apache.mirror.iphh.net/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+set MAVEN_EXPLODED=apache-maven-3.3.9
 set MAVEN_PACKAGE=%MAVEN_EXPLODED%-bin.zip
 set MAVEN_FOLDER=mvn
 
@@ -140,9 +141,9 @@ set GLASSFISH_EXPLODED=glassfish-4
 set GLASSFISH_PACKAGE=glassfish-4.1.zip
 set GLASSFISH_FOLDER=glassfish
 
-set NPP_URL=http://dl.notepad-plus-plus.org/downloads/6.x/6.7.5/npp.6.7.5.bin.zip
+set NPP_URL=https://notepad-plus-plus.org/repository/6.x/6.9.2/npp.6.9.2.bin.zip
 set NPP_EXPLODED=--create--
-set NPP_PACKAGE=npp.6.7.5.bin.zip
+set NPP_PACKAGE=npp.6.9.2.bin.zip
 set NPP_FOLDER=npp
 
 set SUBLIME_URL=http://c758482.r82.cf2.rackcdn.com/Sublime Text 2.0.2 x64.zip
@@ -178,11 +179,16 @@ if "%COMMAND%" == "uninstall" goto uninstall
 echo.
 echo J2EE Devpack setup
 echo.
+echo Usage: setup [-t template] command
+echo.
 echo Available commands:
 echo   install   - Install DevPack / configured packages
 echo   download  - Only download packages
 echo   purge     - Remove disabled packages
 echo   uninstall - Uninstall DevPack
+echo.
+echo Available templates:
+dir /B templates
 
 goto done
 
@@ -611,7 +617,7 @@ pushd %DOWNLOADS_DIR%\JDK
 
 echo ... extracting tools ...
 %TOOLS_DIR%\7-Zip\7z x tools.zip >NUL
-rm tools.zip
+del tools.zip
 
 echo ... unpacking jars ...
 for /r %%x in (*.pack) do (

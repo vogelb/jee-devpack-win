@@ -31,3 +31,4 @@ rem set EDITOR=%WORK_DRIVE%:\tools\sublime\sublime_text.exe
 set EDITOR=%WORK_DRIVE%:\tools\npp\notepad++.exe
 
 rem The default SVN and GIT user name is the system account name.
+set SVN_USER=benno.vogel 
