@@ -202,7 +202,7 @@ findstr /m "SET SVN_USER" conf\devpack.bat > NUL
 if %errorlevel%==0 goto install_devpack_do
 set SVN_USER=%USERNAME%
 setlocal enabledelayedexpansion 
-for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L=l" "M=m" "N=n" "O=o" "P=p" "Q=q" "R=r" "S=s" "T=t" "U=u" "V=v" "W=w" "X=x" "Y=y" "Z=z" "Ã„=Ã¤" "Ã–=Ã¶" "Ãœ=Ã¼") do ( 
+for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L=l" "M=m" "N=n" "O=o" "P=p" "Q=q" "R=r" "S=s" "T=t" "U=u" "V=v" "W=w" "X=x" "Y=y" "Z=z" "Ä=ä" "Ö=ö" "Ü=ü") do ( 
     set "SVN_USER=!SVN_USER:%%~a!" 
 )
 echo set SVN_USER=%SVN_USER% >> conf\devpack.bat
@@ -226,43 +226,43 @@ if exist %DOWNLOADS% del %DOWNLOADS%
 if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 
 if "%INSTALL_MAVEN%" == "TRUE" (
-	call :download_package Maven "%MAVEN_PACKAGE%" "%MAVEN_URL%" %MAVEN_FOLDER%
+	call :download_package Maven MAVEN
 )
 
 if "%INSTALL_ECLIPSE%" == "TRUE" (
-	call :download_package Eclipse "%ECLIPSE_PACKAGE%" "%ECLIPSE_URL%" %ECLIPSE_FOLDER%
+	call :download_package Eclipse ECLIPSE
 )
 
 if "%INSTALL_BABUN%" == "TRUE" (
-	call :download_package Babun "%BABUN_PACKAGE%" "%BABUN_URL%" %BABUN_FOLDER%
+	call :download_package Babun BABUN
 )
 if "%INSTALL_TOMEE%" == "TRUE" (
-	call :download_package TomEE "%TOMEE_PACKAGE%" "%TOMEE_URL%" %TOMEE_FOLDER%
+	call :download_package TomEE TOMEE
 )
 if "%INSTALL_WILDFLY%" == "TRUE" (
-	call :download_package Widlfly "%WILDFLY_PACKAGE%" "%WILDFLY_URL%" %WILDFLY_FOLDER%
+	call :download_package Widlfly WILDFLY
 )
 if "%INSTALL_GLASSFISH%" == "TRUE" (
-	call :download_package Glassfish "%GLASSFISH_PACKAGE%" "%GLASSFISH_URL%" %GLASSFISH_FOLDER%
+	call :download_package Glassfish GLASSFISH
 )
 if "%INSTALL_NOTEPAD%" == "TRUE" (
-	call :download_package Notepad++ "%NPP_PACKAGE%" "%NPP_URL%" %NPP_FOLDER%
+	call :download_package Notepad++ NPP
 )
 
 if "%INSTALL_SUBLIME%" == "TRUE" (
-	call :download_package Sublime "%SUBLIME_PACKAGE%" "%SUBLIME_URL%" %SUBLIME_FOLDER%
+	call :download_package Sublime SUBLIME
 )
 if "%INSTALL_FORGE%" == "TRUE" (
-	call :download_package "JBoss Forge" "%FORGE_PACKAGE%" "%FORGE_URL%" %FORGE_FOLDER%
+	call :download_package "JBoss Forge" FORGE
 )
 
 if "%INSTALL_SCALA%" == "TRUE" (
-	call :download_package Scala "%SCALA_PACKAGE%" "%SCALA_URL%" %SCALA_FOLDER%
-	call :download_package sbt "%SBT_PACKAGE%" "%SBT_URL%" %SBT_FOLDER%
+	call :download_package Scala SCALA
+	call :download_package sbt SBT
 )
 
 if "%INSTALL_CONSOLE%" == "TRUE" (
-	call :download_package Console2 "%CONSOLE_PACKAGE%" "%CONSOLE_URL%" %CONSOLE_FOLDER%
+	call :download_package Console2 CONSOLE
 )
 
 :download_jdk6
@@ -353,7 +353,7 @@ if "%INSTALL_SUBLIME%" == "TRUE" (
 	call :install_package "Sublime" SUBLIME
 )
 if "%INSTALL_FORGE%" == "TRUE" (
-	call :install_package "JBoss Forge" "%FORGE_PACKAGE%" "%FORGE_EXPLODED%" forge
+	call :install_package "JBoss Forge" FORGE
 )
 if "%INSTALL_SCALA%" == "TRUE" (
 	call :install_package "Scala" SCALA
@@ -491,10 +491,10 @@ set VERSION=!%NAME%_VERSION!
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
 
-  if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
-  	echo Error: Package %PACKAGE% was not downloaded!
-	goto done
-  )
+	if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+		echo Error: Package %PACKAGE% was not downloaded!
+		goto done
+	)
 
   echo Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%...
 	pushd %TOOLS_DIR%
@@ -550,11 +550,16 @@ rem Download routine
 rem Add download package to download list
 rem -------------------------------------------------
 :download_package
-set NAME=%~1
-set PACKAGE=%~2
-set PACKAGE_URL=%~3
-set TARGET=%~4
-echo | set /p=Package %NAME%... 
+set OPTION=%~1
+set NAME=%~2
+setlocal enabledelayedexpansion
+set PACKAGE=!%NAME%_PACKAGE!
+set PACKAGE_URL=!%NAME%_URL!
+set UNZIPPED=!%NAME%_EXPLODED!
+set TARGET=!%NAME%_FOLDER!
+set VERSION=!%NAME%_VERSION!
+
+echo | set /p=Package %OPTION%... 
 if not exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
 	echo %PACKAGE_URL% >> %DOWNLOADS%
 	echo marked for download.

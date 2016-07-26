@@ -20,7 +20,7 @@ rem Set to TRUE if you want Eclipse installed
 set INSTALL_ECLIPSE=TRUE
 
 rem Set to TRUE if you want Notepad++ installed
-set INSTALL_NOTEPAD=FALSE
+set INSTALL_NOTEPAD=TRUE
 
 rem Set to TRUE if you want Java 8 installed
 set INSTALL_JDK8=TRUE
@@ -55,4 +55,4 @@ rem Set to TRUE if you want to install babun (cygwin shell)
 set INSTALL_BABUN=FALSE
 
 rem Set to TRUE if you want Console2 installed
-set INSTALL_CONSOLE=FALSE
+set INSTALL_CONSOLE=TRUE

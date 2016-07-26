@@ -7,6 +7,6 @@ start /b %TOOLS_DIR%\console\console %*
 goto done
 
 :cmd_shell
-start cmd
+start cmd %*
 
 :done
