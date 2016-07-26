@@ -17,8 +17,12 @@ set INSTALL_MAVEN=TRUE
 rem Set to TRUE if you want JBoss Forge installed
 set INSTALL_FORGE=FALSE
 
-rem Set to TRUE if you want Eclipse installed
-set INSTALL_ECLIPSE=TRUE
+rem Select Eclipse installation
+rem   FALSE: Dont install eclipse
+rem   EE: Install Eclipse for Java EE developers
+rem   JAVA: Install Eclipse for Java developers
+rem   CPP: Install Eclipse for C/C++ developers
+set INSTALL_ECLIPSE=EE
 
 rem Set to TRUE if you want Notepad++ installed
 set INSTALL_NOTEPAD=TRUE

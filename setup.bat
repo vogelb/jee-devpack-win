@@ -50,19 +50,12 @@ set COMMAND=%1
 
 if not exist %TEMPLATE% echo. && echo Template %TEMPLATE% not found. && echo Exiting... && goto done
 
-rem ===== PACKAGE CONFIGURATION STARTS HERE =====
-
-call %TEMPLATE%
-
-rem ===== END OF PACKAGE CONFIGURATION =====
-
 rem Unmount mounted drive. Might be another instance!
 call %~dp0conf\devpack.bat
 
 rem If installation is started from running devpack, restart from base dir.
 if "%WORK_DRIVE%:" == "%~d0" (
 	echo Restarting installation from base dir %DEVPACK_BASE%...
-	echo on
 	cd /d %DEVPACK_BASE%
 	%DEVPACK_BASE%\setup.bat %*
 	goto :EOF
@@ -114,14 +107,23 @@ set JDK6_PACKAGE=jdk-6u45-windows-x64.exe
 set JDK6_FOLDER=jdk_6
 
 rem set ECLIPSE_URL=http://mirror.switch.ch/eclipse/technology/epp/downloads/release/luna/SR2/eclipse-jee-luna-SR2-win32-x86_64.zip
-rem set ECLIPSE_URL=http://mirror.switch.ch/eclipse/technology/epp/downloads/release/neon/M6/eclipse-jee-neon-M6-win32-x86_64.zip
-set ECLIPSE_URL=http://www.mirrorservice.org/sites/download.eclipse.org/eclipseMirror/technology/epp/downloads/release/neon/R/eclipse-jee-neon-R-win32-x86_64.zip
-set ECLIPSE_EXPLODED=eclipse-jee-neon-R-win32-x86_64
-set ECLIPSE_PACKAGE=%ECLIPSE_EXPLODED%.zip
-set ECLIPSE_FOLDER=eclipse
+set ECLIPSE_EE_URL=http://mirror.switch.ch/eclipse/technology/epp/downloads/release/neon/M6/eclipse-jee-neon-M6-win32-x86_64.zip
+set ECLIPSE_EE_EXPLODED=eclipse-jee-neon-M6-win32-x86_64
+set ECLIPSE_EE_PACKAGE=%ECLIPSE_EXPLODED%.zip
+set ECLIPSE_EE_FOLDER=eclipse_ee
 
-set MAVEN_URL=http://apache.mirror.iphh.net/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
-set MAVEN_EXPLODED=apache-maven-3.3.9
+set ECLIPSE_JAVA_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/neon/R/eclipse-java-neon-R-win32-x86_64.zip
+set ECLIPSE_JAVA_EXPLODED=eclipse-java-neon-R-win32-x86_64
+set ECLIPSE_JAVA_PACKAGE=%ECLIPSE_EXPLODED%.zip
+set ECLIPSE_JAVA_FOLDER=eclipse_java
+
+set ECLIPSE_CPP_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/neon/R/eclipse-cpp-neon-R-win32-x86_64.zip
+set ECLIPSE_CPP_EXPLODED=eclipse-cpp-neon-R-win32-x86_64
+set ECLIPSE_CPP_PACKAGE=%ECLIPSE_EXPLODED%.zip
+set ECLIPSE_CPP_FOLDER=eclipse_cpp
+
+set MAVEN_URL=http://mirror.switch.ch/mirror/apache/dist/maven/maven-3/3.3.1/binaries/apache-maven-3.3.1-bin.zip
+set MAVEN_EXPLODED=apache-maven-3.3.1
 set MAVEN_PACKAGE=%MAVEN_EXPLODED%-bin.zip
 set MAVEN_FOLDER=mvn
 
@@ -170,6 +172,12 @@ set CONSOLE_URL=http://downloads.sourceforge.net/project/console/console-devel/2
 set CONSOLE_EXPLODED=Console2
 set CONSOLE_PACKAGE=Console-2.00b148-Beta_32bit.zip
 set CONSOLE_FOLDER=console
+
+rem ===== PACKAGE CONFIGURATION STARTS HERE =====
+
+call %TEMPLATE%
+
+rem ===== END OF PACKAGE CONFIGURATION =====
 
 if "%COMMAND%" == "install" goto install_devpack
 if "%COMMAND%" == "download" goto download
@@ -229,8 +237,8 @@ if "%INSTALL_MAVEN%" == "TRUE" (
 	call :download_package Maven MAVEN
 )
 
-if "%INSTALL_ECLIPSE%" == "TRUE" (
-	call :download_package Eclipse ECLIPSE
+if "%INSTALL_ECLIPSE_EE%" == "TRUE" (
+	call :download_package "Eclipse EE" ECLIPSE_EE
 )
 
 if "%INSTALL_BABUN%" == "TRUE" (
@@ -333,8 +341,14 @@ if "%INSTALL_MAVEN%" == "TRUE" (
 	call :install_package "Maven" "MAVEN"
 )
 
-if "%INSTALL_ECLIPSE%" == "TRUE" (
-	call :install_package "Eclipse JEE Luna" ECLIPSE
+if "%INSTALL_ECLIPSE%" == "EE" (
+	call :install_package "Eclipse EE" ECLIPSE_EE
+)
+if "%INSTALL_ECLIPSE%" == "JAVA" (
+	call :install_package "Eclipse Java" ECLIPSE_JAVA
+)
+if "%INSTALL_ECLIPSE%" == "CPP" (
+	call :install_package "Eclipse C/C++" ECLIPSE_CPP
 )
 
 if "%INSTALL_TOMEE%" == "TRUE" (
