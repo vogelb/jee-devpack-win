@@ -1,1 +1,13 @@
-/tools/downloads
+/downloads
+/workspace
+/conf/devbase.bat
+/mvn-repo
+/conf/eclipse-settings.zip
+/tools/console/
+/tools/eclipse/
+/tools/forge/
+/tools/jdk_8/
+/tools/mvn/
+/tools/npp/
+/tools/tomee/
+/tools/wildfly/
