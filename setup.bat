@@ -667,9 +667,13 @@ echo done.
 
 echo | set /p=copying files... 
 xcopy /E %DOWNLOADS_DIR%\JDK\tools %TARGET%\ >NUL
+echo done.
+
+echo | set /p=cleaning up... 
 rmdir /S /Q %DOWNLOADS_DIR%\JDK >NUL
 if not "%KEEP_PACKAGES%" == "TRUE" del %PACKAGE%
 echo done.
+echo Install package %OPTION% done.
 echo.
 exit /B
 
@@ -695,7 +699,7 @@ if exist %TOOLS_DIR%\%TARGET% (
 )
 
 echo installing now.
-echo | set /p=extracting package... 
+echo extracting package... 
 PING 127.0.0.1 -n 3 >NUL
 
 call bin\extract_installer %DOWNLOADS_DIR% %PACKAGE%
@@ -704,7 +708,7 @@ IF %ERRORLEVEL% NEQ 0 (
   call :install_jdk_old %PACKAGE_SPEC%
   exit /B
 )
-echo done.
+echo extract package done.
 
 pushd %DOWNLOADS_DIR%\extract
 
@@ -720,12 +724,15 @@ for /r %%x in (*.pack) do (
 echo done.
 popd
 
-echo | set /p=copying files...
-echo xcopy /E %DOWNLOADS_DIR%\extract %TOOLS_DIR%\%TARGET%\ >NUL
+echo | set /p=copying files... 
 xcopy /E %DOWNLOADS_DIR%\extract %TOOLS_DIR%\%TARGET%\ >NUL
-rem rmdir /S /Q %DOWNLOADS_DIR%\extract >NUL
+echo done.
+
+echo | set /p=cleaning up... 
+rmdir /S /Q %DOWNLOADS_DIR%\extract >NUL
 if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
 echo done.
+echo Install package %OPTION% done.
 echo.
 exit /B
 
