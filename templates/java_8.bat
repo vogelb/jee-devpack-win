@@ -18,7 +18,7 @@ rem Set to TRUE if you want JBoss Forge installed
 set INSTALL_FORGE=FALSE
 
 rem Set to TRUE if you want Eclipse installed
-set INSTALL_ECLIPSE=TRUE
+set INSTALL_ECLIPSE=JAVA
 
 rem Set to TRUE if you want Notepad++ installed
 set INSTALL_NOTEPAD=TRUE
