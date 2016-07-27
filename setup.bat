@@ -720,12 +720,16 @@ for /r %%x in (*.pack) do (
 echo done.
 popd
 
-echo | set /p=copying files...
-echo xcopy /E %DOWNLOADS_DIR%\extract %TOOLS_DIR%\%TARGET%\ >NUL
+echo | set /p=copying files... 
 xcopy /E %DOWNLOADS_DIR%\extract %TOOLS_DIR%\%TARGET%\ >NUL
-rem rmdir /S /Q %DOWNLOADS_DIR%\extract >NUL
+echo done.
+
+echo | set /p=cleaning up... 
+rmdir /S /Q %DOWNLOADS_DIR%\extract >NUL
 if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
 echo done.
+echo.
+echo Install package %OPTION% done.
 echo.
 exit /B
 
