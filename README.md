@@ -1,6 +1,6 @@
-# Eclipse / TomEE based Java Enterprise Dev Pack for Windows
+# Eclipse based Java Enterprise Dev Pack for Windows
 
-This is a lightweight Java EE / Eclipse / TomEE [DevPack](http://blog.tknerr.de/blog/2014/10/09/devpack-philosophy-aka-works-on-your-machine/) for windows.
+This is a lightweight Java EE [DevPack](http://blog.tknerr.de/blog/2014/10/09/devpack-philosophy-aka-works-on-your-machine/) for windows.
 It includes standard packages needed to develop in such an environment and is based either on an installation into a virtual HD or a substed folder mounted as working drive (no VM).
 Use of a VHD is the default setting as it improves compatibility with virus checkers and some development tools that have issues with substed drives.
 
@@ -9,13 +9,13 @@ Use of a VHD is the default setting as it improves compatibility with virus chec
 The idea of the dev pack is to provide a self contained local development environment in a separate logical drive (W).
 The packages themselves are not included in the devPack but are downloaded during installation.
 
-The Dev Pack includes the following:
+The Dev Pack supports the following packages:
 - Oracle JDK 8 x64
 - Oracle JDK 8 x86 (optional)
 - Oracle JDK 7 + 6 (optional)
 - Scala and sbt (optional)
 - Apache Maven
-- Eclipse JEE
+- Eclipse JEE, Java or C/C++ IDE
 - TomEE Plus
 - RedHat WildFly (optional)
 - Oracle GlassFish (optional)
@@ -24,7 +24,11 @@ The Dev Pack includes the following:
 - 7-Zip
 - Some scripts to help you get going. All scripts are designed to work out of the explorer (double click).
 
-## Use of 7-Zip
+
+## Acknowledgements
+"Eclipse" and the Eclipse logo are trademarks of the Eclipse Foundation.
+
+### Use of 7-Zip
 
 The devpack ships with a version of 7-Zip that is used for the portable installation of Oracle JDK.
 
@@ -38,7 +42,7 @@ The source code can be obtained here: www.7-zip.org
 
 	$ git clone https://github.com/vogelb/jee-devpack-win
 	
-### 2. Configure installation
+### 2. Configure installation and template
 	
 - Select whether or not you want a VHD to be created for your dev pack  -- conf/devpack.bat -> DEVPACK_VHD
 	
@@ -53,6 +57,9 @@ The source code can be obtained here: www.7-zip.org
 - Add additional or remove packages as required.  
 
 ### 3. Run setup.bat to download and install the software packages
+
+	$ setup.bat install
+	
 
 ### 4. Adapt the dev pack configuration to your needs
 
@@ -71,7 +78,7 @@ Always work on the configured drive because all settings rely on that.
 
 Tools:
 
-- Run `init_workspace.bat` to create your eclipse workspace. By default, is does not really do much but there are some templates provided to tailor the workspace to your needs.
+- Run `init_workspace.bat` to create your Eclipse workspace. By default, is does not really do much but there are some templates provided to tailor the workspace to your needs.
 
 - Run `start_eclipse.bat` to start the Eclipse IDE.
 
@@ -80,6 +87,8 @@ Tools:
 - Run `start_cygwin_shell.bat` to start a cygwin shell with the correct environment. Requires cygwin to be installed in c:\cygwin.
 
 - Run `start_h2_database.bat` to start the H2 Database included in the wildfly package
+
+- Run `eclipse_settings` to store, backup or restore your Eclipse settings. Settings will be stored in the devpack's conf folder.
 
 - Maven is started by typing `mvn` on the command line (wrapped by \bin\mvn.bat in order to pass the location of the configuration files)
 

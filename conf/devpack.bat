@@ -3,8 +3,12 @@ rem ===================================================================
 rem JEE DevPack Configuration
 rem ===================================================================
 
-rem Load base config
-call %~dp0devbase.bat
+rem Load base config.
+if exist %~dp0devbase.bat call %~dp0devbase.bat
+
+if "%DEVPACK_BASE%" == "" (
+	set DEVPACK_BASE=c:\dev\devpack
+)
 
 rem Use virtual harddisk
 rem Set to true to install DevPack in a virtual disk
@@ -31,4 +35,3 @@ rem set EDITOR=%WORK_DRIVE%:\tools\sublime\sublime_text.exe
 set EDITOR=%WORK_DRIVE%:\tools\npp\notepad++.exe
 
 rem The default SVN and GIT user name is the system account name.
-set SVN_USER=benno vogel 
