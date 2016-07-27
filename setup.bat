@@ -734,8 +734,6 @@ if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
 echo done.
 echo Install package %OPTION% done.
 echo.
-echo Install package %OPTION% done.
-echo.
 exit /B
 
 :install_jdk_old
