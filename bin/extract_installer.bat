@@ -25,7 +25,6 @@ taskkill /F /IM %INSTALLER% /T >NUL 2>&1
 
 setlocal enableextensions
 set count=0
-rem for %%x in (dir %EXTRACT%\*.msi ) do set /a count+=1
 for /R %EXTRACT% %%x in (*.msi, *.cab ) do set /a count+=1
 echo got %count% files.
 if %count% NEQ 0 goto UNPACK
