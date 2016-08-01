@@ -96,9 +96,9 @@ set BABUN_PACKAGE=babun-1.2.0-dist.zip
 set BABUN_FOLDER=.babun
 
 set JDK8_NAME="Oracle JDK 8"
-set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u92-b14/jdk-8u92-windows-x64.exe
+set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u102-b14/jdk-8u102-windows-x64.exe
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK8_PACKAGE=jdk-8u92-windows-x64.exe
+set JDK8_PACKAGE=jdk-8u102-windows-x64.exe
 set JDK8_FOLDER=jdk_8
 
 set JDK8_32_NAME="Oracle JDK 8 32bit"
@@ -707,13 +707,14 @@ if exist %TOOLS_DIR%\%TARGET% (
 )
 
 echo installing now.
+
 echo extracting package... 
 PING 127.0.0.1 -n 3 >NUL
 
 call bin\extract_installer %DOWNLOADS_DIR% %PACKAGE%
 IF %ERRORLEVEL% NEQ 0 (
   echo error. Extracting the old way...
-  call :install_jdk_old %PACKAGE_SPEC%
+  call :install_jdk_without_source %PACKAGE_SPEC%
   exit /B
 )
 echo extract package done.
@@ -744,8 +745,8 @@ echo Install package %OPTION% done.
 echo.
 exit /B
 
-:install_jdk_old
-set PACKAGE_SPEC=%~1
+:install_jdk_without_source
+set PACKAGE_SPEC=%1
 setlocal enabledelayedexpansion
 set OPTION=!%PACKAGE_SPEC%_NAME!
 set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
@@ -769,11 +770,16 @@ if exist %TOOLS_DIR%\%TARGET% (
 
 echo Installing %PACKAGE_NAME% ...
 echo ... extracting package ...
-%TOOLS_DIR%\7-Zip\7z e -y %DOWNLOADS_DIR%\%PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
+%TOOLS_DIR%\7-Zip\7z x -y %DOWNLOADS_DIR%\%PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
 pushd %DOWNLOADS_DIR%\JDK
 
 echo ... extracting tools ...
 %TOOLS_DIR%\7-Zip\7z x tools.zip >NUL
+if errorlevel 1 (
+	echo.
+	echo Error extracting files. Installation aborted.
+	exit /B
+)
 del tools.zip
 
 echo ... unpacking jars ...
@@ -783,7 +789,7 @@ for /r %%x in (*.pack) do (
 popd
 
 echo ... copying files ...
-xcopy /E %DOWNLOADS_DIR%\JDK %TOOLS_DIR%\%TARGET%\ >NUL
+xcopy /E %DOWNLOADS_DIR%\JDK %TOOLS_DIR%\%TARGET% >NUL
 rmdir /S /Q %DOWNLOADS_DIR%\JDK >NUL
 if not "%KEEP_PACKAGES%" == "TRUE" del %DOWNLOADS_DIR%\%PACKAGE%
 echo ... done.
