@@ -54,7 +54,14 @@ The source code can be obtained here: www.7-zip.org
 
 	$ setup.bat install
 	
+This will install the packages defined in the default template.
 
+	$ setup.bat -t java_8 install
+	
+Will install the Java 8 template.
+
+	
+	
 ### 4. Adapt the dev pack configuration to your needs
 
 - Working drive is w:\                              -- conf/devpack.bat -> WORK_DRIVE
