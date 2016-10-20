@@ -12,7 +12,7 @@ if "%DEVPACK_BASE%" == "" (
 
 rem Use virtual harddisk
 rem Set to true to install DevPack in a virtual disk
-set DEVPACK_VHD=TRUE
+set DEVPACK_VHD=FALSE
 
 rem Set the working drive letter here. The default is W.
 set WORK_DRIVE=W

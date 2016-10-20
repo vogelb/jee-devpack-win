@@ -3,5 +3,6 @@ rem *******************************************************
 rem Open the JEE DevPack Folder
 rem Mount it if not already mounted
 rem *******************************************************
-call bin\w_mount_drive.bat
+call %~dp0bin\w_mount_drive.bat
+if errorlevel 1 goto :EOF
 explorer %WORK_DRIVE%:\

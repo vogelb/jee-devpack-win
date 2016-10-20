@@ -11,3 +11,5 @@
 /tools/npp/
 /tools/tomee/
 /tools/wildfly/
+/bin/mount_devpack.dps
+/bin/unmount_devpack.dps
