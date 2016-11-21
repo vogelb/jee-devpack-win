@@ -15,7 +15,6 @@ alias dir="ls -alF --color=auto"
 alias mci="mvn clean install"
 alias mcp="mvn clean package"
 
-
 ################## START GIT PROMPT ##############################
 RED="\033[0;31m"
 GREEN="\033[0;32m"
