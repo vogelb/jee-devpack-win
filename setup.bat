@@ -15,7 +15,7 @@ rem - JBoss Forge
 rem ===================================================================
 
 rem Set DOWNLOADS_DIR in order to reuse existing downloads  
-set DOWNLOADS_DIR=%~dp0downloads
+set DOWNLOADS_DIR=d:\download\devpack
 
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
@@ -164,9 +164,10 @@ set GLASSFISH_PACKAGE=glassfish-4.1.zip
 set GLASSFISH_FOLDER=glassfish
 
 set NPP_NAME="Notepad++"
-set NPP_URL=https://notepad-plus-plus.org/repository/6.x/6.9.2/npp.6.9.2.bin.zip
+#set NPP_URL=https://notepad-plus-plus.org/repository/6.x/6.9.2/npp.6.9.2.bin.zip
+NPP_URL=https://notepad-plus-plus.org/repository/7.x/7.2.1/npp.7.2.1.bin.x64.zip
 set NPP_EXPLODED=--create--
-set NPP_PACKAGE=npp.6.9.2.bin.zip
+set NPP_PACKAGE=npp.7.2.1.bin.x64.zip
 set NPP_FOLDER=npp
 
 set SUBLIME_NAME="Sublime Text"
