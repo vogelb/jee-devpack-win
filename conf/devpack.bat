@@ -34,5 +34,8 @@ rem Configure your favourite editor here
 rem set EDITOR=%WORK_DRIVE%:\tools\sublime\sublime_text.exe
 set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\npp\notepad++.exe
 
+rem Set your Cygwin home to enable cygwin integration
+set CYGWIN_HOME=c:\cygwin
+
 rem The default SVN and GIT user name is the system account name.
 set SVN_USER=benno.vogel 
