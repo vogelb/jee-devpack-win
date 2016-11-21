@@ -3,4 +3,4 @@ rem ************************************************
 rem JEE DevPack: Start editor
 rem ************************************************
 
-start %EDITOR% %*
+start %DEVPACK_EDITOR% %*
