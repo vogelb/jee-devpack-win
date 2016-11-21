@@ -20,8 +20,14 @@ set DOWNLOADS_DIR=%~dp0downloads
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
 
-set TEMPLATE=templates\default.bat
+if exist conf\template.bat call conf\template.bat
+if not "%SELECTED_TEMPLATE%" == "" (
+	set TEMPLATE=%SELECTED_TEMPLATE%
+) else (
+	set TEMPLATE=templates\default.bat
+)
 set DEBUG=FALSE
+set TAB=	
 
 :get_commandline
 if "%1" == "-debug" goto debug_found
@@ -40,7 +46,6 @@ goto done_commandline
 :template_found
   shift
 	set TEMPLATE=templates\%1.bat
-	echo Using template %TEMPLATE%...
 	shift
 	goto get_commandline
 
@@ -49,6 +54,10 @@ goto done_commandline
 set COMMAND=%1
 
 if not exist %TEMPLATE% echo. && echo Template %TEMPLATE% not found. && echo Exiting... && goto done
+
+echo Using template %TEMPLATE%...
+	
+echo set SELECTED_TEMPLATE=%TEMPLATE%>conf\template.bat
 
 rem Unmount mounted drive. Might be another instance!
 call %~dp0conf\devpack.bat
@@ -81,19 +90,19 @@ set WGET_OPTIONS=--no-check-certificate --no-cookies
 
 set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
 
-set BABUN_NAME=Babun
+set BABUN_NAME="Babun"
 set BABUN_URL=https://bintray.com/artifact/download/tombujok/babun/babun-1.2.0-dist.zip
 set BABUN_EXPLODED=babun-1.2.0
 set BABUN_PACKAGE=babun-1.2.0-dist.zip
 set BABUN_FOLDER=.babun
 
 set JDK8_NAME="Oracle JDK 8"
-set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u92-b14/jdk-8u92-windows-x64.exe
+set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u102-b14/jdk-8u102-windows-x64.exe
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK8_PACKAGE=jdk-8u92-windows-x64.exe
+set JDK8_PACKAGE=jdk-8u102-windows-x64.exe
 set JDK8_FOLDER=jdk_8
 
-set JDK8_32_NAME="Oracle JDK 8 32bit"
+set JDK8_32_NAME="Oracle JDK 8x32"
 set JDK8_32_URL=http://download.oracle.com/otn-pub/java/jdk/8u92-b14/jdk-8u92-windows-i586.exe
 set JDK8_32_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
 set JDK8_32_PACKAGE=jdk-8u92-windows-i586.exe
@@ -196,6 +205,7 @@ call %TEMPLATE%
 
 rem ===== END OF PACKAGE CONFIGURATION =====
 
+if "%COMMAND%" == "info" goto info
 if "%COMMAND%" == "install" goto install_devpack
 if "%COMMAND%" == "download" goto download
 if "%COMMAND%" == "purge" goto purge
@@ -207,6 +217,7 @@ echo.
 echo Usage: setup [-t template] command
 echo.
 echo Available commands:
+echo   info      - Show currently installed packages
 echo   install   - Install DevPack / configured packages
 echo   download  - Only download packages
 echo   purge     - Remove disabled packages
@@ -354,6 +365,59 @@ rem wget --directory-prefix %TOOLS_DIR% --http-user=%SVN_USER% --ask-password -i
 %WGET% %WGET_OPTIONS% --directory-prefix %DOWNLOADS_DIR% -i %DOWNLOADS%
 
 del %DOWNLOADS%
+
+exit /B
+
+:strlen <resultVar> <stringVar>
+(   
+    setlocal EnableDelayedExpansion
+    set "s=!%~2!#"
+    set "len=0"
+    for %%P in (4096 2048 1024 512 256 128 64 32 16 8 4 2 1) do (
+        if "!s:~%%P,1!" NEQ "" ( 
+            set /a "len+=%%P"
+            set "s=!s:~%%P!"
+        )
+    )
+)
+( 
+    endlocal
+    set "%~1=%len%"
+    exit /b
+)
+
+:info
+echo.
+echo Setup Information
+echo =================
+if exist conf\template.bat (
+  echo Currently installed template: %TEMPLATE%
+  echo.
+  echo Base path: %DEVPACK_BASE%
+  echo Workdrive: %WORK_DRIVE%
+) else (
+  echo DevPack is currently not installed!
+  echo.
+  echo Selected template: %TEMPLATE%
+)
+echo.
+echo Package Status:
+echo.
+call :query_package JDK6
+call :query_package JDK7
+call :query_package JDK8
+call :query_package JDK8_32
+call :query_package MAVEN
+call :query_package ECLIPSE
+call :query_package TOMEE
+call :query_package WILDFLY
+call :query_package GLASSFISH
+call :query_package NPP
+call :query_package SUBLIME
+call :query_package FORGE
+call :query_package SCALA
+call :query_package BABUN
+call :query_package CONSOLE
 
 exit /B
 
@@ -521,6 +585,36 @@ echo -^> Uninstalling DevPack...
 
 echo.
 echo All done.
+
+exit /B
+
+
+:query_package
+set PACKAGE_SPEC=%~1
+setlocal enabledelayedexpansion
+set OPTION=!%PACKAGE_SPEC%_NAME!
+set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
+set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
+set TARGET=!%PACKAGE_SPEC%_FOLDER!
+set VERSION=!%PACKAGE_SPEC%_VERSION!
+echo | set /p=Package %OPTION%:%TAB%
+
+call :strlen OPTION_LEN OPTION 
+if %OPTION_LEN% LEQ 16 (
+	echo | set /p"=%TAB%"
+)
+
+echo | set /p=selected=!INSTALL_%PACKAGE_SPEC%!,%TAB%	
+
+if not exist "%TOOLS_DIR%\%TARGET%" (
+	echo | set /p=not installed,%TAB%
+	if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+		echo | set /p=not 
+	)
+	echo downloaded.
+) else (
+	echo installed.
+)
 
 exit /B
 
@@ -699,13 +793,15 @@ if exist %TOOLS_DIR%\%TARGET% (
 )
 
 echo installing now.
+
 echo extracting package... 
 PING 127.0.0.1 -n 3 >NUL
 
 call bin\extract_installer %DOWNLOADS_DIR% %PACKAGE%
 IF %ERRORLEVEL% NEQ 0 (
-  echo error. Extracting the old way...
-  call :install_jdk_old %PACKAGE_SPEC%
+  echo.
+  echo Error in installer based installation. Extracting the old way...
+  call :install_jdk_without_source %PACKAGE_SPEC%
   exit /B
 )
 echo extract package done.
@@ -725,7 +821,7 @@ echo done.
 popd
 
 echo | set /p=copying files... 
-xcopy /E %DOWNLOADS_DIR%\extract %TOOLS_DIR%\%TARGET%\ >NUL
+xcopy /E /I /Y %DOWNLOADS_DIR%\extract %TOOLS_DIR%\%TARGET%\ >NUL
 echo done.
 
 echo | set /p=cleaning up... 
@@ -736,8 +832,8 @@ echo Install package %OPTION% done.
 echo.
 exit /B
 
-:install_jdk_old
-set PACKAGE_SPEC=%~1
+:install_jdk_without_source
+set PACKAGE_SPEC=%1
 setlocal enabledelayedexpansion
 set OPTION=!%PACKAGE_SPEC%_NAME!
 set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
@@ -748,8 +844,7 @@ set VERSION=!%PACKAGE_SPEC%_VERSION!
 
 echo | set /p=Package %OPTION%... 
 
-if not exist %DOWNLOADS_DIR%\%PACKAGE% 
-(
+if not exist %DOWNLOADS_DIR%\%PACKAGE% (
 	echo Error: Package %PACKAGE% was not downloaded!
 	exit /B
 )
@@ -761,21 +856,39 @@ if exist %TOOLS_DIR%\%TARGET% (
 
 echo Installing %PACKAGE_NAME% ...
 echo ... extracting package ...
-%TOOLS_DIR%\7-Zip\7z e -y %DOWNLOADS_DIR%\%PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
+%TOOLS_DIR%\7-Zip\7z x -y %DOWNLOADS_DIR%\%PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
 pushd %DOWNLOADS_DIR%\JDK
 
+echo ... extracting cab files ...
+for /d /r %%x in (JAVA_CAB*) do (
+	echo ... - extracting %%x...
+	for %%y in (%%x\*.*) do (
+		%TOOLS_DIR%\7-Zip\7z x -y %%y >NUL
+	)
+)
+
 echo ... extracting tools ...
-%TOOLS_DIR%\7-Zip\7z x tools.zip >NUL
+%TOOLS_DIR%\7-Zip\7z x -y tools.zip >NUL
+if errorlevel 1 (
+	echo.
+	echo Error extracting files. Installation aborted.
+	exit /B
+)
 del tools.zip
 
 echo ... unpacking jars ...
 for /r %%x in (*.pack) do (
+    echo ... - unpacking %%x ...
 	.\bin\unpack200 -r %%x %%~dx%%~px%%~nx.jar >NUL
 )
+
+echo ... cleaning up ...
+del .data .pdata .rdata .reloc .text CERTIFICATE
+rmdir /S /Q .rsrc >NUL
 popd
 
 echo ... copying files ...
-xcopy /E %DOWNLOADS_DIR%\JDK %TOOLS_DIR%\%TARGET%\ >NUL
+xcopy /E /I /Y %DOWNLOADS_DIR%\JDK %TOOLS_DIR%\%TARGET% >NUL
 rmdir /S /Q %DOWNLOADS_DIR%\JDK >NUL
 if not "%KEEP_PACKAGES%" == "TRUE" del %DOWNLOADS_DIR%\%PACKAGE%
 echo ... done.

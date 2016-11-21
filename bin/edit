@@ -3,4 +3,4 @@
 # JEE DevPack: Start editor
 # ************************************************
 
-$(cygpath $EDITOR) $*
+$(cygpath $DEVPACK_EDITOR) $*
