@@ -11,4 +11,4 @@ if not exist %CYGWIN_HOME% (
 
 rem start shell
 set CHERE_INVOKING=1
-%CYGWIN_HOME%\bin\bash --init-file /cygdrive/%WORK_DRIVE%/conf/bash.profile -l
+%CYGWIN_HOME%\bin\bash.exe -l -c "exec bash --init-file /cygdrive/%WORK_DRIVE%/conf/bash.profile -i"
