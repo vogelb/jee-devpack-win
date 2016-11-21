@@ -15,7 +15,7 @@ rem - JBoss Forge
 rem ===================================================================
 
 rem Set DOWNLOADS_DIR in order to reuse existing downloads  
-set DOWNLOADS_DIR=d:\download\devpack
+set DOWNLOADS_DIR=%~dp0downloads
 
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
@@ -164,8 +164,7 @@ set GLASSFISH_PACKAGE=glassfish-4.1.zip
 set GLASSFISH_FOLDER=glassfish
 
 set NPP_NAME="Notepad++"
-#set NPP_URL=https://notepad-plus-plus.org/repository/6.x/6.9.2/npp.6.9.2.bin.zip
-NPP_URL=https://notepad-plus-plus.org/repository/7.x/7.2.1/npp.7.2.1.bin.x64.zip
+set NPP_URL=https://notepad-plus-plus.org/repository/7.x/7.2.1/npp.7.2.1.bin.x64.zip
 set NPP_EXPLODED=--create--
 set NPP_PACKAGE=npp.7.2.1.bin.x64.zip
 set NPP_FOLDER=npp
@@ -239,7 +238,7 @@ findstr /m "SET SVN_USER" conf\devpack.bat > NUL
 if %errorlevel%==0 goto install_devpack_do
 set SVN_USER=%USERNAME%
 setlocal enabledelayedexpansion 
-for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L=l" "M=m" "N=n" "O=o" "P=p" "Q=q" "R=r" "S=s" "T=t" "U=u" "V=v" "W=w" "X=x" "Y=y" "Z=z" "Ä=ä" "Ö=ö" "Ü=ü") do ( 
+for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L=l" "M=m" "N=n" "O=o" "P=p" "Q=q" "R=r" "S=s" "T=t" "U=u" "V=v" "W=w" "X=x" "Y=y" "Z=z" "Ã„=Ã¤" "Ã–=Ã¶" "Ãœ=Ã¼") do ( 
     set "SVN_USER=!SVN_USER:%%~a!" 
 )
 echo set SVN_USER=%SVN_USER% >> conf\devpack.bat
