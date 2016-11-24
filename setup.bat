@@ -139,8 +139,8 @@ set ECLIPSE_CPP_PACKAGE=%ECLIPSE_CPP_EXPLODED%.zip
 set ECLIPSE_CPP_FOLDER=eclipse
 
 set MAVEN_NAME="Maven"
-set MAVEN_URL=http://mirror.switch.ch/mirror/apache/dist/maven/maven-3/3.3.1/binaries/apache-maven-3.3.1-bin.zip
-set MAVEN_EXPLODED=apache-maven-3.3.1
+set MAVEN_URL=http://www-eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+set MAVEN_EXPLODED=apache-maven-3.3.9
 set MAVEN_PACKAGE=%MAVEN_EXPLODED%-bin.zip
 set MAVEN_FOLDER=mvn
 
