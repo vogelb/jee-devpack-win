@@ -1,4 +1,5 @@
 # Eclipse based Java Enterprise Dev Pack for Windows
+[On GitHub](https://github.com/vogelb/jee-devpack-win)
 
 This is a lightweight Java EE [DevPack](http://blog.tknerr.de/blog/2014/10/09/devpack-philosophy-aka-works-on-your-machine/) for windows.
 It includes standard packages needed to develop in such an environment and is based on a simple installation folder SUBSTed into a self contained work drive (no VM).
@@ -54,7 +55,14 @@ The source code can be obtained here: www.7-zip.org
 
 	$ setup.bat install
 	
+This will install the packages defined in the default template.
 
+	$ setup.bat -t java_8 install
+	
+Will install the Java 8 template.
+
+	
+	
 ### 4. Adapt the dev pack configuration to your needs
 
 - Working drive is w:\                              -- conf/devpack.bat -> WORK_DRIVE
