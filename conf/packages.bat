@@ -76,11 +76,11 @@ set GLASSFISH_EXPLODED=glassfish-4
 set GLASSFISH_PACKAGE=glassfish-4.1.zip
 set GLASSFISH_FOLDER=glassfish
 
-set NPP_NAME="Notepad++"
-set NPP_URL=https://notepad-plus-plus.org/repository/7.x/7.2.1/npp.7.2.1.bin.x64.zip
-set NPP_EXPLODED=--create--
-set NPP_PACKAGE=npp.7.2.1.bin.x64.zip
-set NPP_FOLDER=npp
+set NOTEPAD_NAME="Notepad++"
+set NOTEPAD_URL=https://notepad-plus-plus.org/repository/7.x/7.2.1/npp.7.2.1.bin.x64.zip
+set NOTEPAD_EXPLODED=--create--
+set NOTEPAD_PACKAGE=npp.7.2.1.bin.x64.zip
+set NOTEPAD_FOLDER=npp
 
 set SUBLIME_NAME="Sublime Text"
 set SUBLIME_URL=http://c758482.r82.cf2.rackcdn.com/Sublime Text 2.0.2 x64.zip

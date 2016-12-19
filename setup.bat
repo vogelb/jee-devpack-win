@@ -60,6 +60,7 @@ echo Using template %TEMPLATE%...
 echo set SELECTED_TEMPLATE=%TEMPLATE%>conf\template.bat
 
 rem Unmount mounted drive. Might be another instance!
+set DEVPACK_BASE=
 call %~dp0conf\devpack.bat
 
 rem If installation is started from running devpack, restart from base dir.
@@ -181,7 +182,7 @@ if "%INSTALL_GLASSFISH%" == "TRUE" (
 	call :download_package GLASSFISH
 )
 if "%INSTALL_NOTEPAD%" == "TRUE" (
-	call :download_package NPP
+	call :download_package NOTEPAD
 )
 
 if "%INSTALL_SUBLIME%" == "TRUE" (
@@ -305,7 +306,7 @@ call :query_package ECLIPSE
 call :query_package TOMEE
 call :query_package WILDFLY
 call :query_package GLASSFISH
-call :query_package NPP
+call :query_package NOTEPAD
 call :query_package SUBLIME
 call :query_package FORGE
 call :query_package SCALA
@@ -342,7 +343,7 @@ if "%INSTALL_GLASSFISH%" == "TRUE" (
 	call :install_package GLASSFISH
 )
 if "%INSTALL_NOTEPAD%" == "TRUE" (
-	call :install_package NPP
+	call :install_package NOTEPAD
 )
 if "%INSTALL_SUBLIME%" == "TRUE" (
 	call :install_package SUBLIME
@@ -410,14 +411,8 @@ if "%INSTALL_MAVEN%" == "FALSE" (
 	call :uninstall_package MAVEN
 )
 
-if NOT "%INSTALL_ECLIPSE%" == "EE" (
+if "%INSTALL_ECLIPSE%" == "FALSE" (
 	call :uninstall_package ECLIPSE_EE
-)
-if NOT "%INSTALL_ECLIPSE%" == "JAVA" (
-	call :uninstall_package ECLIPSE_JAVA
-)
-if NOT "%INSTALL_ECLIPSE%" == "CPP" (
-	call :uninstall_package ECLIPSE_CPP
 )
 
 if "%INSTALL_FORGE%" == "FALSE" (
@@ -435,7 +430,7 @@ if "%INSTALL_GLASSFISH%" == "FALSE" (
 )
 
 if "%INSTALL_NOTEPAD%" == "FALSE" (
-	call :uninstall_package NPP
+	call :uninstall_package NOTEPAD
 )
 if "%INSTALL_SUBLIME%" == "FALSE" (
 	call :uninstall_package SUBLIME
@@ -481,23 +476,32 @@ echo All done.
 
 exit /B
 
-
 :query_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
+
+set SELECTED=!INSTALL_%PACKAGE_SPEC%!
+
+if NOT "!INSTALL_%PACKAGE_SPEC%!" == "TRUE" (
+	if NOT "!INSTALL_%PACKAGE_SPEC%!" == "FALSE" (
+		set PACKAGE_SPEC=%PACKAGE_SPEC%_!INSTALL_%PACKAGE_SPEC%!
+	)
+)
 set OPTION=!%PACKAGE_SPEC%_NAME!
 set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
 set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
 set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
-echo | set /p=Package %OPTION%:%TAB%
 
 call :strlen OPTION_LEN OPTION 
+
 if %OPTION_LEN% LEQ 16 (
-	echo | set /p"=%TAB%"
+	echo | set /p=Package %OPTION%:%TAB%%TAB%
+) else (
+	echo | set /p=Package %OPTION%:%TAB%
 )
 
-echo | set /p=selected=!INSTALL_%PACKAGE_SPEC%!,%TAB%	
+echo | set /p=selected=%SELECTED%,%TAB%	
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
 	echo | set /p=not installed,%TAB%
