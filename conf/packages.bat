@@ -34,20 +34,20 @@ set JDK6_PACKAGE=jdk-6u45-windows-x64.exe
 set JDK6_FOLDER=jdk_6
 
 set ECLIPSE_EE_NAME="Eclipse EE"
-set ECLIPSE_EE_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/neon/R/eclipse-jee-neon-R-win32-x86_64.zip
+set ECLIPSE_EE_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/neon/2/eclipse-jee-neon-2-win32-x86_64.zip
 set ECLIPSE_EE_EXPLODED=eclipse-jee-neon-R-win32-x86_64
 set ECLIPSE_EE_PACKAGE=%ECLIPSE_EE_EXPLODED%.zip
 set ECLIPSE_EE_FOLDER=eclipse
 
 set ECLIPSE_JAVA_NAME="Eclipse Java"
-set ECLIPSE_JAVA_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/neon/R/eclipse-java-neon-R-win32-x86_64.zip
-set ECLIPSE_JAVA_EXPLODED=eclipse-java-neon-R-win32-x86_64
+set ECLIPSE_JAVA_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/neon/2/eclipse-java-neon-2-win32-x86_64.zip
+set ECLIPSE_JAVA_EXPLODED=eclipse-java-neon-2-win32-x86_64
 set ECLIPSE_JAVA_PACKAGE=%ECLIPSE_JAVA_EXPLODED%.zip
 set ECLIPSE_JAVA_FOLDER=eclipse
 
 set ECLIPSE_CPP_NAME="Eclipse C/C++"
-set ECLIPSE_CPP_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/neon/R/eclipse-cpp-neon-R-win32-x86_64.zip
-set ECLIPSE_CPP_EXPLODED=eclipse-cpp-neon-R-win32-x86_64
+set ECLIPSE_CPP_URL=http://ftp.fau.de/eclipse/technology/epp/downloads/release/neon/2/eclipse-cpp-neon-2-win32-x86_64.zip
+set ECLIPSE_CPP_EXPLODED=eclipse-cpp-neon-2-win32-x86_64
 set ECLIPSE_CPP_PACKAGE=%ECLIPSE_CPP_EXPLODED%.zip
 set ECLIPSE_CPP_FOLDER=eclipse
 
