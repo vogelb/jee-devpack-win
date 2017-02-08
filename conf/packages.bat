@@ -10,9 +10,9 @@ set BABUN_PACKAGE=babun-1.2.0-dist.zip
 set BABUN_FOLDER=.babun
 
 set JDK8_NAME="Oracle JDK 8"
-set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-windows-x64.exe
+set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-windows-x64.exe
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK8_PACKAGE=jdk-8u111-windows-x64.exe
+set JDK8_PACKAGE=jdk-8u121-windows-x64.exe
 set JDK8_FOLDER=jdk_8
 
 set JDK8_32_NAME="Oracle JDK 8x32"
@@ -52,8 +52,8 @@ set ECLIPSE_CPP_PACKAGE=%ECLIPSE_CPP_EXPLODED%.zip
 set ECLIPSE_CPP_FOLDER=eclipse
 
 set MAVEN_NAME="Maven"
-set MAVEN_URL=http://mirror.switch.ch/mirror/apache/dist/maven/maven-3/3.3.1/binaries/apache-maven-3.3.1-bin.zip
-set MAVEN_EXPLODED=apache-maven-3.3.1
+set MAVEN_URL=http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+set MAVEN_EXPLODED=apache-maven-3.3.9
 set MAVEN_PACKAGE=%MAVEN_EXPLODED%-bin.zip
 set MAVEN_FOLDER=mvn
 
