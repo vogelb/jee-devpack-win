@@ -516,7 +516,11 @@ if %OPTION_LEN% LEQ 16 (
 	echo | set /p=Package %OPTION%:%TAB%
 )
 
-echo | set /p=selected=%SELECTED%,%TAB%	
+if "%SELECTED%" == "FALSE" (
+	echo | set /p=not selected,%TAB%	
+) else (
+	echo | set /p=version %VERSION%,%TAB%	
+)
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
 	echo | set /p=not installed,%TAB%

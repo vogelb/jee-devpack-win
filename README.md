@@ -16,13 +16,14 @@ The Dev Pack supports the following packages:
 - Oracle JDK 7 + 6
 - Scala and sbt
 - Apache Maven
-- Eclipse JEE
+- Eclipse EE / Java / C++
 - TomEE Plus
 - RedHat WildFly
 - Oracle GlassFish
 - Notepad++
 - Sublime Text
 - 7-Zip
+- SourceTree
 - Some scripts to help you get going. All scripts are designed to work out of the explorer (double click).
 
 ## Use of 7-Zip
@@ -45,11 +46,11 @@ The source code can be obtained here: www.7-zip.org
 
 - Installed packages will NOT be deleted            -- setup.bat -> KEEP_PACKAGES
 
-- Check the package versions in setup.bat for updates.
+- Check the package versions in conf\packages.bat for updates.
  
-- Select a template or create a new one -- templates/default.bat.
+- Select and customize a template or create a new one -- templates\default.bat.
 
-- Add additional or remove packages as required.  
+- Add or remove packages as required.  
 
 ### 3. To download and install the configured software packages, run
 
@@ -102,7 +103,6 @@ Tools:
 - Global maven settings are in \tools\mvn\conf
 - Public and private maven settings are in \conf
 - The loval maven repository is \mvn-repo
-- The local maven repository is \tools\mvn-repo
 - The toolchains.xml is packaged in \conf and copied to the user/.m2 directory
 
 In order to share installed tools and local maven config & repository between several instances of the dev pack (e.g. one dev pack per project), configure TOOLS_DIR, PUBLIC_M2_CONFIG and PRIVATE_M2_CONFIG in conf\devpack.bat to point to a global location.
