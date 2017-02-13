@@ -7,7 +7,7 @@ call %~dp0conf\devpack.bat
 if not exist %TOOLS_DIR%\glassfish (
 	echo.
 	echo Glassfish is not installed.
-	echo Please set INSTALL_GLASSFISH to TRUE in install.bat and start the installation.
+	echo Please set INSTALL_GLASSFISH to TRUE in your template and start the installation.
 	goto :EOF
 )
 

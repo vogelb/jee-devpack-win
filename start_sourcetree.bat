@@ -7,13 +7,11 @@ rem ===================================================================
 call bin\w_mount_drive.bat
 cd /d %WORK_DRIVE%:\
 call setenv.bat
-set ECLIPSE_HOME=%TOOLS_DIR%\eclipse
-
-if not exist %ECLIPSE_HOME% (
+if not exist %TOOLS_DIR%\sourcetree (
 	echo.
-	echo Eclipse is not installed.
-	echo Please set INSTALL_ECLIPSE to JAVA, EE or CPP in your template and start the installation.
+	echo SourceTree is not installed.
+	echo Please set INSTALL_SOURCETREE to TRUE in your template and start the installation.
 	goto :EOF
 )
 
-start %ECLIPSE_HOME%\eclipse.exe -vm %JAVA_HOME%\bin -data %WORKSPACE% -vmargs -Xms515m -Xmx1024m
+start %TOOLS_DIR%\sourcetree\SourceTree

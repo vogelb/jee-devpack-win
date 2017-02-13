@@ -111,3 +111,9 @@ set CONSOLE_URL=http://downloads.sourceforge.net/project/console/console-devel/2
 set CONSOLE_EXPLODED=Console2
 set CONSOLE_PACKAGE=Console-2.00b148-Beta_32bit.zip
 set CONSOLE_FOLDER=console
+
+set SOURCETREE_NAME="SourceTree"
+set SOURCETREE_URL=https://downloads.atlassian.com/software/sourcetree/windows/ga/SourceTreeSetup-1.10.20.1.exe
+set SOURCETREE_EXPLODED=SourceTree-1.10.20.1-full.nupkg
+set SOURCETREE_PACKAGE=SourceTreeSetup-1.10.20.1.exe
+set SOURCETREE_FOLDER=sourcetree

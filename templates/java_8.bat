@@ -61,3 +61,6 @@ set INSTALL_BABUN=FALSE
 
 rem Set to TRUE if you want Console2 installed
 set INSTALL_CONSOLE=TRUE
+
+rem Set to TRUE if you want SourceTree installed
+set INSTALL_SOURCETREE=TRUE

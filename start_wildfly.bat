@@ -7,7 +7,7 @@ call setenv.bat
 if not exist %JBOSS_HOME% (
 	echo.
 	echo Wildfly is not installed.
-	echo Please set INSTALL_WILDFLY to TRUE in install.bat and start the installation.
+	echo Please set INSTALL_WILDFLY to TRUE in your template and start the installation.
 	goto :EOF
 )
 

@@ -7,7 +7,7 @@ call setenv.bat
 if not exist %CATALINA_HOME% (
 	echo.
 	echo TomEE is not installed.
-	echo Please set INSTALL_TOMEE to TRUE in install.bat and start the installation.
+	echo Please set INSTALL_TOMEE to TRUE in your template and start the installation.
 	goto :EOF
 )
 

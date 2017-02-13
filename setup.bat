@@ -201,6 +201,10 @@ if "%INSTALL_CONSOLE%" == "TRUE" (
 	call :download_package CONSOLE
 )
 
+if "%INSTALL_SOURCETREE%" == "TRUE" (
+	call :download_package SOURCETREE
+)
+
 :download_jdk6
 if "%INSTALL_JDK6%" == "TRUE" (
 	echo | set /p=Package JDK 6... 
@@ -312,6 +316,7 @@ call :query_package FORGE
 call :query_package SCALA
 call :query_package BABUN
 call :query_package CONSOLE
+call :query_package SOURCETREE
 
 exit /B
 
@@ -399,6 +404,10 @@ if "%INSTALL_CONSOLE%" == "TRUE" (
 	call :install_package CONSOLE
 )
 
+if "%INSTALL_SOURCETREE%" == "TRUE" (
+	call :install_nupkg_package SOURCETREE
+)
+
 call %WORK_DRIVE%:\setenv.bat
 
 exit /B
@@ -459,6 +468,10 @@ if "%INSTALL_BABUN%" == "FALSE" (
 
 if "%INSTALL_CONSOLE%" == "FALSE" (
 	call :uninstall_package CONSOLE
+)
+
+if "%INSTALL_SOURCETREE%" == "FALSE" (
+	call :uninstall_package SOURCETREE
 )
 
 echo.
@@ -727,6 +740,46 @@ if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
 echo done.
 echo Install package %OPTION% done.
 echo.
+exit /B
+
+:install_nupkg_package
+set PACKAGE_SPEC=%~1
+setlocal enabledelayedexpansion
+set OPTION=!%PACKAGE_SPEC%_NAME!
+set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
+set PACKAGE_URL=!%PACKAGE_SPEC%_URL!
+set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
+set TARGET=!%PACKAGE_SPEC%_FOLDER!
+set VERSION=!%PACKAGE_SPEC%_VERSION!
+
+set EXTRACT=%DOWNLOADS_DIR%\extract
+
+echo | set /p=Package %OPTION%... 
+if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+	echo Error: Package %PACKAGE% was not downloaded!
+	exit /B
+)
+if exist %TOOLS_DIR%\%TARGET% (
+	echo already installed.
+	exit /B
+)
+
+echo installing now.
+
+echo extracting package... 
+
+rmdir /s /q %EXTRACT% >NUL 2>&1
+mkdir %EXTRACT%
+pushd %EXTRACT%
+
+%TOOLS_DIR%\7-Zip\7z x %DOWNLOADS_DIR%\%PACKAGE% >NUL
+%TOOLS_DIR%\7-Zip\7z x %UNZIPPED% >NUL
+
+xcopy "lib\net45\*" "%TOOLS_DIR%\%TARGET%" /S /i >NUL
+popd
+
+rmdir /s /q %EXTRACT% >NUL 2>&1
+
 exit /B
 
 :install_jdk_without_source
