@@ -20,7 +20,9 @@ set DOWNLOADS_DIR=%~dp0downloads
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
 
-if exist conf\template.bat call conf\template.bat
+set LAST_TEMPLATE=conf\template.bat
+
+if exist %LAST_TEMPLATE% call %LAST_TEMPLATE%
 if not "%SELECTED_TEMPLATE%" == "" (
 	set TEMPLATE=%SELECTED_TEMPLATE%
 ) else (
@@ -57,7 +59,7 @@ if not exist %TEMPLATE% echo. && echo Template %TEMPLATE% not found. && echo Exi
 
 echo Using template %TEMPLATE%...
 	
-echo set SELECTED_TEMPLATE=%TEMPLATE%>conf\template.bat
+echo set SELECTED_TEMPLATE=%TEMPLATE%>%LAST_TEMPLATE%
 
 rem Unmount mounted drive. Might be another instance!
 set DEVPACK_BASE=
