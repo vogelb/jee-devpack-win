@@ -572,8 +572,20 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 			rename %UNZIPPED% %TARGET%
 			if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
 		)
-		echo %VERSION% > %TARGET%\version.txt
-  ) 
+  )
+  echo %VERSION% > %TARGET%\version.txt
+  
+  for /l %%x in (1, 1, 10) do (
+	
+	set TOOL_NAME=%PACKAGE_SPEC%_TOOL_%%x
+	set TOOL_VALUE=%PACKAGE_SPEC%_TOOL_%%x
+	
+	call :expand TOOL_VALUE
+	
+	if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
+	  copy %~dp0bin\!TOOL_VALUE! %~dp0
+	)
+  )
 
   popd
   echo done.
@@ -595,19 +607,32 @@ set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
 set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
 set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
+
 echo | set /p=Package %OPTION%... 
 
 if exist "%TOOLS_DIR%\%TARGET%" (
 	pushd %TOOLS_DIR%
 	
 	rmdir /Q /S "%TARGET%"
+	
+	for /l %%x in (1, 1, 10) do (
+		set TOOL_NAME=%PACKAGE_SPEC%_TOOL_%%x
+		set TOOL_VALUE=%PACKAGE_SPEC%_TOOL_%%x
+		
+		call :expand TOOL_VALUE
+		
+		if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
+		  del %~dp0!TOOL_VALUE!
+		)
+	  )
+	
 	echo uninstalled.
 
   popd
   exit /B
 )
 endlocal
-echo package not installed.
+echo not installed.
 exit /B
 
 rem -------------------------------------------------
@@ -786,6 +811,16 @@ popd
 
 rmdir /s /q %EXTRACT% >NUL 2>&1
 
+exit /B
+
+:expand
+set var=%1
+:expand_loop
+if not "!%var%!" == "" (
+  set var=!%var%!
+  goto :expand_loop
+)
+set %1=!var!
 exit /B
 
 :install_jdk_without_source

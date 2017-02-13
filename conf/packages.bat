@@ -72,6 +72,7 @@ set TOMEE_URL=http://apache.openmirror.de/tomee/tomee-1.7.2/apache-tomee-1.7.2-p
 set TOMEE_EXPLODED=apache-tomee-plus-1.7.2
 set TOMEE_PACKAGE=apache-tomee-1.7.2-plus.zip
 set TOMEE_FOLDER=tomee
+set TOMEE_TOOL_1=start_tomee.bat
 
 set WILDFLY_NAME="Wildfly"
 set WILDFLY_VERSION=9.0.2
@@ -80,6 +81,8 @@ set WILDFLY_URL=http://download.jboss.org/wildfly/%WILDFLY_VERSION%/wildfly-%WIL
 set WILDFLY_EXPLODED=wildfly-%WILDFLY_VERSION%
 set WILDFLY_PACKAGE=%WILDFLY_EXPLODED%.zip
 set WILDFLY_FOLDER=wildfly
+set WILDFLY_TOOL_1=start_wildfly.bat
+set WILDFLY_TOOL_2=start_h2_database.bat
 
 set GLASSFISH_NAME="Glassfish"
 set GLASSFISH_VERSION=4.1
@@ -87,6 +90,7 @@ set GLASSFISH_URL=http://download.java.net/glassfish/4.1/release/glassfish-4.1.z
 set GLASSFISH_EXPLODED=glassfish-4
 set GLASSFISH_PACKAGE=glassfish-4.1.zip
 set GLASSFISH_FOLDER=glassfish
+set GLASSFISH_TOOL_1=start_glassfish.bat
 
 set NOTEPAD_NAME="Notepad++"
 set NOTEPAD_VERSION=7.3.1
@@ -135,3 +139,4 @@ set SOURCETREE_URL=https://downloads.atlassian.com/software/sourcetree/windows/g
 set SOURCETREE_EXPLODED=SourceTree-1.10.20.1-full.nupkg
 set SOURCETREE_PACKAGE=SourceTreeSetup-1.10.20.1.exe
 set SOURCETREE_FOLDER=sourcetree
+set SOURCETREE_TOOL_1=start_sourcetree.bat
