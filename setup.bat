@@ -509,6 +509,7 @@ set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
 
 call :strlen OPTION_LEN OPTION 
+call :strlen VERSION_LEN VERSION
 
 if %OPTION_LEN% LEQ 16 (
 	echo | set /p=Package %OPTION%:%TAB%%TAB%
@@ -517,9 +518,13 @@ if %OPTION_LEN% LEQ 16 (
 )
 
 if "%SELECTED%" == "FALSE" (
-	echo | set /p=not selected,%TAB%	
+	echo | set /p=not selected,%TAB%%TAB%%TAB%
 ) else (
-	echo | set /p=version %VERSION%,%TAB%	
+	if %VERSION_LEN% LEQ 8 (
+	  echo | set /p=version %VERSION%,%TAB%%TAB%%TAB%
+	) else (
+	  echo | set /p=version %VERSION%,%TAB%	
+	)
 )
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
@@ -573,7 +578,23 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 			if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
 		)
   )
-  echo %VERSION% > %TARGET%\version.txt
+  
+  call :postinstall_package
+
+  popd
+  echo done.
+  exit /B
+)
+endlocal
+echo already installed.
+exit /B
+
+rem -------------------------------------------------
+rem Package post-installation.
+rem Create version.txt, handle configured tools.
+rem -------------------------------------------------
+:postinstall_package
+  echo %VERSION% > %TOOLS_DIR%\%TARGET%\version.txt
   
   for /l %%x in (1, 1, 10) do (
 	
@@ -583,16 +604,9 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 	call :expand TOOL_VALUE
 	
 	if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
-	  copy %~dp0bin\!TOOL_VALUE! %~dp0
+	  copy %~dp0bin\!TOOL_VALUE! %~dp0 >NUL
 	)
   )
-
-  popd
-  echo done.
-  exit /B
-)
-endlocal
-echo already installed.
 exit /B
 
 rem -------------------------------------------------
@@ -810,6 +824,8 @@ xcopy "lib\net45\*" "%TOOLS_DIR%\%TARGET%" /S /i >NUL
 popd
 
 rmdir /s /q %EXTRACT% >NUL 2>&1
+
+call :postinstall_package
 
 exit /B
 
