@@ -64,3 +64,6 @@ set INSTALL_BABUN=FALSE
 
 rem Set to TRUE if you want Console2 installed
 set INSTALL_CONSOLE=TRUE
+
+rem Set to TRUE if you want the git client installed
+set INSTALL_GIT=FALSE

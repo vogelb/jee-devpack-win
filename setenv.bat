@@ -12,11 +12,11 @@ set FORGE_HOME=%TOOLS_DIR%\forge
 set JAVA_HOME=%TOOLS_DIR%\jdk_8
 set JBOSS_HOME=%TOOLS_DIR%\wildfly
 set CATALINA_HOME=%TOOLS_DIR%\tomee
+set GIT_HOME=%TOOLS_DIR%\git
 
 rem -----------------------------------------------------------------
 rem Add workspace parameters as required
-
-set PATH=%BIN_DIR%;%JAVA_HOME%\bin;%FORGE_HOME%\bin;%TOOLS_DIR%\scala\bin;%TOOLS_DIR%\tomee\bin;%PATH%
+set PATH=%BIN_DIR%;%JAVA_HOME%\bin;%FORGE_HOME%\bin;%TOOLS_DIR%\scala\bin;%TOOLS_DIR%\tomee\bin;%GIT_HOME%\bin;%PATH%
 
 rem -----------------------------------------------------------------
 rem Define command aliases

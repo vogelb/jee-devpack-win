@@ -207,6 +207,10 @@ if "%INSTALL_SOURCETREE%" == "TRUE" (
 	call :download_package SOURCETREE
 )
 
+if "%INSTALL_GIT%" == "TRUE" (
+	call :download_package GIT
+)
+
 :download_jdk6
 if "%INSTALL_JDK6%" == "TRUE" (
 	echo | set /p=Package JDK 6... 
@@ -318,6 +322,7 @@ call :query_package FORGE
 call :query_package SCALA
 call :query_package BABUN
 call :query_package CONSOLE
+call :query_package GIT
 call :query_package SOURCETREE
 
 exit /B
@@ -406,6 +411,10 @@ if "%INSTALL_CONSOLE%" == "TRUE" (
 	call :install_package CONSOLE
 )
 
+if "%INSTALL_GIT%" == "TRUE" (
+	call :install_package GIT
+)
+
 if "%INSTALL_SOURCETREE%" == "TRUE" (
 	call :install_nupkg_package SOURCETREE
 )
@@ -472,6 +481,10 @@ if "%INSTALL_CONSOLE%" == "FALSE" (
 	call :uninstall_package CONSOLE
 )
 
+if "%INSTALL_GIT%" == "FALSE" (
+	call :uninstall_package GIT
+)
+
 if "%INSTALL_SOURCETREE%" == "FALSE" (
 	call :uninstall_package SOURCETREE
 )
@@ -511,7 +524,9 @@ set VERSION=!%PACKAGE_SPEC%_VERSION!
 call :strlen OPTION_LEN OPTION 
 call :strlen VERSION_LEN VERSION
 
-if %OPTION_LEN% LEQ 16 (
+if %OPTION_LEN% LEQ 6 (
+	echo | set /p=Package %OPTION%:%TAB%%TAB%%TAB%
+) else if %OPTION_LEN% LEQ 14 (
 	echo | set /p=Package %OPTION%:%TAB%%TAB%
 ) else (
 	echo | set /p=Package %OPTION%:%TAB%

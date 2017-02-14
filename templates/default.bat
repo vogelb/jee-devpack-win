@@ -68,3 +68,6 @@ set INSTALL_CONSOLE=TRUE
 
 rem Set to TRUE if you want SourceTree installed
 set INSTALL_SOURCETREE=FALSE
+
+rem Set to TRUE if you want the git client installed
+set INSTALL_GIT=FALSE
