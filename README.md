@@ -1,9 +1,10 @@
-# Eclipse based Java Enterprise Dev Pack for Windows
+# Eclipse based Java Dev Pack for Windows
 [On GitHub](https://github.com/vogelb/jee-devpack-win)
 
-This is a lightweight Java EE [DevPack](http://blog.tknerr.de/blog/2014/10/09/devpack-philosophy-aka-works-on-your-machine/) for windows.
+This is a lightweight Java [DevPack](http://blog.tknerr.de/blog/2014/10/09/devpack-philosophy-aka-works-on-your-machine/) for windows.
 It includes standard packages needed to develop in such an environment and is based on a simple installation folder SUBSTed into a self contained work drive (no VM).
 
+The repository name suggests a Java EE environment, however the dev pack has evolved to be more multipurpose over time.
 
 ## General Idea
 
@@ -24,13 +25,13 @@ The Dev Pack supports the following packages:
 - Sublime Text
 - 7-Zip
 - SourceTree
-- Some scripts to help you get going. All scripts are designed to work out of the explorer (double click).
+- Some aliases and scripts to help you get going. Most scripts are designed to work out of the explorer (double click).
 
 ## Use of 7-Zip
 
 The devpack ships with a version of 7-Zip that is used for the portable installation of Oracle JDK.
 
-7-Zip is licensed under the GNU LGPL license.
+7-Zip by Igor Pavlov is licensed under the GNU LGPL license.
 
 The source code can be obtained here: www.7-zip.org
 
@@ -41,16 +42,14 @@ The source code can be obtained here: www.7-zip.org
 	$ git clone https://github.com/vogelb/jee-devpack-win
 	
 ### 2. Configure installation and template
-	
-- Packages will be downloaded to w:\tools\downloads -- setup.bat -> DOWNLOADS_DIR
 
-- Installed packages will NOT be deleted            -- setup.bat -> KEEP_PACKAGES
-
-- Check the package versions in conf\packages.bat for updates.
- 
-- Select and customize a template or create a new one -- templates\default.bat.
-
-- Add or remove packages as required.  
+| | |
+| -------------------------------------------------------------- | ----------------------------------- |
+| - Packages will be downloaded to w:\tools\downloads            | -- setup.bat -> DOWNLOADS_DIR       |
+| - Installed packages will NOT be deleted                       | -- setup.bat -> KEEP_PACKAGES       |
+| - Check the packages you want to use for updates.              | -- conf\packages.bat                |
+| - Select and customize a template or create a new one          | -- templates\default.bat            |
+| - Add or remove packages as required.                          |                                     | 
 
 ### 3. To download and install the configured software packages, run
 
@@ -60,24 +59,22 @@ This will install the packages defined in the default template.
 
 	$ setup.bat -t java_8 install
 	
-Will install the Java 8 template.
-
-	
+Will install the packages defined in the Java 8 template (templates\java_8.bat).
 	
 ### 4. Adapt the dev pack configuration to your needs
-
-- Working drive is w:\                              -- conf/devpack.bat -> WORK_DRIVE
-
-- Tools installation dir is w:\tools                -- conf/devpack.bat -> TOOLS_DIR
-
-- Workspace location is w:\workspace                -- conf/devpack.bat -> WORKSPACE
+| | |
+| -------------------------------------- | ----------------------------------- |
+| - Working drive is w:\                 |   -- conf/devpack.bat -> WORK_DRIVE |
+|- Tools installation dir is w:\tools    |  -- conf/devpack.bat -> TOOLS_DIR |
+|- Workspace location is w:\workspace    |  -- conf/devpack.bat -> WORKSPACE |
+|- Paths and aliases                     |	-- setenv.bat |
 
 
 ## How to use
 
 To start working, run `open_devpack.bat`, `open_workspace.bat` or `start_eclipse.bat`. The configured logical drive will be created and pop up containing your dev pack.
 
-Always work on the configured drive because all settings rely on that.
+Always work on the configured drive because paths and settings rely on that. Its also quite convenient because everything is in one place and paths are shorter.
 
 Tools:
 
@@ -102,8 +99,8 @@ Tools:
 
 - Global maven settings are in \tools\mvn\conf
 - Public and private maven settings are in \conf
-- The loval maven repository is \mvn-repo
-- The toolchains.xml is packaged in \conf and copied to the user/.m2 directory
+- The local maven repository is \mvn-repo
+- The toolchains.xml is packaged in \conf and copied to the user/.m2 directory in init_workspace.bat (if enabled)
 
 In order to share installed tools and local maven config & repository between several instances of the dev pack (e.g. one dev pack per project), configure TOOLS_DIR, PUBLIC_M2_CONFIG and PRIVATE_M2_CONFIG in conf\devpack.bat to point to a global location.
 
