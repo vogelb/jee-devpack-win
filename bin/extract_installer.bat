@@ -1,4 +1,7 @@
-@echo off
+@echo off & setlocal
+rem ------------------------------------------------------------
+rem Extract contents of oracle JDK Installer package
+rem-------------------------------------------------------------
 set DOWNLOADS_DIR=%1
 set INSTALLER=%2
 

@@ -67,3 +67,6 @@ set INSTALL_SOURCETREE=TRUE
 
 rem Set to TRUE if you want the git client installed
 set INSTALL_GIT=TRUE
+
+rem set to TRUE is you want to install Meld Merge
+set INSTALL_MELD=TRUE

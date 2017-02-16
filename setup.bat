@@ -1,4 +1,4 @@
-@echo off
+@echo off & setlocal
 rem ===================================================================
 rem JEE DevPack Installation Script
 rem - Download and install binary packages
@@ -28,6 +28,7 @@ if not "%SELECTED_TEMPLATE%" == "" (
 ) else (
 	set TEMPLATE=templates\default.bat
 )
+set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
 set DEBUG=FALSE
 set TAB=	
 
@@ -91,8 +92,6 @@ cd /d %WORK_DRIVE%:\
 set WGET=%~dp0bin\wget
 set WGET_OPTIONS=--no-check-certificate --no-cookies
 
-set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
-
 call %~dp0conf\packages.bat
 
 rem ===== PACKAGE CONFIGURATION STARTS HERE =====
@@ -102,6 +101,7 @@ call %TEMPLATE%
 rem ===== END OF PACKAGE CONFIGURATION =====
 
 if "%COMMAND%" == "info" goto info
+if "%COMMAND%" == "status" goto info
 if "%COMMAND%" == "install" goto install_devpack
 if "%COMMAND%" == "download" goto download
 if "%COMMAND%" == "purge" goto purge
@@ -113,7 +113,7 @@ echo.
 echo Usage: setup [-t template] command
 echo.
 echo Available commands:
-echo   info      - Show currently installed packages
+echo   status    - Show currently installed packages
 echo   install   - Install DevPack / configured packages
 echo   download  - Only download packages
 echo   purge     - Remove disabled packages
@@ -152,64 +152,21 @@ exit /B
 :download
 echo.
 echo -^> Downloading packages...
+setlocal enabledelayedexpansion
 
 if not exist %TOOLS_DIR% mkdir %TOOLS_DIR%
 if exist %DOWNLOADS% del %DOWNLOADS%
 if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 
-if "%INSTALL_MAVEN%" == "TRUE" (
-	call :download_package MAVEN
+for %%p in ( %DEVPACK_PACKAGES% )  do (	
+	set DOWNLOAD_PACKAGE=INSTALL_%%p
+	call :expand_variable DOWNLOAD_PACKAGE
+	
+	if "!DOWNLOAD_PACKAGE!" == "TRUE" (
+		call :download_package %%p
+	)
 )
-
-if "%INSTALL_ECLIPSE%" == "EE" (
-	call :download_package ECLIPSE_EE
-)
-if "%INSTALL_ECLIPSE%" == "JAVA" (
-	call :download_package ECLIPSE_JAVA
-)
-if "%INSTALL_ECLIPSE%" == "CPP" (
-	call :download_package ECLIPSE_CPP
-)
-
-if "%INSTALL_BABUN%" == "TRUE" (
-	call :download_package BABUN
-)
-if "%INSTALL_TOMEE%" == "TRUE" (
-	call :download_package TOMEE
-)
-if "%INSTALL_WILDFLY%" == "TRUE" (
-	call :download_package WILDFLY
-)
-if "%INSTALL_GLASSFISH%" == "TRUE" (
-	call :download_package GLASSFISH
-)
-if "%INSTALL_NOTEPAD%" == "TRUE" (
-	call :download_package NOTEPAD
-)
-
-if "%INSTALL_SUBLIME%" == "TRUE" (
-	call :download_package SUBLIME
-)
-if "%INSTALL_FORGE%" == "TRUE" (
-	call :download_package FORGE
-)
-
-if "%INSTALL_SCALA%" == "TRUE" (
-	call :download_package SCALA
-	call :download_package SBT
-)
-
-if "%INSTALL_CONSOLE%" == "TRUE" (
-	call :download_package CONSOLE
-)
-
-if "%INSTALL_SOURCETREE%" == "TRUE" (
-	call :download_package SOURCETREE
-)
-
-if "%INSTALL_GIT%" == "TRUE" (
-	call :download_package GIT
-)
+endlocal
 
 :download_jdk6
 if "%INSTALL_JDK6%" == "TRUE" (
@@ -307,32 +264,37 @@ if exist conf\template.bat (
 echo.
 echo Package Status:
 echo.
-call :query_package JDK6
-call :query_package JDK7
-call :query_package JDK8
-call :query_package JDK8_32
-call :query_package MAVEN
-call :query_package ECLIPSE
-call :query_package TOMEE
-call :query_package WILDFLY
-call :query_package GLASSFISH
-call :query_package NOTEPAD
-call :query_package SUBLIME
-call :query_package FORGE
-call :query_package SCALA
-call :query_package BABUN
-call :query_package CONSOLE
-call :query_package GIT
-call :query_package SOURCETREE
+
+for %%p in ( %DEVPACK_PACKAGES% )  do (	
+	call :query_package %%p
+)
 
 exit /B
 
 :install
 echo.
 echo -^> Installing packages...
+setlocal enabledelayedexpansion
 
-if "%INSTALL_MAVEN%" == "TRUE" (
-	call :install_package MAVEN
+for %%p in ( %DEVPACK_PACKAGES% )  do (		
+	set INSTALL_PACKAGE=INSTALL_%%p
+	call :expand_variable INSTALL_PACKAGE
+	
+	if "!INSTALL_PACKAGE!" == "TRUE" (
+		if "%%p" == "JDK6" (
+			call :install_jdk_6 %%p
+		) else if "%%p" == "JDK7" (
+			call :install_jdk %%p
+		) else if "%%p" == "JDK8" (
+			call :install_jdk %%p
+		) else if "%%p" == "JDK8_32" (
+			call :install_jdk %%p
+		) else if "%%p" == "SOURCETREE" (
+			call :install_nupkg_package %%p
+		) else if not "%%p" == "BABUN" (
+			call :install_package %%p
+		)
+	)
 )
 
 if "%INSTALL_ECLIPSE%" == "EE" (
@@ -344,41 +306,8 @@ if "%INSTALL_ECLIPSE%" == "JAVA" (
 if "%INSTALL_ECLIPSE%" == "CPP" (
 	call :install_package ECLIPSE_CPP
 )
-
-if "%INSTALL_TOMEE%" == "TRUE" (
-	call :install_package TOMEE
-)
-if "%INSTALL_WILDFLY%" == "TRUE" (
-	call :install_package WILDFLY
-)
-if "%INSTALL_GLASSFISH%" == "TRUE" (
-	call :install_package GLASSFISH
-)
-if "%INSTALL_NOTEPAD%" == "TRUE" (
-	call :install_package NOTEPAD
-)
-if "%INSTALL_SUBLIME%" == "TRUE" (
-	call :install_package SUBLIME
-)
-if "%INSTALL_FORGE%" == "TRUE" (
-	call :install_package FORGE
-)
 if "%INSTALL_SCALA%" == "TRUE" (
-	call :install_package SCALA
 	call :install_package SBT
-)
-
-if "%INSTALL_JDK6%" == "TRUE" (
-	call :install_jdk_6 JDK6
-)
-if "%INSTALL_JDK7%" == "TRUE" (
-	call :install_jdk JDK7
-)
-if "%INSTALL_JDK8%" == "TRUE" (
-	call :install_jdk JDK8
-)
-if "%INSTALL_JDK8_32%" == "TRUE" (
-	call :install_jdk JDK8_32
 )
 
 if "%INSTALL_BABUN%" == "TRUE" (
@@ -406,89 +335,30 @@ if "%INSTALL_BABUN%" == "TRUE" (
 	)
 	echo Package %BABUN_NAME% is already installed.
 )
-
-if "%INSTALL_CONSOLE%" == "TRUE" (
-	call :install_package CONSOLE
-)
-
-if "%INSTALL_GIT%" == "TRUE" (
-	call :install_package GIT
-)
-
-if "%INSTALL_SOURCETREE%" == "TRUE" (
-	call :install_nupkg_package SOURCETREE
-)
-
 call %WORK_DRIVE%:\setenv.bat
 
 exit /B
 
 :purge
+setlocal enabledelayedexpansion
 echo.
 echo -^> Purging disabled packages...
 
-if "%INSTALL_MAVEN%" == "FALSE" (
-	call :uninstall_package MAVEN
+for %%p in ( %DEVPACK_PACKAGES% )  do (		
+	set PURGE_PACKAGE=INSTALL_%%p
+	call :expand_variable PURGE_PACKAGE
+	
+	if "!PURGE_PACKAGE!" == "FALSE" (
+		call :uninstall_package %%p
+		if "%%p" == "SCALA" (
+			call :uninstall_package SBT
+		)
+	)	
 )
 
 if "%INSTALL_ECLIPSE%" == "FALSE" (
 	call :uninstall_package ECLIPSE_EE
 )
-
-if "%INSTALL_FORGE%" == "FALSE" (
-	call :uninstall_package FORGE
-)
-
-if "%INSTALL_TOMEE%" == "FALSE" (
-	call :uninstall_package TOMEE
-)
-if "%INSTALL_WILDFLY%" == "FALSE" (
-	call :uninstall_package WILDFLY
-)
-if "%INSTALL_GLASSFISH%" == "FALSE" (
-	call :uninstall_package GLASSFISH
-)
-
-if "%INSTALL_NOTEPAD%" == "FALSE" (
-	call :uninstall_package NOTEPAD
-)
-if "%INSTALL_SUBLIME%" == "FALSE" (
-	call :uninstall_package SUBLIME
-)
-if "%INSTALL_SCALA%" == "FALSE" (
-	call :uninstall_package SCALA
-	call :uninstall_package SBT
-)
-
-if "%INSTALL_JDK6%" == "FALSE" (
-	call :uninstall_package JDK6
-)
-if "%INSTALL_JDK7%" == "FALSE" (
-	call :uninstall_package JDK7
-)
-if "%INSTALL_JDK8%" == "FALSE" (
-	call :uninstall_package JDK8
-)
-if "%INSTALL_JDK8_32%" == "FALSE" (
-	call :uninstall_package JDK8_32
-)
-
-if "%INSTALL_BABUN%" == "FALSE" (
-	call :uninstall_package BABUN
-)
-
-if "%INSTALL_CONSOLE%" == "FALSE" (
-	call :uninstall_package CONSOLE
-)
-
-if "%INSTALL_GIT%" == "FALSE" (
-	call :uninstall_package GIT
-)
-
-if "%INSTALL_SOURCETREE%" == "FALSE" (
-	call :uninstall_package SOURCETREE
-)
-
 echo.
 echo All done.
 
@@ -498,6 +368,9 @@ exit /B
 echo.
 echo -^> Uninstalling DevPack...
 
+for %%p in ( %DEVPACK_PACKAGES% )  do (	
+	call :uninstall_package %%p
+)
 
 echo.
 echo All done.
@@ -509,12 +382,6 @@ set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
 
 set SELECTED=!INSTALL_%PACKAGE_SPEC%!
-
-if NOT "!INSTALL_%PACKAGE_SPEC%!" == "TRUE" (
-	if NOT "!INSTALL_%PACKAGE_SPEC%!" == "FALSE" (
-		set PACKAGE_SPEC=%PACKAGE_SPEC%_!INSTALL_%PACKAGE_SPEC%!
-	)
-)
 set OPTION=!%PACKAGE_SPEC%_NAME!
 set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
 set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
@@ -575,15 +442,21 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 		exit /B
 	)
 
-  echo installing now.
-  echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%... 
+	echo installing now.
 	pushd %TOOLS_DIR%
 	
-	if "%UNZIPPED%" == "--create--" (
+	if "%UNZIPPED%" == "--MSI--" (
+		call :extract_msi_package "%DOWNLOADS_DIR%\%PACKAGE%" %TOOLS_DIR%\%TARGET%
+		set UNZIPPED=%TARGET%
+	) else if "%UNZIPPED%" == "--create--" (
+		echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%... 
 		%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%TARGET% >NUL
 		set UNZIPPED=%TARGET%
+		echo ok.
 	) else (
+		echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%... 
 		%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" >NUL
+		echo ok.
 	)
 
 	if not "%UNZIPPED%" == "??" (
@@ -616,7 +489,7 @@ rem -------------------------------------------------
 	set TOOL_NAME=%PACKAGE_SPEC%_TOOL_%%x
 	set TOOL_VALUE=%PACKAGE_SPEC%_TOOL_%%x
 	
-	call :expand TOOL_VALUE
+	call :expand_variable TOOL_VALUE
 	
 	if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
 	  copy %~dp0bin\!TOOL_VALUE! %~dp0 >NUL
@@ -648,7 +521,7 @@ if exist "%TOOLS_DIR%\%TARGET%" (
 		set TOOL_NAME=%PACKAGE_SPEC%_TOOL_%%x
 		set TOOL_VALUE=%PACKAGE_SPEC%_TOOL_%%x
 		
-		call :expand TOOL_VALUE
+		call :expand_variable TOOL_VALUE
 		
 		if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
 		  del %~dp0!TOOL_VALUE!
@@ -678,7 +551,7 @@ set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
 set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
 
-echo | set /p=Package %OPTION%... 
+echo | set /p=Package %OPTION% [%PACKAGE%]... 
 if not exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
 	echo %PACKAGE_URL% >> %DOWNLOADS%
 	echo marked for download.
@@ -802,6 +675,21 @@ echo Install package %OPTION% done.
 echo.
 exit /B
 
+:extract_msi_package
+set MSI_PACKAGE=%1
+set MSI_TARGET=%2
+
+if not exist %MSI_PACKAGE% (
+	echo.
+	echo Error: Package %MSI_PACKAGE% does not exist.
+	exit /B
+)
+
+echo | set /p=Unpacking %OPTION% %VERSION% to %MSI_TARGET%...
+msiexec /a %MSI_PACKAGE% /qn TARGETDIR=%MSI_TARGET% 
+
+exit /B
+
 :install_nupkg_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
@@ -844,7 +732,7 @@ call :postinstall_package
 
 exit /B
 
-:expand
+:expand_variable
 set var=%1
 :expand_loop
 if not "!%var%!" == "" (

@@ -3,6 +3,8 @@ rem ===================================================================
 rem Java DevPack Package definitions
 rem ===================================================================
 
+set DEVPACK_PACKAGES=BABUN JDK8 JDK8_32 JDK7 JDK6 ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD SUBLIME FORGE SCALA CONSOLE SOURCETREE GIT MELD
+
 set BABUN_NAME=Babun
 set BABUN_VERSION=1.2.0
 set BABUN_URL=https://bintray.com/artifact/download/tombujok/babun/babun-1.2.0-dist.zip
@@ -121,6 +123,7 @@ set SCALA_PACKAGE=%SCALA_EXPLODED%.zip
 set SCALA_FOLDER=scala
 
 set SBT_NAME=SBT
+set SBT_VERSION=0.13.9
 set SBT_URL=https://dl.bintray.com/sbt/native-packages/sbt/0.13.9/sbt-0.13.9.zip
 set SBT_EXPLODED=sbt-0.13.9
 set SBT_PACKAGE=%SBT_EXPLODED%.zip
@@ -143,7 +146,14 @@ set SOURCETREE_TOOL_1=start_sourcetree.bat
 
 set GIT_NAME=Git
 set GIT_VERSION=2.11.1
-set GIT_PACKAGE=https://github.com/git-for-windows/git/releases/download/v2.11.1.windows.1/PortableGit-2.11.1-64-bit.7z.exe
+set GIT_URL=https://github.com/git-for-windows/git/releases/download/v2.11.1.windows.1/PortableGit-2.11.1-64-bit.7z.exe
 set GIT_EXPLODED=--create--
 set GIT_PACKAGE=PortableGit-2.11.1-64-bit.7z.exe
 set GIT_FOLDER=git
+
+set MELD_NAME=Meld Merge
+set MELD_VERSION=3.16.2
+set MELD_URL=https://download.gnome.org/binaries/win32/meld/3.16/Meld-3.16.2-win32.msi
+set MELD_EXPLODED=--MSI--
+set MELD_PACKAGE=Meld-3.16.2-win32.msi
+set MELD_FOLDER=meld
