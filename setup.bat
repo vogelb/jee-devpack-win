@@ -20,13 +20,13 @@ set DOWNLOADS_DIR=%~dp0downloads
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
 
-set LAST_TEMPLATE=conf\template.bat
+set LAST_TEMPLATE=%TEMPLATE_DIR%\template.bat
 
 if exist %LAST_TEMPLATE% call %LAST_TEMPLATE%
 if not "%SELECTED_TEMPLATE%" == "" (
 	set TEMPLATE=%SELECTED_TEMPLATE%
 ) else (
-	set TEMPLATE=templates\default.bat
+	set TEMPLATE=%TEMPLATE_DIR%\default.bat
 )
 set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
 set DEBUG=FALSE
@@ -48,7 +48,7 @@ goto done_commandline
 
 :template_found
   shift
-	set TEMPLATE=templates\%1.bat
+	set TEMPLATE=%TEMPLATE_DIR%\%1.bat
 	shift
 	goto get_commandline
 
