@@ -74,7 +74,7 @@ if "%WORK_DRIVE%:" == "%~d0" (
 	goto done
 )
 
-call %~dp0bin\w_unmount_drive.bat
+call %~dp0bin\unmount_devpack.bat
 
 if not exist %WORK_DRIVE%:\ goto mount_work_drive
 echo.
@@ -85,7 +85,7 @@ goto done
 :mount_work_drive
 
 rem Mount work drive and read configuration
-call %~dp0bin\w_mount_drive.bat
+call %~dp0bin\mount_devpack.bat
 
 cd /d %WORK_DRIVE%:\
 

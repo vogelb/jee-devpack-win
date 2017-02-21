@@ -3,7 +3,7 @@ rem ===================================================================
 rem Cygwin condole Start Script
 rem Please configure the desired eclipse version and workspace location
 rem ===================================================================
-call bin\w_mount_drive.bat
+call %~dp0bin\mount_devpack.bat
 if not exist %CYGWIN_HOME% (
 	echo.
 	echo Cygwin is not installed.	

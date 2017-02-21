@@ -17,3 +17,4 @@ tools/sourcetree/
 start_sourcetree.bat
 /tools/git
 tools/meld
+templates/template.bat
