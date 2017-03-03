@@ -3,7 +3,7 @@ rem ===================================================================
 rem Java DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=BABUN JDK8 JDK8_32 JDK7 JDK6 ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD SUBLIME FORGE SCALA CONSOLE SOURCETREE GIT MELD
+set DEVPACK_PACKAGES=BABUN JDK8 JDK8_32 JDK7 JDK6 ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD SUBLIME FORGE SCALA CONSOLE SOURCETREE GIT MELD
 
 set BABUN_NAME=Babun
 set BABUN_VERSION=1.2.0
@@ -60,6 +60,14 @@ set ECLIPSE_CPP_URL=http://ftp.fau.de/eclipse/technology/epp/downloads/release/n
 set ECLIPSE_CPP_EXPLODED=eclipse-cpp-neon-2-win32-x86_64
 set ECLIPSE_CPP_PACKAGE=%ECLIPSE_CPP_EXPLODED%.zip
 set ECLIPSE_CPP_FOLDER=eclipse
+
+rem Option to install preconfigured eclipse workspace
+set ECLIPSE_WORKSPACE_NAME=Eclipse workspace
+set ECLIPSE_WORKSPACE_VERSION=
+set ECLIPSE_WORKSPACE_URL=
+set ECLIPSE_WORKSPACE_PACKAGE=
+set ECLIPSE_WORKSPACE_EXPLODED=workspace
+set ECLIPSE_WORKSPACE_FOLDER=..\workspace
 
 set MAVEN_NAME=Maven
 set MAVEN_VERSION=3.3.9

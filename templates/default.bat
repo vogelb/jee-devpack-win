@@ -2,6 +2,9 @@
 rem ===================================================================
 rem JEE DevPack Installation default Template
 rem
+rem Configure which packages to install
+rem Package configuration (from conf/packages.bat) can be overriden here.
+rem
 rem Included packages:
 rem - Oracle JDK 8
 rem - Tom EE
@@ -23,6 +26,10 @@ rem   EE: Install Eclipse for Java EE developers
 rem   JAVA: Install Eclipse for Java developers
 rem   CPP: Install Eclipse for C/C++ developers
 set INSTALL_ECLIPSE=EE
+
+rem Set to TRUE if you want to install a preconfigured workspace
+rem Additional settings required in package configuration (or here)
+set INSTALL_ECLIPSE_WORKSPACE=FALSE
 
 rem Set to TRUE if you want Notepad++ installed
 set INSTALL_NOTEPAD=TRUE

@@ -17,6 +17,8 @@ rem ===================================================================
 rem Set DOWNLOADS_DIR in order to reuse existing downloads  
 set DOWNLOADS_DIR=%~dp0downloads
 
+set TEMPLATE_DIR=%~dp0templates
+
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
 
@@ -106,6 +108,7 @@ if "%COMMAND%" == "install" goto install_devpack
 if "%COMMAND%" == "download" goto download
 if "%COMMAND%" == "purge" goto purge
 if "%COMMAND%" == "uninstall" goto uninstall
+if "%COMMAND%" == "clean" goto clean_devpack
 
 echo.
 echo J2EE Devpack setup
@@ -166,6 +169,17 @@ for %%p in ( %DEVPACK_PACKAGES% )  do (
 		call :download_package %%p
 	)
 )
+
+if "%INSTALL_ECLIPSE%" == "EE" (
+	call :download_package ECLIPSE_EE
+)
+if "%INSTALL_ECLIPSE%" == "JAVA" (
+	call :download_package ECLIPSE_JAVA
+)
+if "%INSTALL_ECLIPSE%" == "CPP" (
+	call :download_package ECLIPSE_CPP
+)
+
 endlocal
 
 :download_jdk6
@@ -462,7 +476,7 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 	if not "%UNZIPPED%" == "??" (
 		if exist %UNZIPPED% if not exist %TARGET% (
 			echo Renaming %UNZIPPED% to %TARGET%
-			rename %UNZIPPED% %TARGET%
+			move %UNZIPPED% %TARGET%
 			if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
 		)
   )
@@ -637,6 +651,13 @@ if exist %TOOLS_DIR%\%TARGET% (
 
 echo installing now.
 
+if not "%INSTALL_JAVA_SOURCE%" == "TRUE" (
+  echo.
+  echo extracting JDK...
+  call :install_jdk_without_source %PACKAGE_SPEC%
+  exit /B
+)
+
 echo extracting package... 
 PING 127.0.0.1 -n 3 >NUL
 
@@ -804,5 +825,38 @@ if not "%KEEP_PACKAGES%" == "TRUE" del %DOWNLOADS_DIR%\%PACKAGE%
 echo ... done.
 echo.
 exit /B
+
+rem Clean installing dev pack
+rem Remove all user files, e.g. for distribution
+:clean_devpack
+echo.
+echo Cleaning dev pack...
+if exist %TOOLS_DIR%\npp (
+  call :clean_file %TOOLS_DIR%\npp\session.xml
+  call :clean_folder %TOOLS_DIR%\npp\backup
+)
+
+if exist workspace (
+  echo.
+  echo Cleaning workspace... press ctrl-c to abort!
+  pause
+  FOR /D /r %%G in ("workspace\*") DO (
+	if NOT "%%~nG" == "" (
+		echo Removing workspace folder "%%G"
+		call :clean_folder %%G
+	)
+  )
+)
+echo done
+exit /B
+
+:clean_file
+if exist %1 del /Q %1 >NUL
+exit /B
+
+:clean_folder
+if exist %1 rmdir /S /Q %1 >NUL
+exit /B
+
 
 :done
