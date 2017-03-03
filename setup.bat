@@ -17,6 +17,8 @@ rem ===================================================================
 rem Set DOWNLOADS_DIR in order to reuse existing downloads  
 set DOWNLOADS_DIR=%~dp0downloads
 
+set TEMPLATE_DIR=%~dp0templates
+
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
 
@@ -167,6 +169,17 @@ for %%p in ( %DEVPACK_PACKAGES% )  do (
 		call :download_package %%p
 	)
 )
+
+if "%INSTALL_ECLIPSE%" == "EE" (
+	call :download_package ECLIPSE_EE
+)
+if "%INSTALL_ECLIPSE%" == "JAVA" (
+	call :download_package ECLIPSE_JAVA
+)
+if "%INSTALL_ECLIPSE%" == "CPP" (
+	call :download_package ECLIPSE_CPP
+)
+
 endlocal
 
 :download_jdk6
@@ -463,7 +476,7 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 	if not "%UNZIPPED%" == "??" (
 		if exist %UNZIPPED% if not exist %TARGET% (
 			echo Renaming %UNZIPPED% to %TARGET%
-			rename %UNZIPPED% %TARGET%
+			move %UNZIPPED% %TARGET%
 			if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
 		)
   )
