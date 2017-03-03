@@ -651,6 +651,13 @@ if exist %TOOLS_DIR%\%TARGET% (
 
 echo installing now.
 
+if not "%INSTALL_JAVA_SOURCE%" == "TRUE" (
+  echo.
+  echo extracting JDK...
+  call :install_jdk_without_source %PACKAGE_SPEC%
+  exit /B
+)
+
 echo extracting package... 
 PING 127.0.0.1 -n 3 >NUL
 
