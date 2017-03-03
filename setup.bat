@@ -106,6 +106,7 @@ if "%COMMAND%" == "install" goto install_devpack
 if "%COMMAND%" == "download" goto download
 if "%COMMAND%" == "purge" goto purge
 if "%COMMAND%" == "uninstall" goto uninstall
+if "%COMMAND%" == "clean" goto clean_devpack
 
 echo.
 echo J2EE Devpack setup
@@ -804,5 +805,38 @@ if not "%KEEP_PACKAGES%" == "TRUE" del %DOWNLOADS_DIR%\%PACKAGE%
 echo ... done.
 echo.
 exit /B
+
+rem Clean installing dev pack
+rem Remove all user files, e.g. for distribution
+:clean_devpack
+echo.
+echo Cleaning dev pack...
+if exist %TOOLS_DIR%\npp (
+  call :clean_file %TOOLS_DIR%\npp\session.xml
+  call :clean_folder %TOOLS_DIR%\npp\backup
+)
+
+if exist workspace (
+  echo.
+  echo Cleaning workspace... press ctrl-c to abort!
+  pause
+  FOR /D /r %%G in ("workspace\*") DO (
+	if NOT "%%~nG" == "" (
+		echo Removing workspace folder "%%G"
+		call :clean_folder %%G
+	)
+  )
+)
+echo done
+exit /B
+
+:clean_file
+if exist %1 del /Q %1 >NUL
+exit /B
+
+:clean_folder
+if exist %1 rmdir /S /Q %1 >NUL
+exit /B
+
 
 :done
