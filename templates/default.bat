@@ -79,5 +79,8 @@ set INSTALL_SOURCETREE=FALSE
 rem Set to TRUE if you want the git client installed
 set INSTALL_GIT=FALSE
 
-rem set to TRUE is you want to install Meld Merge
+rem Set to TRUE is you want to install Meld Merge
 set INSTALL_MELD=FALSE
+
+rem Set to TRUE is you want to install PostgreSQL
+set INSTALL_POSTGRES=FALSE

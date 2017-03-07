@@ -3,7 +3,7 @@ rem ===================================================================
 rem Java DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=BABUN JDK8 JDK8_32 JDK7 JDK6 ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD SUBLIME FORGE SCALA CONSOLE SOURCETREE GIT MELD
+set DEVPACK_PACKAGES=BABUN JDK8 JDK8_32 JDK7 JDK6 ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD SUBLIME FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES
 
 set BABUN_NAME=Babun
 set BABUN_VERSION=1.2.0
@@ -165,3 +165,10 @@ set MELD_URL=https://download.gnome.org/binaries/win32/meld/3.16/Meld-3.16.2-win
 set MELD_EXPLODED=--MSI--
 set MELD_PACKAGE=Meld-3.16.2-win32.msi
 set MELD_FOLDER=meld
+
+set POSTGRES_NAME=PostgreSQL
+set POSTGRES_VERSION=9.6.2
+set POSTGRES_URL=http://get.enterprisedb.com/postgresql/postgresql-9.6.2-2-windows-x64-binaries.zip
+set POSTGRES_PACKAGE=postgresql-9.6.2-2-windows-x64-binaries.zip
+set POSTGRES_EXPLODED=pgsql
+set POSTGRES_FOLDER=postgres

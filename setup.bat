@@ -33,6 +33,7 @@ if not "%SELECTED_TEMPLATE%" == "" (
 set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
 set DEBUG=FALSE
 set TAB=	
+set GIT_REPO=--git-repo--
 
 :get_commandline
 if "%1" == "-debug" goto debug_found
@@ -566,13 +567,31 @@ set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
 
 echo | set /p=Package %OPTION% [%PACKAGE%]... 
+
 if not exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
-	echo %PACKAGE_URL% >> %DOWNLOADS%
-	echo marked for download.
+	if "%PACKAGE%" == "%GIT_REPO%" (
+		call :checkout_git_repo %PACKAGE_URL% %TARGET%
+	) else (
+		echo %PACKAGE_URL% >> %DOWNLOADS%
+		echo marked for download.	
+	)
 	exit /B
 )
 endlocal
 echo already available.
+exit /B
+
+:checkout_git_repo
+setlocal
+set REPO_URL=%1
+set REPO_TARGET=%2
+if not exist "%REPO_TARGET%" (
+  mkdir "%REPO_TARGET%"
+)
+
+echo | set /p=Checking out %PACKAGE%... 
+git clone %REPO_URL% "%REPO_TARGET%"
+echo done.	
 exit /B
 
 :install_jdk_6
