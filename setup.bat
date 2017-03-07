@@ -13,6 +13,8 @@ rem - Eclipse JEE package
 rem - Notepad++
 rem - JBoss Forge
 rem ===================================================================
+rem
+rem Setup configuration
 
 rem Set DOWNLOADS_DIR in order to reuse existing downloads  
 set DOWNLOADS_DIR=%~dp0downloads
@@ -22,7 +24,11 @@ set TEMPLATE_DIR=%~dp0templates
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
 
+rem ===================================================================
+
+set TEMPLATE_DIR=%~dp0templates
 set LAST_TEMPLATE=%TEMPLATE_DIR%\template.bat
+set CONF_DIR=%~dp0conf
 
 if exist %LAST_TEMPLATE% call %LAST_TEMPLATE%
 if not "%SELECTED_TEMPLATE%" == "" (
@@ -498,6 +504,13 @@ rem Create version.txt, handle configured tools.
 rem -------------------------------------------------
 :postinstall_package
   echo %VERSION% > %TOOLS_DIR%\%TARGET%\version.txt
+  
+  set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
+  call :expand_variable CONFIG_NAME
+  
+  if not "!CONFIG_NAME!" == "" (
+    copy %CONF_DIR%\!CONFIG_NAME!.config %CONF_DIR%\!CONFIG_NAME!.bat
+  )
   
   for /l %%x in (1, 1, 10) do (
 	

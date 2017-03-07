@@ -172,3 +172,4 @@ set POSTGRES_URL=http://get.enterprisedb.com/postgresql/postgresql-9.6.2-2-windo
 set POSTGRES_PACKAGE=postgresql-9.6.2-2-windows-x64-binaries.zip
 set POSTGRES_EXPLODED=pgsql
 set POSTGRES_FOLDER=postgres
+set POSTGRES_CONFIG=postgres

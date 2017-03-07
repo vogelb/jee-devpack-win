@@ -19,6 +19,9 @@ rem -----------------------------------------------------------------
 rem Add workspace parameters as required
 set PATH=%BIN_DIR%;%JAVA_HOME%\bin;%FORGE_HOME%\bin;%TOOLS_DIR%\scala\bin;%TOOLS_DIR%\tomee\bin;%GIT_HOME%\bin;%WORKING_DIR%;%PATH%
 
+rem load optional package configuration
+call :include_config %CONF_DIR%\postgres.bat
+
 rem -----------------------------------------------------------------
 rem Define command aliases
 doskey mci=mvn clean install
@@ -28,3 +31,9 @@ doskey st=sourcetree
 rem Add more aliases for your convenience...
 doskey ..=cd ..
 doskey ...=cd ..\..
+
+exit /B
+
+:include_config
+if exist %1 call %1
+exit /B
