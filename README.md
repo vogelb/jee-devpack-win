@@ -25,6 +25,7 @@ The Dev Pack supports the following packages:
 - Sublime Text
 - 7-Zip
 - SourceTree
+- PostgreSQL
 - Some aliases and scripts to help you get going. Most scripts are designed to work out of the explorer (double click).
 
 ## Use of 7-Zip
