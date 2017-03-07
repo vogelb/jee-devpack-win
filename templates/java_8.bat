@@ -36,7 +36,7 @@ set INSTALL_NOTEPAD=TRUE
 
 rem Set to TRUE to extract source.zip from JDK installation package.
 rem This requires to start the installation to extract the installation files.
-set INSTALL_JAVA_SOURCE=TRUE
+set INSTALL_JAVA_SOURCE=FALSE
 
 rem Set to TRUE if you want Java 8 installed
 set INSTALL_JDK8=TRUE

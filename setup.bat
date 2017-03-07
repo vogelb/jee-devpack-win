@@ -28,6 +28,7 @@ rem ===================================================================
 
 set TEMPLATE_DIR=%~dp0templates
 set LAST_TEMPLATE=%TEMPLATE_DIR%\template.bat
+set BIN_DIR=%~dp0bin
 set CONF_DIR=%~dp0conf
 
 if exist %LAST_TEMPLATE% call %LAST_TEMPLATE%
@@ -299,21 +300,25 @@ setlocal enabledelayedexpansion
 
 for %%p in ( %DEVPACK_PACKAGES% )  do (		
 	set INSTALL_PACKAGE=INSTALL_%%p
+	set PACKAGE_TYPE=%%p_TYPE
 	call :expand_variable INSTALL_PACKAGE
+	call :expand_variable PACKAGE_TYPE
 	
 	if "!INSTALL_PACKAGE!" == "TRUE" (
-		if "%%p" == "JDK6" (
+		if "!PACKAGE_TYPE!" == "JDK6" (
 			call :install_jdk_6 %%p
-		) else if "%%p" == "JDK7" (
+		) else if "!PACKAGE_TYPE!" == "JDK7" (
 			call :install_jdk %%p
-		) else if "%%p" == "JDK8" (
+		) else if "!PACKAGE_TYPE!" == "JDK" (
 			call :install_jdk %%p
-		) else if "%%p" == "JDK8_32" (
-			call :install_jdk %%p
-		) else if "%%p" == "SOURCETREE" (
+		) else if "!PACKAGE_TYPE!" == "MSI" (
+			call :install_msi_package %%p
+		) else if "!PACKAGE_TYPE!" == "NUPKG" (
 			call :install_nupkg_package %%p
-		) else if not "%%p" == "BABUN" (
+		) else if "!PACKAGE_TYPE!" == "ZIP" (
 			call :install_package %%p
+		) else (
+			echo Error installing package %%p: Unknown package type "!PACKAGE_TYPE!"
 		)
 	)
 )
@@ -331,31 +336,6 @@ if "%INSTALL_SCALA%" == "TRUE" (
 	call :install_package SBT
 )
 
-if "%INSTALL_BABUN%" == "TRUE" (
-	if not exist "%TOOLS_DIR%\%BABUN_FOLDER%" (
-		call :install_package %BABUN_NAME% BABUN
-		
-		echo unpacked %BABUN_NAME%.
-		echo calling %TOOLS_DIR%\%BABUN_EXPLODED%\install.bat /t %TOOLS_DIR%
-		
-		call "%TOOLS_DIR%\%BABUN_EXPLODED%\install.bat" /t "%TOOLS_DIR%"
-		if errorlevel 1 set BABUN_ERROR=TRUE
-		
-		echo cleaning up...
-		rmdir /S /Q "%TOOLS_DIR%\%BABUN_EXPLODED%" >NUL
-		
-	  if "%BABUN_ERROR%" == "TRUE" (
-		echo.
-		  echo ---
-			echo %BABUN_NAME% was not correctly installed. Please see above error log.
-			echo DevPack installation aborted!
-			exit /B
-		) else (
-			echo %BABUN_NAME% installation done.	
-		)
-	)
-	echo Package %BABUN_NAME% is already installed.
-)
 call %WORK_DRIVE%:\setenv.bat
 
 exit /B
@@ -454,6 +434,7 @@ set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
 set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
 set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
+echo.
 echo | set /p=Package %OPTION%... 
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
@@ -466,10 +447,7 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 	echo installing now.
 	pushd %TOOLS_DIR%
 	
-	if "%UNZIPPED%" == "--MSI--" (
-		call :extract_msi_package "%DOWNLOADS_DIR%\%PACKAGE%" %TOOLS_DIR%\%TARGET%
-		set UNZIPPED=%TARGET%
-	) else if "%UNZIPPED%" == "--create--" (
+	if "%UNZIPPED%" == "--create--" (
 		echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%... 
 		%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%TARGET% >NUL
 		set UNZIPPED=%TARGET%
@@ -482,20 +460,57 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 
 	if not "%UNZIPPED%" == "??" (
 		if exist %UNZIPPED% if not exist %TARGET% (
-			echo Renaming %UNZIPPED% to %TARGET%
-			move %UNZIPPED% %TARGET%
-			if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
+			echo | set /p=Renaming %UNZIPPED% to %TARGET%... 
+			move %UNZIPPED% %TARGET% >NUL
+			echo ok.
 		)
+		if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
   )
   
   call :postinstall_package
 
   popd
-  echo done.
+  echo Package %OPTION% done.
   exit /B
 )
 endlocal
 echo already installed.
+exit /B
+
+:install_msi_package
+set PACKAGE_SPEC=%~1
+setlocal enabledelayedexpansion
+set OPTION=!%PACKAGE_SPEC%_NAME!
+set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
+set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
+set TARGET=!%PACKAGE_SPEC%_FOLDER!
+set VERSION=!%PACKAGE_SPEC%_VERSION!
+echo.
+echo | set /p=Package %OPTION%... 
+
+if not exist "%TOOLS_DIR%\%TARGET%" (
+
+	if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+		echo Error: Package %PACKAGE% was not downloaded!
+		exit /B
+	)
+
+	echo installing now.
+	pushd %TOOLS_DIR%
+
+	echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%... 
+	msiexec /a %DOWNLOADS_DIR%\%PACKAGE% /qn TARGETDIR=%TOOLS_DIR%\%TARGET% 
+	echo ok.
+	
+	call :postinstall_package
+
+	popd
+	echo Package %OPTION% done.
+	exit /B
+)
+endlocal
+echo already installed.
+
 exit /B
 
 rem -------------------------------------------------
@@ -506,9 +521,15 @@ rem -------------------------------------------------
   echo %VERSION% > %TOOLS_DIR%\%TARGET%\version.txt
   
   set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
+  set POSTINSTALL=%PACKAGE_SPEC%_POSTINSTALL
   call :expand_variable CONFIG_NAME
+  call :expand_variable POSTINSTALL
   
-  if not "!CONFIG_NAME!" == "" (
+  if not "!POSTINSTALL!" == "%PACKAGE_SPEC%_POSTINSTALL" (
+	call %BIN_DIR%\%POSTINSTALL%
+  )
+  
+  if not "!CONFIG_NAME!" == "%PACKAGE_SPEC%_CONFIG" (
     copy %CONF_DIR%\!CONFIG_NAME!.config %CONF_DIR%\!CONFIG_NAME!.bat
   )
   
@@ -520,7 +541,7 @@ rem -------------------------------------------------
 	call :expand_variable TOOL_VALUE
 	
 	if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
-	  copy %~dp0bin\!TOOL_VALUE! %~dp0 >NUL
+	  if exist %~dp0bin\!TOOL_VALUE! copy %~dp0bin\!TOOL_VALUE! %~dp0 >NUL
 	)
   )
 exit /B
@@ -551,8 +572,8 @@ if exist "%TOOLS_DIR%\%TARGET%" (
 		
 		call :expand_variable TOOL_VALUE
 		
-		if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
-		  del %~dp0!TOOL_VALUE!
+		if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (		
+		  if exist %~dp0!TOOL_VALUE! del %~dp0!TOOL_VALUE!
 		)
 	  )
 	
@@ -728,21 +749,6 @@ echo Install package %OPTION% done.
 echo.
 exit /B
 
-:extract_msi_package
-set MSI_PACKAGE=%1
-set MSI_TARGET=%2
-
-if not exist %MSI_PACKAGE% (
-	echo.
-	echo Error: Package %MSI_PACKAGE% does not exist.
-	exit /B
-)
-
-echo | set /p=Unpacking %OPTION% %VERSION% to %MSI_TARGET%...
-msiexec /a %MSI_PACKAGE% /qn TARGETDIR=%MSI_TARGET% 
-
-exit /B
-
 :install_nupkg_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
@@ -754,7 +760,7 @@ set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
 
 set EXTRACT=%DOWNLOADS_DIR%\extract
-
+echo.
 echo | set /p=Package %OPTION%... 
 if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
 	echo Error: Package %PACKAGE% was not downloaded!
@@ -767,7 +773,7 @@ if exist %TOOLS_DIR%\%TARGET% (
 
 echo installing now.
 
-echo extracting package... 
+echo | set /p=Extracting package %OPTION%... 
 
 rmdir /s /q %EXTRACT% >NUL 2>&1
 mkdir %EXTRACT%
@@ -775,14 +781,20 @@ pushd %EXTRACT%
 
 %TOOLS_DIR%\7-Zip\7z x %DOWNLOADS_DIR%\%PACKAGE% >NUL
 %TOOLS_DIR%\7-Zip\7z x %UNZIPPED% >NUL
+echo ok.
 
+echo | set /p=Copying files to %TOOLS_DIR%\%TARGET%...
 xcopy "lib\net45\*" "%TOOLS_DIR%\%TARGET%" /S /i >NUL
 popd
+echo ok.
 
+echo | set /p=Cleaning up...
 rmdir /s /q %EXTRACT% >NUL 2>&1
+echo ok.
 
 call :postinstall_package
 
+echo Package %OPTION% done.
 exit /B
 
 :expand_variable
