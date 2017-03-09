@@ -33,7 +33,7 @@ set CONF_DIR=%~dp0conf
 
 if exist %LAST_TEMPLATE% call %LAST_TEMPLATE%
 if not "%SELECTED_TEMPLATE%" == "" (
-	set TEMPLATE=%SELECTED_TEMPLATE%
+	set TEMPLATE=%TEMPLATE_DIR%\%SELECTED_TEMPLATE%
 ) else (
 	set TEMPLATE=%TEMPLATE_DIR%\default.bat
 )
@@ -69,8 +69,9 @@ set COMMAND=%1
 if not exist %TEMPLATE% echo. && echo Template %TEMPLATE% not found. && echo Exiting... && goto done
 
 echo Using template %TEMPLATE%...
-	
-echo set SELECTED_TEMPLATE=%TEMPLATE%>%LAST_TEMPLATE%
+
+call :get_filename TEMPLATE_NAME %TEMPLATE%
+echo set SELECTED_TEMPLATE=%TEMPLATE_NAME%>%LAST_TEMPLATE%
 
 rem Unmount mounted drive. Might be another instance!
 set DEVPACK_BASE=
@@ -92,9 +93,8 @@ echo The configured work drive (%WORK_DRIVE%) is already in use.
 echo Installation cancelled.
 goto done
 
-:mount_work_drive
-
 rem Mount work drive and read configuration
+:mount_work_drive
 call %~dp0bin\mount_devpack.bat
 
 cd /d %WORK_DRIVE%:\
@@ -135,6 +135,8 @@ dir /B templates
 
 exit /B
 
+rem ======================================================================
+rem Install selected packages
 :install_devpack
 echo.
 echo Start Installation of JEE DevPack
@@ -160,6 +162,8 @@ echo All done.
 
 exit /B
 
+rem ======================================================================
+rem Download selected packages
 :download
 echo.
 echo -^> Downloading packages...
@@ -190,6 +194,8 @@ if "%INSTALL_ECLIPSE%" == "CPP" (
 
 endlocal
 
+rem ======================================================================
+rem Download JDK6
 :download_jdk6
 if "%INSTALL_JDK6%" == "TRUE" (
 	echo | set /p=Package JDK 6... 
@@ -203,6 +209,8 @@ if "%INSTALL_JDK6%" == "TRUE" (
 	echo already available.
 )
 
+rem ======================================================================
+rem Download JDK7
 :download_jdk7
 if "%INSTALL_JDK7%" == "TRUE" (
 	echo | set /p=Package JDK 7... 
@@ -214,6 +222,8 @@ if "%INSTALL_JDK7%" == "TRUE" (
 	echo already available.
 )
 
+rem ======================================================================
+rem Download JDK8 64bit
 :download_jdk8
 if "%INSTALL_JDK8%" == "TRUE" (
 	echo | set /p=Package JDK 8... 
@@ -225,6 +235,9 @@ if "%INSTALL_JDK8%" == "TRUE" (
 	echo already available.
 )
 
+
+rem ======================================================================
+rem Download JDK8 32bit
 :download_jdk8_32
 if "%INSTALL_JDK8_32%" == "TRUE" (
 	echo | set /p=Package JDK 8_32... 
@@ -236,6 +249,8 @@ if "%INSTALL_JDK8_32%" == "TRUE" (
 	echo already available.
 )
 
+rem ======================================================================
+rem Execute download of marked packages.
 :execute_downloads
 if not exist %DOWNLOADS% goto done
 echo.
@@ -251,24 +266,8 @@ del %DOWNLOADS%
 
 exit /B
 
-:strlen <resultVar> <stringVar>
-(   
-    setlocal EnableDelayedExpansion
-    set "s=!%~2!#"
-    set "len=0"
-    for %%P in (4096 2048 1024 512 256 128 64 32 16 8 4 2 1) do (
-        if "!s:~%%P,1!" NEQ "" ( 
-            set /a "len+=%%P"
-            set "s=!s:~%%P!"
-        )
-    )
-)
-( 
-    endlocal
-    set "%~1=%len%"
-    exit /b
-)
-
+rem ======================================================================
+rem Print DevPack status information
 :info
 echo.
 echo Setup Information
@@ -293,6 +292,8 @@ for %%p in ( %DEVPACK_PACKAGES% )  do (
 
 exit /B
 
+rem ======================================================================
+rem Install selected packages
 :install
 echo.
 echo -^> Installing packages...
@@ -340,6 +341,8 @@ call %WORK_DRIVE%:\setenv.bat
 
 exit /B
 
+rem ======================================================================
+rem Uninstall packages not selected by the current template
 :purge
 setlocal enabledelayedexpansion
 echo.
@@ -365,6 +368,8 @@ echo All done.
 
 exit /B
 
+rem ======================================================================
+rem Uninstall all packages in the DevPack
 :uninstall
 echo.
 echo -^> Uninstalling DevPack...
@@ -378,6 +383,9 @@ echo All done.
 
 exit /B
 
+rem ======================================================================
+rem Print the status of a package
+rem %1: Package identifier
 :query_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
@@ -422,10 +430,10 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 
 exit /B
 
-rem -------------------------------------------------
-rem Installation routine
-rem Unzip package into target folder.
-rem -------------------------------------------------
+rem ======================================================================
+rem Install an archived package
+rem Unzips the package into target folder.
+rem %1: package identifier
 :install_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
@@ -477,6 +485,9 @@ endlocal
 echo already installed.
 exit /B
 
+rem ======================================================================
+rem Install an MSI based installer
+rem %1: package identifier
 :install_msi_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
@@ -513,10 +524,9 @@ echo already installed.
 
 exit /B
 
-rem -------------------------------------------------
+rem ======================================================================
 rem Package post-installation.
 rem Create version.txt, handle configured tools.
-rem -------------------------------------------------
 :postinstall_package
   echo %VERSION% > %TOOLS_DIR%\%TARGET%\version.txt
   
@@ -546,10 +556,9 @@ rem -------------------------------------------------
   )
 exit /B
 
-rem -------------------------------------------------
+rem ======================================================================
 rem Deinstallation routine
 rem Remove target folder.
-rem -------------------------------------------------
 :uninstall_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
@@ -586,10 +595,9 @@ endlocal
 echo not installed.
 exit /B
 
-rem -------------------------------------------------
+rem ======================================================================
 rem Download routine
 rem Add download package to download list
-rem -------------------------------------------------
 :download_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
@@ -615,6 +623,10 @@ endlocal
 echo already available.
 exit /B
 
+rem ======================================================================
+rem Checkout a git repository
+rem %1: repository URL
+rem %2: target folder (will be created) 
 :checkout_git_repo
 setlocal
 set REPO_URL=%1
@@ -628,6 +640,9 @@ git clone %REPO_URL% "%REPO_TARGET%"
 echo done.	
 exit /B
 
+rem ======================================================================
+rem Install a JDK 6 installer
+rem  %1 package identifier
 :install_jdk_6
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
@@ -681,7 +696,9 @@ echo Install package %OPTION% done.
 echo.
 exit /B
 
-
+rem ======================================================================
+rem Install a JDK installer (JDK >=7)
+rem  %1 package identifier
 :install_jdk
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
@@ -749,6 +766,10 @@ echo Install package %OPTION% done.
 echo.
 exit /B
 
+rem ======================================================================
+rem Install a NUPKG based installer
+rem  %1 package identifier
+
 :install_nupkg_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
@@ -797,6 +818,9 @@ call :postinstall_package
 echo Package %OPTION% done.
 exit /B
 
+rem ======================================================================
+rem Expand variable: Recursively expand the given variable 
+rem  %1 variable name
 :expand_variable
 set var=%1
 :expand_loop
@@ -807,6 +831,9 @@ if not "!%var%!" == "" (
 set %1=!var!
 exit /B
 
+rem ======================================================================
+rem "Old" JDK installation procedure: Extract installer and contained CABs
+rem %1: Package identifier
 :install_jdk_without_source
 set PACKAGE_SPEC=%1
 setlocal enabledelayedexpansion
@@ -870,6 +897,7 @@ echo ... done.
 echo.
 exit /B
 
+rem ======================================================================
 rem Clean installing dev pack
 rem Remove all user files, e.g. for distribution
 :clean_devpack
@@ -894,13 +922,46 @@ if exist workspace (
 echo done
 exit /B
 
-:clean_file
+rem ======================================================================
+rem Get the length of a string
+:strlen <resultVar> <stringVar>
+(   
+    setlocal EnableDelayedExpansion
+    set "s=!%~2!#"
+    set "len=0"
+    for %%P in (4096 2048 1024 512 256 128 64 32 16 8 4 2 1) do (
+        if "!s:~%%P,1!" NEQ "" ( 
+            set /a "len+=%%P"
+            set "s=!s:~%%P!"
+        )
+    )
+)
+( 
+    endlocal
+    set "%~1=%len%"
+    exit /b
+)
+
+rem ======================================================================
+rem Delete a file
+rem %1: File path
+:clean_file <filePath>
 if exist %1 del /Q %1 >NUL
 exit /B
 
-:clean_folder
+rem ======================================================================
+rem Recursively delete a folder
+rem %1: Folder path
+:clean_folder <folderPath>
 if exist %1 rmdir /S /Q %1 >NUL
 exit /B
 
+rem ======================================================================
+rem Get the file name from a path
+rem %1: Result variable
+rem %2: The Path
+:get_filename <resultVar> <filePath>
+set %1=%~nx2
+exit /B
 
 :done
