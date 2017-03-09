@@ -442,7 +442,7 @@ set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
 set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
 set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
-echo.
+
 echo | set /p=Package %OPTION%... 
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
@@ -479,6 +479,7 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 
   popd
   echo Package %OPTION% done.
+  echo.
   exit /B
 )
 endlocal
@@ -517,6 +518,7 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 
 	popd
 	echo Package %OPTION% done.
+	echo.
 	exit /B
 )
 endlocal
@@ -664,7 +666,7 @@ if exist %TOOLS_DIR%\%TARGET% (
 	exit /B
 )
 
-echo installing now!
+echo installing now.
 echo | set /p=extracting package... 
 %TOOLS_DIR%\7-Zip\7z x -y %PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
 pushd %DOWNLOADS_DIR%\JDK
@@ -692,7 +694,7 @@ echo | set /p=cleaning up...
 rmdir /S /Q %DOWNLOADS_DIR%\JDK >NUL
 if not "%KEEP_PACKAGES%" == "TRUE" del %PACKAGE%
 echo done.
-echo Install package %OPTION% done.
+echo Package %OPTION% done.
 echo.
 exit /B
 
@@ -724,8 +726,6 @@ if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
 echo installing now.
 
 if not "%INSTALL_JAVA_SOURCE%" == "TRUE" (
-  echo.
-  echo extracting JDK...
   call :install_jdk_without_source %PACKAGE_SPEC%
   exit /B
 )
@@ -764,7 +764,7 @@ echo | set /p=cleaning up...
 rmdir /S /Q %DOWNLOADS_DIR%\extract >NUL
 if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
 echo done.
-echo Install package %OPTION% done.
+echo Package %OPTION% done.
 echo.
 exit /B
 
@@ -783,7 +783,6 @@ set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
 
 set EXTRACT=%DOWNLOADS_DIR%\extract
-echo.
 echo | set /p=Package %OPTION%... 
 if exist %TOOLS_DIR%\%TARGET% (
 	echo already installed.
@@ -819,6 +818,7 @@ echo ok.
 call :postinstall_package
 
 echo Package %OPTION% done.
+echo.
 exit /B
 
 rem ======================================================================
@@ -847,8 +847,6 @@ set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
 set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
 
-echo | set /p=Package %OPTION%... 
-
 if not exist %DOWNLOADS_DIR%\%PACKAGE% (
 	echo Error: Package %PACKAGE% was not downloaded!
 	exit /B
@@ -859,8 +857,8 @@ if exist %TOOLS_DIR%\%TARGET% (
 	exit /B
 )
 
-echo Installing %PACKAGE_NAME% ...
 echo ... extracting package ...
+call :clean_folder %DOWNLOADS_DIR%\JDK
 %TOOLS_DIR%\7-Zip\7z x -y %DOWNLOADS_DIR%\%PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
 pushd %DOWNLOADS_DIR%\JDK
 
