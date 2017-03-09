@@ -710,12 +710,14 @@ set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
 
 echo | set /p=Package %OPTION%... 
-if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
-	echo Error: Package %PACKAGE% was not downloaded!
-	exit /B
-)
+
 if exist %TOOLS_DIR%\%TARGET% (
 	echo already installed.
+	exit /B
+)
+
+if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+	echo Error: Package %PACKAGE% was not downloaded!
 	exit /B
 )
 
@@ -783,12 +785,13 @@ set VERSION=!%PACKAGE_SPEC%_VERSION!
 set EXTRACT=%DOWNLOADS_DIR%\extract
 echo.
 echo | set /p=Package %OPTION%... 
-if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
-	echo Error: Package %PACKAGE% was not downloaded!
-	exit /B
-)
 if exist %TOOLS_DIR%\%TARGET% (
 	echo already installed.
+	exit /B
+)
+
+if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+	echo Error: Package %PACKAGE% was not downloaded!
 	exit /B
 )
 
