@@ -40,6 +40,7 @@ if not "%SELECTED_TEMPLATE%" == "" (
 set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
 set DEBUG=FALSE
 set TAB=	
+set VERSION_FILE=version.txt
 set GIT_REPO=--git-repo--
 
 :get_commandline
@@ -425,7 +426,8 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 	)
 	echo downloaded.
 ) else (
-	echo installed.
+	call :processVersionFile "%TOOLS_DIR%\%TARGET%\%VERSION_FILE%" INSTALLED_VERSION
+	echo installed [!INSTALLED_VERSION!].
 )
 
 exit /B
@@ -528,9 +530,9 @@ exit /B
 
 rem ======================================================================
 rem Package post-installation.
-rem Create version.txt, handle configured tools.
+rem Create version file, handle configured tools.
 :postinstall_package
-  echo %VERSION% > %TOOLS_DIR%\%TARGET%\version.txt
+  echo %VERSION%> "%TOOLS_DIR%\%TARGET%\%VERSION_FILE%"
   
   set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
   set POSTINSTALL=%PACKAGE_SPEC%_POSTINSTALL
@@ -575,7 +577,12 @@ echo | set /p=Package %OPTION%...
 if exist "%TOOLS_DIR%\%TARGET%" (
 	pushd %TOOLS_DIR%
 	
-	rmdir /Q /S "%TARGET%"
+	call :clean_folder "%TARGET%"
+	
+	set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
+    call :expand_variable CONFIG_NAMEif not "!CONFIG_NAME!" == "" (
+      call :clean_file %CONF_DIR%\!CONFIG_NAME!.bat
+    )
 	
 	for /l %%x in (1, 1, 10) do (
 		set TOOL_NAME=%PACKAGE_SPEC%_TOOL_%%x
@@ -583,8 +590,8 @@ if exist "%TOOLS_DIR%\%TARGET%" (
 		
 		call :expand_variable TOOL_VALUE
 		
-		if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (		
-		  if exist %~dp0!TOOL_VALUE! del %~dp0!TOOL_VALUE!
+		if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
+		  call :clean_file %~dp0!TOOL_VALUE!
 		)
 	  )
 	
@@ -963,6 +970,19 @@ rem %1: Result variable
 rem %2: The Path
 :get_filename <resultVar> <filePath>
 set %1=%~nx2
+
+rem Read single value from given file.
+:processVersionFile <configFile> <resultVar>
+if exist %1 (
+	@for /F "tokens=*" %%a in ('type %1') do (
+		set %2=%%a
+		exit /b %errorlevel%
+	)
+)
+exit /b
+
+:normalizePath <inputPath> <resultVar>
+SET %2=%~dpfn1
 exit /B
 
 :done
