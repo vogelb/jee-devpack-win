@@ -768,9 +768,12 @@ xcopy /E /I /Y %DOWNLOADS_DIR%\extract %TOOLS_DIR%\%TARGET%\ >NUL
 echo done.
 
 echo | set /p=cleaning up... 
-rmdir /S /Q %DOWNLOADS_DIR%\extract >NUL
+call :clean_folder %DOWNLOADS_DIR%\extract
 if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
 echo done.
+
+call :postinstall_package
+
 echo Package %OPTION% done.
 echo.
 exit /B
@@ -778,7 +781,6 @@ exit /B
 rem ======================================================================
 rem Install a NUPKG based installer
 rem  %1 package identifier
-
 :install_nupkg_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
@@ -805,7 +807,7 @@ echo installing now.
 
 echo | set /p=Extracting package %OPTION%... 
 
-rmdir /s /q %EXTRACT% >NUL 2>&1
+call :clean_folder %EXTRACT%
 mkdir %EXTRACT%
 pushd %EXTRACT%
 
@@ -819,7 +821,7 @@ popd
 echo ok.
 
 echo | set /p=Cleaning up...
-rmdir /s /q %EXTRACT% >NUL 2>&1
+call :clean_folder %EXTRACT%
 echo ok.
 
 call :postinstall_package
@@ -902,6 +904,10 @@ xcopy /E /I /Y %DOWNLOADS_DIR%\JDK %TOOLS_DIR%\%TARGET% >NUL
 rmdir /S /Q %DOWNLOADS_DIR%\JDK >NUL
 if not "%KEEP_PACKAGES%" == "TRUE" del %DOWNLOADS_DIR%\%PACKAGE%
 echo ... done.
+
+call :postinstall_package
+
+echo Package %OPTION% done.
 echo.
 exit /B
 
