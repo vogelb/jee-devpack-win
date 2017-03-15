@@ -94,6 +94,7 @@ set TOMEE_TYPE=ZIP
 set TOMEE_EXPLODED=apache-tomee-plus-1.7.2
 set TOMEE_PACKAGE=apache-tomee-1.7.2-plus.zip
 set TOMEE_FOLDER=tomee
+set TOMEE_CONFIG=tomcat
 set TOMEE_TOOL_1=start_tomee.bat
 
 set WILDFLY_NAME=Wildfly
@@ -104,6 +105,7 @@ set WILDFLY_TYPE=ZIP
 set WILDFLY_EXPLODED=wildfly-%WILDFLY_VERSION%
 set WILDFLY_PACKAGE=%WILDFLY_EXPLODED%.zip
 set WILDFLY_FOLDER=wildfly
+set WILDFLY_CONFIG=jboss
 set WILDFLY_TOOL_1=start_wildfly.bat
 set WILDFLY_TOOL_2=start_h2_database.bat
 
@@ -139,6 +141,7 @@ set FORGE_TYPE=ZIP
 set FORGE_EXPLODED=forge-distribution-2.15.2.Final
 set FORGE_PACKAGE=%FORGE_EXPLODED%-offline.zip
 set FORGE_FOLDER=forge
+set FORGE_CONFIG=forge
 
 set SCALA_NAME=Scala
 set SCALA_VERSION=2.11.7
@@ -147,6 +150,7 @@ set SCALA_TYPE=ZIP
 set SCALA_EXPLODED=scala-2.11.7
 set SCALA_PACKAGE=%SCALA_EXPLODED%.zip
 set SCALA_FOLDER=scala
+set SCALA_CONFIG=scala
 
 set SBT_NAME=SBT
 set SBT_VERSION=0.13.9
@@ -180,6 +184,7 @@ set GIT_TYPE=ZIP
 set GIT_EXPLODED=--create--
 set GIT_PACKAGE=PortableGit-2.11.1-64-bit.7z.exe
 set GIT_FOLDER=git
+set GIT_CONFIG=git
 
 set MELD_NAME=Meld Merge
 set MELD_VERSION=3.16.2

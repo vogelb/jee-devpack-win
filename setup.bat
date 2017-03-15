@@ -540,11 +540,11 @@ rem Create version file, handle configured tools.
   call :expand_variable POSTINSTALL
   
   if not "!POSTINSTALL!" == "%PACKAGE_SPEC%_POSTINSTALL" (
-	call %BIN_DIR%\%POSTINSTALL%
+	if exist %BIN_DIR%\%POSTINSTALL% call %BIN_DIR%\%POSTINSTALL%
   )
   
   if not "!CONFIG_NAME!" == "%PACKAGE_SPEC%_CONFIG" (
-    copy %CONF_DIR%\!CONFIG_NAME!.config %CONF_DIR%\!CONFIG_NAME!.bat
+    copy %CONF_DIR%\!CONFIG_NAME!.config %CONF_DIR%\!CONFIG_NAME!.bat >NUL
   )
   
   for /l %%x in (1, 1, 10) do (

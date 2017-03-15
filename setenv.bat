@@ -9,18 +9,20 @@ set TEMPLATE_DIR=%WORKING_DIR%templates
 set BIN_DIR=%WORKING_DIR%bin
 
 set M2_HOME=%TOOLS_DIR%\mvn
-set FORGE_HOME=%TOOLS_DIR%\forge
 set JAVA_HOME=%TOOLS_DIR%\jdk_8
-set JBOSS_HOME=%TOOLS_DIR%\wildfly
-set CATALINA_HOME=%TOOLS_DIR%\tomee
-set GIT_HOME=%TOOLS_DIR%\git
 
 rem -----------------------------------------------------------------
 rem Add workspace parameters as required
-set PATH=%BIN_DIR%;%JAVA_HOME%\bin;%FORGE_HOME%\bin;%TOOLS_DIR%\scala\bin;%TOOLS_DIR%\tomee\bin;%GIT_HOME%\bin;%WORKING_DIR%;%PATH%
+set PATH=%BIN_DIR%;%JAVA_HOME%\bin;%WORKING_DIR%;%PATH%
 
 rem load optional package configuration
 call :include_config %CONF_DIR%\postgres.bat
+call :include_config %CONF_DIR%\jboss.bat
+call :include_config %CONF_DIR%\tomcat.bat
+call :include_config %CONF_DIR%\forge.bat
+call :include_config %CONF_DIR%\scala.bat
+call :include_config %CONF_DIR%\git.bat
+
 
 rem -----------------------------------------------------------------
 rem Define command aliases
@@ -34,6 +36,6 @@ doskey ...=cd ..\..
 
 exit /B
 
-:include_config
+:include_config <configPath>
 if exist %1 call %1
 exit /B
