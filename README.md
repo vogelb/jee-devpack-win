@@ -54,13 +54,22 @@ The source code can be obtained here: www.7-zip.org
 
 ### 3. To download and install the configured software packages, run
 
-	$ setup.bat install
+	$ setup install
 	
 This will install the packages defined in the default template.
 
-	$ setup.bat -t java_8 install
+	$ setup -t java_8 install
 	
 Will install the packages defined in the Java 8 template (templates\java_8.bat).
+
+Packages can also be installed and uninstalled regardless of the current template:
+	
+	$ setup install POSTGRES
+	$ setup uninstall POSTGRES
+	
+Get the list of available packages:
+	
+	$ setup packages
 	
 ### 4. Adapt the dev pack configuration to your needs
 | | |
