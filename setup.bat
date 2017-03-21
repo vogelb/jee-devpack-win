@@ -29,6 +29,7 @@ rem ===================================================================
 set TEMPLATE_DIR=%~dp0templates
 set LAST_TEMPLATE=%TEMPLATE_DIR%\template.bat
 set SETUP_WORKING_DRIVE=%~d0
+set SETUP_WORKING_DIR=%~dp0
 set BIN_DIR=%~dp0bin
 set CONF_DIR=%~dp0conf
 
@@ -78,7 +79,7 @@ echo set SELECTED_TEMPLATE=%TEMPLATE_NAME%>%LAST_TEMPLATE%
 
 rem Unmount mounted drive. Might be another instance!
 set DEVPACK_BASE=
-call :call_debug %~dp0conf\devpack.bat
+call :call_debug %SETUP_WORKING_DIR%\conf\devpack.bat
 
 rem If installation is started from running devpack, restart from base dir.
 if "%WORK_DRIVE%:" == "%SETUP_WORKING_DRIVE%" (
@@ -88,7 +89,7 @@ if "%WORK_DRIVE%:" == "%SETUP_WORKING_DRIVE%" (
 	goto done
 )
 
-call :call_debug %~dp0bin\unmount_devpack.bat
+call :call_debug %SETUP_WORKING_DIR%\bin\unmount_devpack.bat
 
 if not exist %WORK_DRIVE%:\ goto mount_work_drive
 echo.
@@ -98,14 +99,14 @@ goto done
 
 rem Mount work drive and read configuration
 :mount_work_drive
-call %~dp0bin\mount_devpack.bat
+call %SETUP_WORKING_DIR%\bin\mount_devpack.bat
 
 cd /d %WORK_DRIVE%:\
 
-set WGET=%~dp0bin\wget
+set WGET=%SETUP_WORKING_DIR%\bin\wget
 set WGET_OPTIONS=--no-check-certificate --no-cookies
 
-call %~dp0conf\packages.bat
+call %SETUP_WORKING_DIR%\conf\packages.bat
 
 rem ===== PACKAGE CONFIGURATION STARTS HERE =====
 
@@ -534,6 +535,7 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 
 	if not "%UNZIPPED%" == "??" (
 		if exist %UNZIPPED% if not exist %TARGET% (
+
 			echo | set /p=Renaming %UNZIPPED% to %TARGET%... 
 			move %UNZIPPED% %TARGET% >NUL
 			echo ok.
@@ -644,7 +646,8 @@ if exist "%TOOLS_DIR%\%TARGET%" (
 	call :clean_folder "%TARGET%"
 	
 	set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
-    call :expand_variable CONFIG_NAMEif not "!CONFIG_NAME!" == "" (
+    call :expand_variable CONFIG_NAME
+    if not "!CONFIG_NAME!" == "" (
       call :clean_file %CONF_DIR%\!CONFIG_NAME!.bat
     )
 	
@@ -795,6 +798,7 @@ if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
 )
 
 echo installing now.
+
 
 if not "%INSTALL_JAVA_SOURCE%" == "TRUE" (
   call :install_jdk_without_source %PACKAGE_SPEC%
