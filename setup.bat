@@ -28,6 +28,7 @@ rem ===================================================================
 
 set TEMPLATE_DIR=%~dp0templates
 set LAST_TEMPLATE=%TEMPLATE_DIR%\template.bat
+set SETUP_WORKING_DRIVE=%~d0
 set BIN_DIR=%~dp0bin
 set CONF_DIR=%~dp0conf
 
@@ -66,6 +67,7 @@ goto done_commandline
 :done_commandline
 
 set COMMAND=%1
+shift
 
 if not exist %TEMPLATE% echo. && echo Template %TEMPLATE% not found. && echo Exiting... && goto done
 
@@ -76,17 +78,17 @@ echo set SELECTED_TEMPLATE=%TEMPLATE_NAME%>%LAST_TEMPLATE%
 
 rem Unmount mounted drive. Might be another instance!
 set DEVPACK_BASE=
-call %~dp0conf\devpack.bat
+call :call_debug %~dp0conf\devpack.bat
 
 rem If installation is started from running devpack, restart from base dir.
-if "%WORK_DRIVE%:" == "%~d0" (
+if "%WORK_DRIVE%:" == "%SETUP_WORKING_DRIVE%" (
 	echo Restarting installation from base dir %DEVPACK_BASE%...
 	cd /d %DEVPACK_BASE%
 	%DEVPACK_BASE%\setup.bat %*
 	goto done
 )
 
-call %~dp0bin\unmount_devpack.bat
+call :call_debug %~dp0bin\unmount_devpack.bat
 
 if not exist %WORK_DRIVE%:\ goto mount_work_drive
 echo.
@@ -118,6 +120,7 @@ if "%COMMAND%" == "download" goto download
 if "%COMMAND%" == "purge" goto purge
 if "%COMMAND%" == "uninstall" goto uninstall
 if "%COMMAND%" == "clean" goto clean_devpack
+if "%COMMAND%" == "packages" goto list_packages
 
 echo.
 echo J2EE Devpack setup
@@ -125,11 +128,12 @@ echo.
 echo Usage: setup [-t template] command
 echo.
 echo Available commands:
-echo   status    - Show currently installed packages
-echo   install   - Install DevPack / configured packages
-echo   download  - Only download packages
-echo   purge     - Remove disabled packages
-echo   uninstall - Uninstall DevPack
+echo   status                    - Show currently installed packages
+echo   install [^<packageName^>]   - Install DevPack / configured / single packages
+echo   download                  - Only download packages
+echo   purge                     - Remove disabled packages
+echo   uninstall [^<packageName^>] - Uninstall DevPack / single package
+echo   packages                  - List available packages
 echo.
 echo Available templates:
 dir /B templates
@@ -137,8 +141,49 @@ dir /B templates
 exit /B
 
 rem ======================================================================
+rem List available packages
+:list_packages
+setlocal enabledelayedexpansion
+echo.
+echo List of available packages:
+for %%p in ( %DEVPACK_PACKAGES% )  do (	
+  set PACKAGE=%%p
+  set SELECTED=!INSTALL_%%p!
+  set OPTION=!%%p_NAME!
+  set VERSION=!%%p_VERSION!
+  
+  call :strlen PACKAGE_LEN PACKAGE
+  call :strlen OPTION_LEN OPTION
+  
+  echo | set /p=Package 
+  
+  if !PACKAGE_LEN! LEQ 6 (
+	echo | set /p=!PACKAGE!:%TAB%%TAB%%TAB%
+  ) else if !PACKAGE_LEN! LEQ 14 (
+	echo | set /p=!PACKAGE!:%TAB%%TAB%
+  ) else (
+	echo | set /p=!PACKAGE!:%TAB%
+  )
+  
+  if !OPTION_LEN! LEQ 7 (
+	echo | set /p=!OPTION!%TAB%%TAB%%TAB%
+  ) else if !OPTION_LEN! LEQ 15 (
+	echo | set /p=!OPTION!%TAB%%TAB%
+  ) else (
+	echo | set /p=!OPTION!%TAB%
+  )
+
+  echo !VERSION!
+)
+endlocal
+exit /B
+
+rem ======================================================================
 rem Install selected packages
 :install_devpack
+
+if not "%1" == "" goto install_single_package
+
 echo.
 echo Start Installation of JEE DevPack
 echo =================================
@@ -161,6 +206,19 @@ call :install
 echo.
 echo All done.
 
+exit /B
+
+rem ======================================================================
+rem Download and install a single package
+:install_single_package <packageName>
+echo.
+echo Downloading...
+call :download_package %1
+echo.
+echo Installing...
+call :install_package %1
+echo.
+echo All done.
 exit /B
 
 rem ======================================================================
@@ -370,15 +428,21 @@ echo All done.
 exit /B
 
 rem ======================================================================
-rem Uninstall all packages in the DevPack
+rem Uninstall packages in the DevPack
 :uninstall
 echo.
-echo -^> Uninstalling DevPack...
 
-for %%p in ( %DEVPACK_PACKAGES% )  do (	
-	call :uninstall_package %%p
+if "%1" == "" (
+  rem Uninstall all packages
+  echo -^> Uninstalling DevPack...
+  for %%p in ( %DEVPACK_PACKAGES% ) do (
+    call :uninstall_package %%p
+  )
+) else (
+  rem Uninstall single package
+  call :uninstall_package %1
 )
-
+	
 echo.
 echo All done.
 
@@ -989,6 +1053,11 @@ exit /b
 
 :normalizePath <inputPath> <resultVar>
 SET %2=%~dpfn1
+exit /B
+
+:call_debug
+call %*
+if "%DEBUG%" == "TRUE" echo on
 exit /B
 
 :done

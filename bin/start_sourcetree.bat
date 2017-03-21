@@ -1,8 +1,6 @@
 @echo off
 rem ===================================================================
-rem Eclipse Start Script
-rem Please configure the desired eclipse version (ECLIPSE_HOME)
-rem Please configure your workspace location in conf/devpack.bat
+rem Start Sourcetree
 rem ===================================================================
 call bin\mount_devpack.bat
 cd /d %WORK_DRIVE%:\

@@ -1,14 +1,17 @@
 @echo off
 rem ===================================================================
-rem JEE DevPack: Start Glassfish server
+rem JEE DevPack: Start TomEE server
 rem ===================================================================
+call bin\mount_devpack.bat
+cd /d %WORK_DRIVE%:\
 call setenv.bat
 
-if not exist %CATALINA_HOME% (
-	echo.
-	echo TomEE is not installed.
-	echo Please set INSTALL_TOMEE to TRUE in your template and start the installation.
-	goto :EOF
-)
+if not "%CATALINA_HOME%" == "" if exist %CATALINA_HOME% goto start
 
+echo.
+echo TomEE is not installed.
+echo Please set INSTALL_TOMEE to TRUE in your template and start the installation.
+exit /B
+
+:start
 call %CATALINA_HOME%\bin\startup.bat

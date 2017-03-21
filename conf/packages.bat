@@ -72,7 +72,7 @@ set ECLIPSE_CPP_FOLDER=eclipse
 
 rem Option to install preconfigured eclipse workspace
 set ECLIPSE_WORKSPACE_NAME=Eclipse workspace
-set ECLIPSE_WORKSPACE_VERSION=
+set ECLIPSE_WORKSPACE_VERSION=0
 set ECLIPSE_WORKSPACE_URL=
 set ECLIPSE_WORKSPACE_TYPE=ZIP
 set ECLIPSE_WORKSPACE_PACKAGE=
@@ -202,3 +202,4 @@ set POSTGRES_PACKAGE=postgresql-9.6.2-2-windows-x64-binaries.zip
 set POSTGRES_EXPLODED=pgsql
 set POSTGRES_FOLDER=postgres
 set POSTGRES_CONFIG=postgres
+set POSTGRES_TOOL_1=start_postgres.bat

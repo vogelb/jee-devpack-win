@@ -25,3 +25,7 @@
 /conf/scala.bat
 /start_sourcetree.bat
 /templates/template.bat
+tools/postgres/
+conf/postgres.bat
+start_postgres.bat
+postgres.log
