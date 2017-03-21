@@ -10,6 +10,9 @@ if "%DEVPACK_BASE%" == "" (
 	set DEVPACK_BASE=c:\dev\devpack
 )
 
+rem Extend command prompt with git branch
+set DEVPACK_GIT_PROMPT=TRUE
+
 rem Use virtual harddisk
 rem Set to true to install DevPack in a virtual disk
 set DEVPACK_VHD=FALSE
