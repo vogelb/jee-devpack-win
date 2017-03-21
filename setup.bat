@@ -214,7 +214,9 @@ rem Download and install a single package
 :install_single_package <packageName>
 echo.
 echo Downloading...
+if exist %DOWNLOADS% del %DOWNLOADS%
 call :download_package %1
+call :execute_downloads
 echo.
 echo Installing...
 call :install_package %1
