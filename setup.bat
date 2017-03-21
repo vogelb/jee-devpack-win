@@ -83,7 +83,7 @@ if "%WORK_DRIVE%:" == "%SETUP_WORKING_DRIVE%" (
   echo Restarting installation from base dir %DEVPACK_BASE%...
   cd /d %DEVPACK_BASE%
   %DEVPACK_BASE%\setup.bat %*
-  exit /B
+  goto done
 )
 
 call %SETUP_WORKING_DIR%\bin\unmount_devpack.bat
@@ -91,7 +91,7 @@ if exist %WORK_DRIVE%:\ (
   echo.
   echo The configured work drive [%WORK_DRIVE%] is already in use.
   echo Installation cancelled.
-  exit /B
+  goto done
 )
 
 rem ===== Mount work drive and read configuration ====
@@ -131,7 +131,7 @@ echo.
 echo Available templates:
 dir /B templates
 
-exit /B
+goto done
 
 rem ======================================================================
 rem List available packages
@@ -369,7 +369,6 @@ echo.
 for %%p in ( %DEVPACK_PACKAGES% )  do (	
 	call :query_package %%p
 )
-
 exit /B
 
 rem ======================================================================
