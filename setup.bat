@@ -43,28 +43,27 @@ set TAB=
 set VERSION_FILE=version.txt
 set GIT_REPO=--git-repo--
 
-:get_commandline
+:loop_commandline
 if "%1" == "-debug" goto debug_found
 goto test_template
 
 :debug_found
   shift
-	set DEBUG=TRUE
-	echo on
-	goto get_commandline
+  set DEBUG=TRUE
+  echo on
+  goto loop_commandline
 
 :test_template
-if "%1" == "-t" goto template_found
-goto done_commandline
+  if "%1" == "-t" goto template_found
+  goto endloop_commandline
 
 :template_found
   shift
-	set TEMPLATE=%TEMPLATE_DIR%\%1.bat
-	shift
-	goto get_commandline
+  set TEMPLATE=%TEMPLATE_DIR%\%1.bat
+  shift
+  goto loop_commandline
 
-:done_commandline
-
+:endloop_commandline
 set COMMAND=%1
 shift
 
@@ -81,22 +80,21 @@ call :call_debug %SETUP_WORKING_DIR%\conf\devpack.bat
 
 rem If installation is started from running devpack, restart from base dir.
 if "%WORK_DRIVE%:" == "%SETUP_WORKING_DRIVE%" (
-	echo Restarting installation from base dir %DEVPACK_BASE%...
-	cd /d %DEVPACK_BASE%
-	%DEVPACK_BASE%\setup.bat %*
-	goto done
+  echo Restarting installation from base dir %DEVPACK_BASE%...
+  cd /d %DEVPACK_BASE%
+  %DEVPACK_BASE%\setup.bat %*
+  exit /B
 )
 
-call :call_debug %SETUP_WORKING_DIR%\bin\unmount_devpack.bat
+call %SETUP_WORKING_DIR%\bin\unmount_devpack.bat
+if exist %WORK_DRIVE%:\ (
+  echo.
+  echo The configured work drive [%WORK_DRIVE%] is already in use.
+  echo Installation cancelled.
+  exit /B
+)
 
-if not exist %WORK_DRIVE%:\ goto mount_work_drive
-echo.
-echo The configured work drive (%WORK_DRIVE%) is already in use.
-echo Installation cancelled.
-goto done
-
-rem Mount work drive and read configuration
-:mount_work_drive
+rem ===== Mount work drive and read configuration ====
 call %SETUP_WORKING_DIR%\bin\mount_devpack.bat
 
 cd /d %WORK_DRIVE%:\
@@ -104,13 +102,9 @@ cd /d %WORK_DRIVE%:\
 set WGET=%SETUP_WORKING_DIR%\bin\wget
 set WGET_OPTIONS=--no-check-certificate --no-cookies
 
+rem ===== Read Package Configuration =====
 call %SETUP_WORKING_DIR%\conf\packages.bat
-
-rem ===== PACKAGE CONFIGURATION STARTS HERE =====
-
 call %TEMPLATE%
-
-rem ===== END OF PACKAGE CONFIGURATION =====
 
 if "%COMMAND%" == "info" goto info
 if "%COMMAND%" == "status" goto info
@@ -209,7 +203,7 @@ exit /B
 
 rem ======================================================================
 rem Download and install a single package
-:install_single_package <packageName>
+:download_and_install_single_package <packageName>
 echo.
 echo Downloading...
 if exist %DOWNLOADS% del %DOWNLOADS%
@@ -217,9 +211,35 @@ call :download_package %1
 call :execute_downloads
 echo.
 echo Installing...
-call :install_package %1
+call :install_single_package %1
 echo.
 echo All done.
+exit /B
+
+
+rem ======================================================================
+rem Install a single package
+:install_single_package <packageName>
+setlocal enabledelayedexpansion
+set PACKAGE_TYPE=%1_TYPE
+call :expand_variable PACKAGE_TYPE
+
+if "!PACKAGE_TYPE!" == "JDK6" (
+	call :install_jdk_6 %1
+) else if "!PACKAGE_TYPE!" == "JDK7" (
+	call :install_jdk %1
+) else if "!PACKAGE_TYPE!" == "JDK" (
+	call :install_jdk %1
+) else if "!PACKAGE_TYPE!" == "MSI" (
+	call :install_msi_package %1
+) else if "!PACKAGE_TYPE!" == "NUPKG" (
+	call :install_nupkg_package %1
+) else if "!PACKAGE_TYPE!" == "ZIP" (
+	call :install_package %1
+) else (
+	echo Error installing package %1: Unknown package type "!PACKAGE_TYPE!"
+)
+endlocal
 exit /B
 
 rem ======================================================================
@@ -366,21 +386,7 @@ for %%p in ( %DEVPACK_PACKAGES% )  do (
 	call :expand_variable PACKAGE_TYPE
 	
 	if "!INSTALL_PACKAGE!" == "TRUE" (
-		if "!PACKAGE_TYPE!" == "JDK6" (
-			call :install_jdk_6 %%p
-		) else if "!PACKAGE_TYPE!" == "JDK7" (
-			call :install_jdk %%p
-		) else if "!PACKAGE_TYPE!" == "JDK" (
-			call :install_jdk %%p
-		) else if "!PACKAGE_TYPE!" == "MSI" (
-			call :install_msi_package %%p
-		) else if "!PACKAGE_TYPE!" == "NUPKG" (
-			call :install_nupkg_package %%p
-		) else if "!PACKAGE_TYPE!" == "ZIP" (
-			call :install_package %%p
-		) else (
-			echo Error installing package %%p: Unknown package type "!PACKAGE_TYPE!"
-		)
+		call :install_single_package %%p
 	)
 )
 
@@ -798,8 +804,6 @@ if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
 )
 
 echo installing now.
-
-
 if not "%INSTALL_JAVA_SOURCE%" == "TRUE" (
   call :install_jdk_without_source %PACKAGE_SPEC%
   exit /B
