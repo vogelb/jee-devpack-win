@@ -19,8 +19,6 @@ rem Setup configuration
 rem Set DOWNLOADS_DIR in order to reuse existing downloads  
 set DOWNLOADS_DIR=%~dp0downloads
 
-set TEMPLATE_DIR=%~dp0templates
-
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
 
