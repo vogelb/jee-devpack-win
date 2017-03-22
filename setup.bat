@@ -174,7 +174,7 @@ rem ======================================================================
 rem Install selected packages
 :install_devpack
 
-if not "%1" == "" goto install_single_package
+if not "%1" == "" goto download_and_install_single_package
 
 echo.
 echo Start Installation of JEE DevPack
@@ -583,6 +583,7 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
   pushd %TOOLS_DIR%
 
   echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%... 
+  icacls %DOWNLOADS_DIR%\%PACKAGE% /grant SYSTEM:^(GR^) >NUL
   msiexec /a %DOWNLOADS_DIR%\%PACKAGE% /qn TARGETDIR=%TOOLS_DIR%\%TARGET%
   echo ok.
   
@@ -614,7 +615,7 @@ rem Create version file, handle configured tools.
   )
   
   if not "!CONFIG_NAME!" == "%PACKAGE_SPEC%_CONFIG" (
-    copy %CONF_DIR%\!CONFIG_NAME!.config %CONF_DIR%\!CONFIG_NAME!.bat >NUL
+    if exist %CONF_DIR%\!CONFIG_NAME!.config copy %CONF_DIR%\!CONFIG_NAME!.config %CONF_DIR%\!CONFIG_NAME!.bat >NUL
   )
   
   for /l %%x in (1, 1, 10) do (
