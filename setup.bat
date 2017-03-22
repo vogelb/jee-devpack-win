@@ -1,6 +1,6 @@
 @echo off & setlocal
 rem ===================================================================
-rem JEE DevPack Installation Script
+rem Java EE DevPack Installation Script
 rem - Download and install binary packages
 rem - To Update a package, remove the exploded folder from the dev pack
 rem - Adjust download paths in order to pick up another version
@@ -16,8 +16,8 @@ rem ===================================================================
 rem
 rem Setup configuration
 
-rem Set DOWNLOADS_DIR in order to reuse existing downloads  
 set DOWNLOADS_DIR=%~dp0downloads
+rem Set DOWNLOADS_DIR in order to reuse existing downloads
 
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
@@ -139,7 +139,7 @@ rem List available packages
 setlocal enabledelayedexpansion
 echo.
 echo List of available packages:
-for %%p in ( %DEVPACK_PACKAGES% )  do (	
+for %%p in ( %DEVPACK_PACKAGES% )  do (
   set PACKAGE=%%p
   set SELECTED=!INSTALL_%%p!
   set OPTION=!%%p_NAME!
@@ -151,21 +151,20 @@ for %%p in ( %DEVPACK_PACKAGES% )  do (
   echo | set /p=Package 
   
   if !PACKAGE_LEN! LEQ 6 (
-	echo | set /p=!PACKAGE!:%TAB%%TAB%%TAB%
+    echo | set /p=!PACKAGE!:%TAB%%TAB%%TAB%
   ) else if !PACKAGE_LEN! LEQ 14 (
-	echo | set /p=!PACKAGE!:%TAB%%TAB%
+    echo | set /p=!PACKAGE!:%TAB%%TAB%
   ) else (
-	echo | set /p=!PACKAGE!:%TAB%
+    echo | set /p=!PACKAGE!:%TAB%
   )
   
   if !OPTION_LEN! LEQ 7 (
-	echo | set /p=!OPTION!%TAB%%TAB%%TAB%
+    echo | set /p=!OPTION!%TAB%%TAB%%TAB%
   ) else if !OPTION_LEN! LEQ 15 (
-	echo | set /p=!OPTION!%TAB%%TAB%
+    echo | set /p=!OPTION!%TAB%%TAB%
   ) else (
-	echo | set /p=!OPTION!%TAB%
+    echo | set /p=!OPTION!%TAB%
   )
-
   echo !VERSION!
 )
 endlocal
@@ -185,9 +184,9 @@ echo.
 findstr /m "SET SVN_USER" conf\devpack.bat > NUL
 if %errorlevel%==0 goto install_devpack_do
 set SVN_USER=%USERNAME%
-setlocal enabledelayedexpansion 
-for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L=l" "M=m" "N=n" "O=o" "P=p" "Q=q" "R=r" "S=s" "T=t" "U=u" "V=v" "W=w" "X=x" "Y=y" "Z=z" "Ä=ä" "Ö=ö" "Ü=ü") do ( 
-    set "SVN_USER=!SVN_USER:%%~a!" 
+setlocal enabledelayedexpansion
+for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L=l" "M=m" "N=n" "O=o" "P=p" "Q=q" "R=r" "S=s" "T=t" "U=u" "V=v" "W=w" "X=x" "Y=y" "Z=z" "Ä=ä" "Ö=ö" "Ü=ü") do (
+    set "SVN_USER=!SVN_USER:%%~a!"
 )
 echo set SVN_USER=%SVN_USER% >> conf\devpack.bat
 endlocal
@@ -225,19 +224,19 @@ set PACKAGE_TYPE=%1_TYPE
 call :expand_variable PACKAGE_TYPE
 
 if "!PACKAGE_TYPE!" == "JDK6" (
-	call :install_jdk_6 %1
+    call :install_jdk_6 %1
 ) else if "!PACKAGE_TYPE!" == "JDK7" (
-	call :install_jdk %1
+    call :install_jdk %1
 ) else if "!PACKAGE_TYPE!" == "JDK" (
-	call :install_jdk %1
+    call :install_jdk %1
 ) else if "!PACKAGE_TYPE!" == "MSI" (
-	call :install_msi_package %1
+    call :install_msi_package %1
 ) else if "!PACKAGE_TYPE!" == "NUPKG" (
-	call :install_nupkg_package %1
+    call :install_nupkg_package %1
 ) else if "!PACKAGE_TYPE!" == "ZIP" (
-	call :install_package %1
+    call :install_package %1
 ) else (
-	echo Error installing package %1: Unknown package type "!PACKAGE_TYPE!"
+    echo Error installing package %1: Unknown package type "!PACKAGE_TYPE!"
 )
 endlocal
 exit /B
@@ -253,23 +252,23 @@ if not exist %TOOLS_DIR% mkdir %TOOLS_DIR%
 if exist %DOWNLOADS% del %DOWNLOADS%
 if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 
-for %%p in ( %DEVPACK_PACKAGES% )  do (	
-	set DOWNLOAD_PACKAGE=INSTALL_%%p
-	call :expand_variable DOWNLOAD_PACKAGE
-	
-	if "!DOWNLOAD_PACKAGE!" == "TRUE" (
-		call :download_package %%p
-	)
+for %%p in ( %DEVPACK_PACKAGES% ) do (
+  set DOWNLOAD_PACKAGE=INSTALL_%%p
+  call :expand_variable DOWNLOAD_PACKAGE
+  
+  if "!DOWNLOAD_PACKAGE!" == "TRUE" (
+    call :download_package %%p
+  )
 )
 
 if "%INSTALL_ECLIPSE%" == "EE" (
-	call :download_package ECLIPSE_EE
+  call :download_package ECLIPSE_EE
 )
 if "%INSTALL_ECLIPSE%" == "JAVA" (
-	call :download_package ECLIPSE_JAVA
+  call :download_package ECLIPSE_JAVA
 )
 if "%INSTALL_ECLIPSE%" == "CPP" (
-	call :download_package ECLIPSE_CPP
+  call :download_package ECLIPSE_CPP
 )
 
 endlocal
@@ -278,41 +277,41 @@ rem ======================================================================
 rem Download JDK6
 :download_jdk6
 if "%INSTALL_JDK6%" == "TRUE" (
-	echo | set /p=Package JDK 6... 
-	if not exist %TOOLS_DIR%\%JDK6_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK6_PACKAGE%" (
-		echo.
-		echo JDK 6 cannot be automatically downloaded because it requires an Oracle web account.
-		echo Please Download it manually and place into the configured download folder %DOWNLOADS_DIR%.
-		echo Installation cancelled.
-		exit /B 
-	)
-	echo already available.
+  echo | set /p=Package JDK 6... 
+  if not exist %TOOLS_DIR%\%JDK6_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK6_PACKAGE%" (
+    echo.
+    echo JDK 6 cannot be automatically downloaded because it requires an Oracle web account.
+    echo Please Download it manually and place into the configured download folder %DOWNLOADS_DIR%.
+    echo Installation cancelled.
+    exit /B 
+  )
+  echo already available.
 )
 
 rem ======================================================================
 rem Download JDK7
 :download_jdk7
 if "%INSTALL_JDK7%" == "TRUE" (
-	echo | set /p=Package JDK 7... 
-	if not exist %TOOLS_DIR%\%JDK7_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK7_PACKAGE%" (
-		echo Downloading now.
-		%WGET% %JDK7_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK7_URL%
-		goto download_jdk8
-	)
-	echo already available.
+  echo | set /p=Package JDK 7... 
+  if not exist %TOOLS_DIR%\%JDK7_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK7_PACKAGE%" (
+    echo Downloading now.
+    %WGET% %JDK7_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK7_URL%
+    goto download_jdk8
+  )
+  echo already available.
 )
 
 rem ======================================================================
 rem Download JDK8 64bit
 :download_jdk8
 if "%INSTALL_JDK8%" == "TRUE" (
-	echo | set /p=Package JDK 8... 
-	if not exist %TOOLS_DIR%\%JDK8_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK8_PACKAGE%" (
-		echo Downloading now.
-		%WGET% %JDK8_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK8_URL%
-		goto download_jdk8_32
-	)
-	echo already available.
+  echo | set /p=Package JDK 8... 
+  if not exist %TOOLS_DIR%\%JDK8_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK8_PACKAGE%" (
+    echo Downloading now.
+    %WGET% %JDK8_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK8_URL%
+    goto download_jdk8_32
+  )
+  echo already available.
 )
 
 
@@ -320,13 +319,13 @@ rem ======================================================================
 rem Download JDK8 32bit
 :download_jdk8_32
 if "%INSTALL_JDK8_32%" == "TRUE" (
-	echo | set /p=Package JDK 8_32... 
-	if not exist %TOOLS_DIR%\%JDK8_32_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK8_32_PACKAGE%" (
-		echo Downloading JDK 8_32...
-		%WGET% %JDK8_32_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK8_32_URL%
-		goto execute_downloads
-	)
-	echo already available.
+  echo | set /p=Package JDK 8_32... 
+  if not exist %TOOLS_DIR%\%JDK8_32_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK8_32_PACKAGE%" (
+    echo Downloading JDK 8_32...
+    %WGET% %JDK8_32_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK8_32_URL%
+    goto execute_downloads
+  )
+  echo already available.
 )
 
 rem ======================================================================
@@ -366,8 +365,8 @@ echo.
 echo Package Status:
 echo.
 
-for %%p in ( %DEVPACK_PACKAGES% )  do (	
-	call :query_package %%p
+for %%p in ( %DEVPACK_PACKAGES% )  do (
+  call :query_package %%p
 )
 exit /B
 
@@ -378,28 +377,28 @@ echo.
 echo -^> Installing packages...
 setlocal enabledelayedexpansion
 
-for %%p in ( %DEVPACK_PACKAGES% )  do (		
-	set INSTALL_PACKAGE=INSTALL_%%p
-	set PACKAGE_TYPE=%%p_TYPE
-	call :expand_variable INSTALL_PACKAGE
-	call :expand_variable PACKAGE_TYPE
-	
-	if "!INSTALL_PACKAGE!" == "TRUE" (
-		call :install_single_package %%p
-	)
+for %%p in ( %DEVPACK_PACKAGES% ) do (
+  set INSTALL_PACKAGE=INSTALL_%%p
+  set PACKAGE_TYPE=%%p_TYPE
+  call :expand_variable INSTALL_PACKAGE
+  call :expand_variable PACKAGE_TYPE
+  
+  if "!INSTALL_PACKAGE!" == "TRUE" (
+    call :install_single_package %%p
+  )
 )
 
 if "%INSTALL_ECLIPSE%" == "EE" (
-	call :install_package ECLIPSE_EE
+  call :install_package ECLIPSE_EE
 )
 if "%INSTALL_ECLIPSE%" == "JAVA" (
-	call :install_package ECLIPSE_JAVA
+  call :install_package ECLIPSE_JAVA
 )
 if "%INSTALL_ECLIPSE%" == "CPP" (
-	call :install_package ECLIPSE_CPP
+  call :install_package ECLIPSE_CPP
 )
 if "%INSTALL_SCALA%" == "TRUE" (
-	call :install_package SBT
+  call :install_package SBT
 )
 
 call %WORK_DRIVE%:\setenv.bat
@@ -413,20 +412,20 @@ setlocal enabledelayedexpansion
 echo.
 echo -^> Purging disabled packages...
 
-for %%p in ( %DEVPACK_PACKAGES% )  do (		
-	set PURGE_PACKAGE=INSTALL_%%p
-	call :expand_variable PURGE_PACKAGE
-	
-	if "!PURGE_PACKAGE!" == "FALSE" (
-		call :uninstall_package %%p
-		if "%%p" == "SCALA" (
-			call :uninstall_package SBT
-		)
-	)	
+for %%p in ( %DEVPACK_PACKAGES% ) do (
+  set PURGE_PACKAGE=INSTALL_%%p
+  call :expand_variable PURGE_PACKAGE
+  
+  if "!PURGE_PACKAGE!" == "FALSE" (
+    call :uninstall_package %%p
+    if "%%p" == "SCALA" (
+      call :uninstall_package SBT
+    )
+  )
 )
 
 if "%INSTALL_ECLIPSE%" == "FALSE" (
-	call :uninstall_package ECLIPSE_EE
+  call :uninstall_package ECLIPSE_EE
 )
 echo.
 echo All done.
@@ -448,7 +447,7 @@ if "%1" == "" (
   rem Uninstall single package
   call :uninstall_package %1
 )
-	
+
 echo.
 echo All done.
 
@@ -472,32 +471,32 @@ call :strlen OPTION_LEN OPTION
 call :strlen VERSION_LEN VERSION
 
 if %OPTION_LEN% LEQ 6 (
-	echo | set /p=Package %OPTION%:%TAB%%TAB%%TAB%
+  echo | set /p=Package %OPTION%:%TAB%%TAB%%TAB%
 ) else if %OPTION_LEN% LEQ 14 (
-	echo | set /p=Package %OPTION%:%TAB%%TAB%
+  echo | set /p=Package %OPTION%:%TAB%%TAB%
 ) else (
-	echo | set /p=Package %OPTION%:%TAB%
+  echo | set /p=Package %OPTION%:%TAB%
 )
 
 if "%SELECTED%" == "FALSE" (
-	echo | set /p=not selected,%TAB%%TAB%%TAB%
+  echo | set /p=not selected,%TAB%%TAB%%TAB%
 ) else (
-	if %VERSION_LEN% LEQ 8 (
-	  echo | set /p=version %VERSION%,%TAB%%TAB%%TAB%
-	) else (
-	  echo | set /p=version %VERSION%,%TAB%	
-	)
+  if %VERSION_LEN% LEQ 8 (
+    echo | set /p=version %VERSION%,%TAB%%TAB%%TAB%
+  ) else (
+    echo | set /p=version %VERSION%,%TAB%
+  )
 )
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
-	echo | set /p=not installed,%TAB%
-	if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
-		echo | set /p=not 
-	)
-	echo downloaded.
+  echo | set /p=not installed,%TAB%
+  if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+    echo | set /p=not 
+  )
+  echo downloaded.
 ) else (
-	call :processVersionFile "%TOOLS_DIR%\%TARGET%\%VERSION_FILE%" INSTALLED_VERSION
-	echo installed [!INSTALLED_VERSION!].
+  call :processVersionFile "%TOOLS_DIR%\%TARGET%\%VERSION_FILE%" INSTALLED_VERSION
+  echo installed [!INSTALLED_VERSION!].
 )
 
 exit /B
@@ -519,33 +518,33 @@ echo | set /p=Package %OPTION%...
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
 
-	if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
-		echo Error: Package %PACKAGE% was not downloaded!
-		exit /B
-	)
+  if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+    echo Error: Package %PACKAGE% was not downloaded!
+    exit /B
+  )
 
-	echo installing now.
-	pushd %TOOLS_DIR%
-	
-	if "%UNZIPPED%" == "--create--" (
-		echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%... 
-		%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%TARGET% >NUL
-		set UNZIPPED=%TARGET%
-		echo ok.
-	) else (
-		echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%... 
-		%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" >NUL
-		echo ok.
-	)
+  echo installing now.
+  pushd %TOOLS_DIR%
 
-	if not "%UNZIPPED%" == "??" (
-		if exist %UNZIPPED% if not exist %TARGET% (
+  if "%UNZIPPED%" == "--create--" (
+    echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%... 
+    %TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%TARGET% >NUL
+    set UNZIPPED=%TARGET%
+    echo ok.
+  ) else (
+    echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%... 
+    %TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" >NUL
+    echo ok.
+  )
 
-			echo | set /p=Renaming %UNZIPPED% to %TARGET%... 
-			move %UNZIPPED% %TARGET% >NUL
-			echo ok.
-		)
-		if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
+  if not "%UNZIPPED%" == "??" (
+    if exist %UNZIPPED% if not exist %TARGET% (
+
+      echo | set /p=Renaming %UNZIPPED% to %TARGET%... 
+      move %UNZIPPED% %TARGET% >NUL
+      echo ok.
+    )
+    if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
   )
   
   call :postinstall_package
@@ -575,24 +574,24 @@ echo | set /p=Package %OPTION%...
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
 
-	if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
-		echo Error: Package %PACKAGE% was not downloaded!
-		exit /B
-	)
+  if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+    echo Error: Package %PACKAGE% was not downloaded!
+    exit /B
+  )
 
-	echo installing now.
-	pushd %TOOLS_DIR%
+  echo installing now.
+  pushd %TOOLS_DIR%
 
-	echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%... 
-	msiexec /a %DOWNLOADS_DIR%\%PACKAGE% /qn TARGETDIR=%TOOLS_DIR%\%TARGET% 
-	echo ok.
-	
-	call :postinstall_package
+  echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%... 
+  msiexec /a %DOWNLOADS_DIR%\%PACKAGE% /qn TARGETDIR=%TOOLS_DIR%\%TARGET%
+  echo ok.
+  
+  call :postinstall_package
 
-	popd
-	echo Package %OPTION% done.
-	echo.
-	exit /B
+  popd
+  echo Package %OPTION% done.
+  echo.
+  exit /B
 )
 endlocal
 echo already installed.
@@ -611,7 +610,7 @@ rem Create version file, handle configured tools.
   call :expand_variable POSTINSTALL
   
   if not "!POSTINSTALL!" == "%PACKAGE_SPEC%_POSTINSTALL" (
-	if exist %BIN_DIR%\%POSTINSTALL% call %BIN_DIR%\%POSTINSTALL%
+    if exist %BIN_DIR%\%POSTINSTALL% call %BIN_DIR%\%POSTINSTALL%
   )
   
   if not "!CONFIG_NAME!" == "%PACKAGE_SPEC%_CONFIG" (
@@ -619,15 +618,15 @@ rem Create version file, handle configured tools.
   )
   
   for /l %%x in (1, 1, 10) do (
-	
-	set TOOL_NAME=%PACKAGE_SPEC%_TOOL_%%x
-	set TOOL_VALUE=%PACKAGE_SPEC%_TOOL_%%x
-	
-	call :expand_variable TOOL_VALUE
-	
-	if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
-	  if exist %~dp0bin\!TOOL_VALUE! copy %~dp0bin\!TOOL_VALUE! %~dp0 >NUL
-	)
+    
+    set TOOL_NAME=%PACKAGE_SPEC%_TOOL_%%x
+    set TOOL_VALUE=%PACKAGE_SPEC%_TOOL_%%x
+    
+    call :expand_variable TOOL_VALUE
+    
+    if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
+      if exist %~dp0bin\!TOOL_VALUE! copy %~dp0bin\!TOOL_VALUE! %~dp0 >NUL
+    )
   )
 exit /B
 
@@ -646,29 +645,29 @@ set VERSION=!%PACKAGE_SPEC%_VERSION!
 echo | set /p=Package %OPTION%... 
 
 if exist "%TOOLS_DIR%\%TARGET%" (
-	pushd %TOOLS_DIR%
-	
-	call :clean_folder "%TARGET%"
-	
-	set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
+  pushd %TOOLS_DIR%
+  
+  call :clean_folder "%TARGET%"
+  
+  set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
     call :expand_variable CONFIG_NAME
     if not "!CONFIG_NAME!" == "" (
       call :clean_file %CONF_DIR%\!CONFIG_NAME!.bat
     )
-	
-	for /l %%x in (1, 1, 10) do (
-		set TOOL_NAME=%PACKAGE_SPEC%_TOOL_%%x
-		set TOOL_VALUE=%PACKAGE_SPEC%_TOOL_%%x
-		
-		call :expand_variable TOOL_VALUE
-		
-		if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
-		  call :clean_file %~dp0!TOOL_VALUE!
-		)
-	  )
-	
-	echo uninstalled.
-
+  
+  for /l %%x in (1, 1, 10) do (
+    set TOOL_NAME=%PACKAGE_SPEC%_TOOL_%%x
+    set TOOL_VALUE=%PACKAGE_SPEC%_TOOL_%%x
+    
+    call :expand_variable TOOL_VALUE
+    
+    if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
+      call :clean_file %~dp0!TOOL_VALUE!
+    )
+  )
+  
+  echo uninstalled.
+  
   popd
   exit /B
 )
@@ -692,13 +691,13 @@ set VERSION=!%PACKAGE_SPEC%_VERSION!
 echo | set /p=Package %OPTION% [%PACKAGE%]... 
 
 if not exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
-	if "%PACKAGE%" == "%GIT_REPO%" (
-		call :checkout_git_repo %PACKAGE_URL% %TARGET%
-	) else (
-		echo %PACKAGE_URL% >> %DOWNLOADS%
-		echo marked for download.	
-	)
-	exit /B
+  if "%PACKAGE%" == "%GIT_REPO%" (
+    call :checkout_git_repo %PACKAGE_URL% %TARGET%
+  ) else (
+    echo %PACKAGE_URL% >> %DOWNLOADS%
+    echo marked for download.	
+  )
+  exit /B
 )
 endlocal
 echo already available.
@@ -737,12 +736,12 @@ set VERSION=!%PACKAGE_SPEC%_VERSION!
 echo | set /p=Package %OPTION%... 
 
 if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
-	echo Error: Package %PACKAGE% was not downloaded!
-	exit /B
+  echo Error: Package %PACKAGE% was not downloaded!
+  exit /B
 )
 if exist %TOOLS_DIR%\%TARGET% (
-	echo already installed.
-	exit /B
+  echo already installed.
+  exit /B
 )
 
 echo installing now.
@@ -793,13 +792,13 @@ set VERSION=!%PACKAGE_SPEC%_VERSION!
 echo | set /p=Package %OPTION%... 
 
 if exist %TOOLS_DIR%\%TARGET% (
-	echo already installed.
-	exit /B
+  echo already installed.
+  exit /B
 )
 
 if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
-	echo Error: Package %PACKAGE% was not downloaded!
-	exit /B
+  echo Error: Package %PACKAGE% was not downloaded!
+  exit /B
 )
 
 echo installing now.
@@ -829,7 +828,7 @@ echo done.
 
 echo | set /p=unpacking jars... 
 for /r %%x in (*.pack) do (
-	.\bin\unpack200 -r %%x %%~dx%%~px%%~nx.jar >NUL
+  .\bin\unpack200 -r %%x %%~dx%%~px%%~nx.jar >NUL
 )
 echo done.
 popd
@@ -865,13 +864,13 @@ set VERSION=!%PACKAGE_SPEC%_VERSION!
 set EXTRACT=%DOWNLOADS_DIR%\extract
 echo | set /p=Package %OPTION%... 
 if exist %TOOLS_DIR%\%TARGET% (
-	echo already installed.
-	exit /B
+  echo already installed.
+  exit /B
 )
 
 if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
-	echo Error: Package %PACKAGE% was not downloaded!
-	exit /B
+  echo Error: Package %PACKAGE% was not downloaded!
+  exit /B
 )
 
 echo installing now.
@@ -928,13 +927,13 @@ set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
 
 if not exist %DOWNLOADS_DIR%\%PACKAGE% (
-	echo Error: Package %PACKAGE% was not downloaded!
-	exit /B
+  echo Error: Package %PACKAGE% was not downloaded!
+  exit /B
 )
 
 if exist %TOOLS_DIR%\%TARGET% (
-	echo Package %PACKAGE_NAME% is already installed.
-	exit /B
+  echo Package %PACKAGE_NAME% is already installed.
+  exit /B
 )
 
 echo ... extracting package ...
@@ -944,25 +943,25 @@ pushd %DOWNLOADS_DIR%\JDK
 
 echo ... extracting cab files ...
 for /d /r %%x in (JAVA_CAB*) do (
-	echo ... - extracting %%x...
-	for %%y in (%%x\*.*) do (
-		%TOOLS_DIR%\7-Zip\7z x -y %%y >NUL
-	)
+  echo ... - extracting %%x...
+  for %%y in (%%x\*.*) do (
+    %TOOLS_DIR%\7-Zip\7z x -y %%y >NUL
+  )
 )
 
 echo ... extracting tools ...
 %TOOLS_DIR%\7-Zip\7z x -y tools.zip >NUL
 if errorlevel 1 (
-	echo.
-	echo Error extracting files. Installation aborted.
-	exit /B
+  echo.
+  echo Error extracting files. Installation aborted.
+  exit /B
 )
 del tools.zip
 
 echo ... unpacking jars ...
 for /r %%x in (*.pack) do (
-    echo ... - unpacking %%x ...
-	.\bin\unpack200 -r %%x %%~dx%%~px%%~nx.jar >NUL
+  echo ... - unpacking %%x ...
+  .\bin\unpack200 -r %%x %%~dx%%~px%%~nx.jar >NUL
 )
 
 echo ... cleaning up ...
@@ -997,11 +996,11 @@ if exist workspace (
   echo.
   echo Cleaning workspace... press ctrl-c to abort!
   pause
-  FOR /D /r %%G in ("workspace\*") DO (
-	if NOT "%%~nG" == "" (
-		echo Removing workspace folder "%%G"
-		call :clean_folder %%G
-	)
+  for /D /r %%G in ("workspace\*") do (
+    if not "%%~nG" == "" (
+      echo Removing workspace folder "%%G"
+      call :clean_folder %%G
+    )
   )
 )
 echo done
@@ -1010,21 +1009,21 @@ exit /B
 rem ======================================================================
 rem Get the length of a string
 :strlen <resultVar> <stringVar>
-(   
-    setlocal EnableDelayedExpansion
-    set "s=!%~2!#"
-    set "len=0"
-    for %%P in (4096 2048 1024 512 256 128 64 32 16 8 4 2 1) do (
-        if "!s:~%%P,1!" NEQ "" ( 
-            set /a "len+=%%P"
-            set "s=!s:~%%P!"
-        )
+(
+  setlocal EnableDelayedExpansion
+  set "s=!%~2!#"
+  set "len=0"
+  for %%P in (4096 2048 1024 512 256 128 64 32 16 8 4 2 1) do (
+    if "!s:~%%P,1!" NEQ "" ( 
+      set /a "len+=%%P"
+      set "s=!s:~%%P!"
     )
+  )
 )
 ( 
-    endlocal
-    set "%~1=%len%"
-    exit /b
+  endlocal
+  set "%~1=%len%"
+  exit /b
 )
 
 rem ======================================================================
@@ -1051,10 +1050,10 @@ set %1=%~nx2
 rem Read single value from given file.
 :processVersionFile <configFile> <resultVar>
 if exist %1 (
-	@for /F "tokens=*" %%a in ('type %1') do (
-		set %2=%%a
-		exit /b %errorlevel%
-	)
+  @for /F "tokens=*" %%a in ('type %1') do (
+    set %2=%%a
+    exit /b %errorlevel%
+  )
 )
 exit /b
 
