@@ -479,10 +479,10 @@ if %OPTION_LEN% LEQ 6 (
 )
 
 if "%SELECTED%" == "FALSE" (
-  echo | set /p=not selected,%TAB%%TAB%%TAB%
+  echo | set /p=not selected,%TAB%%TAB%
 ) else (
   if %VERSION_LEN% LEQ 8 (
-    echo | set /p=version %VERSION%,%TAB%%TAB%%TAB%
+    echo | set /p=version %VERSION%,%TAB%%TAB%
   ) else (
     echo | set /p=version %VERSION%,%TAB%
   )
