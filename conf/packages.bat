@@ -178,11 +178,11 @@ set SOURCETREE_FOLDER=sourcetree
 set SOURCETREE_TOOL_1=start_sourcetree.bat
 
 set GIT_NAME=Git
-set GIT_VERSION=2.11.1
-set GIT_URL=https://github.com/git-for-windows/git/releases/download/v2.11.1.windows.1/PortableGit-2.11.1-64-bit.7z.exe
+set GIT_VERSION=2.12.1
+set GIT_URL=https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.1/PortableGit-%GIT_VERSION%-64-bit.7z.exe
 set GIT_TYPE=ZIP
 set GIT_EXPLODED=--create--
-set GIT_PACKAGE=PortableGit-2.11.1-64-bit.7z.exe
+set GIT_PACKAGE=PortableGit-%GIT_VERSION%-64-bit.7z.exe
 set GIT_FOLDER=git
 set GIT_CONFIG=git
 
