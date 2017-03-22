@@ -79,6 +79,12 @@ Get the list of available packages:
 |- Workspace location is w:\workspace    |  -- conf/devpack.bat -> WORKSPACE |
 |- Paths and aliases                     |	-- setenv.bat |
 
+## Updates
+The DevPack has an update mechanism. Update the package versions and URLs in conf/packages.bat and issue
+
+	$ setup update
+	
+This will check the installed against configured versions and uninstall, downloas and install mismatching packages (no check for higher version number).
 
 ## How to use
 

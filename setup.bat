@@ -109,6 +109,7 @@ call %TEMPLATE%
 if "%COMMAND%" == "info" goto info
 if "%COMMAND%" == "status" goto info
 if "%COMMAND%" == "install" goto install_devpack
+if "%COMMAND%" == "update" goto update_devpack
 if "%COMMAND%" == "download" goto download
 if "%COMMAND%" == "purge" goto purge
 if "%COMMAND%" == "uninstall" goto uninstall
@@ -123,6 +124,7 @@ echo.
 echo Available commands:
 echo   status                    - Show currently installed packages
 echo   install [^<packageName^>]   - Install DevPack / configured / single packages
+echo   update [^<packageName^>]    - Update DevPack / configured / single packages
 echo   download                  - Only download packages
 echo   purge                     - Remove disabled packages
 echo   uninstall [^<packageName^>] - Uninstall DevPack / single package
@@ -171,29 +173,69 @@ endlocal
 exit /B
 
 rem ======================================================================
+rem Update selected packages
+:update_devpack
+setlocal enabledelayedexpansion
+echo.
+echo Start Update of Java EE DevPack
+echo ===============================
+echo.
+
+if not "%1" == "" (
+  call :update_single_package %1
+) else (
+  for %%p in ( %DEVPACK_PACKAGES% ) do (
+    set PACKAGE=%%p
+    set SELECTED=!INSTALL_%%p!
+    if "!SELECTED!" == "TRUE" (
+      call :update_single_package !PACKAGE!
+    )
+  )
+  if "%INSTALL_ECLIPSE%" == "EE" (
+    call :update_single_package ECLIPSE_EE
+  )
+  if "%INSTALL_ECLIPSE%" == "JAVA" (
+    call :update_single_package ECLIPSE_JAVA
+  )
+  if "%INSTALL_ECLIPSE%" == "CPP" (
+    call :update_single_package ECLIPSE_CPP
+  )
+  if "%INSTALL_SCALA%" == "TRUE" (
+    call :update_single_package SBT
+  )
+)
+echo.
+echo All done.
+
+exit /B
+
+rem ======================================================================
 rem Install selected packages
 :install_devpack
 
-if not "%1" == "" goto download_and_install_single_package
-
 echo.
-echo Start Installation of JEE DevPack
-echo =================================
+echo Start Installation of Java EE DevPack
+echo =====================================
 echo.
 
-findstr /m "SET SVN_USER" conf\devpack.bat > NUL
-if %errorlevel%==0 goto install_devpack_do
-set SVN_USER=%USERNAME%
-setlocal enabledelayedexpansion
-for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L=l" "M=m" "N=n" "O=o" "P=p" "Q=q" "R=r" "S=s" "T=t" "U=u" "V=v" "W=w" "X=x" "Y=y" "Z=z" "Ä=ä" "Ö=ö" "Ü=ü") do (
+if not "%1" == "" (
+  call :download_and_install_single_package
+) else (
+
+  findstr /m "SET SVN_USER" conf\devpack.bat > NUL
+  if %errorlevel%==0 goto install_devpack_do
+  set SVN_USER=%USERNAME%
+  setlocal enabledelayedexpansion
+  for %%a in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i" "J=j" "K=k" "L=l" "M=m" "N=n" "O=o" "P=p" "Q=q" "R=r" "S=s" "T=t" "U=u" "V=v" "W=w" "X=x" "Y=y" "Z=z" "Ä=ä" "Ö=ö" "Ü=ü") do (
     set "SVN_USER=!SVN_USER:%%~a!"
-)
-echo set SVN_USER=%SVN_USER% >> conf\devpack.bat
-endlocal
+  )
+  echo set SVN_USER=%SVN_USER% >> conf\devpack.bat
+  endlocal
 
 :install_devpack_do
-call :download
-call :install
+  call :download
+  call :install
+)
 
 echo.
 echo All done.
@@ -211,10 +253,7 @@ call :execute_downloads
 echo.
 echo Installing...
 call :install_single_package %1
-echo.
-echo All done.
 exit /B
-
 
 rem ======================================================================
 rem Install a single package
@@ -238,6 +277,54 @@ if "!PACKAGE_TYPE!" == "JDK6" (
 ) else (
     echo Error installing package %1: Unknown package type "!PACKAGE_TYPE!"
 )
+endlocal
+exit /B
+
+rem ======================================================================
+rem Get installed version
+:get_installed_version <packageName> <outputVar>
+set PACKAGE_TARGET=%1_FOLDER
+call :expand_variable PACKAGE_TARGET
+
+if exist "%TOOLS_DIR%\!PACKAGE_TARGET!\%VERSION_FILE%" (
+  @for /F "tokens=*" %%a in ('type "%TOOLS_DIR%\!PACKAGE_TARGET!\%VERSION_FILE%"') do (
+    set %2=%%a
+    exit /b %errorlevel%
+  )
+)
+exit /B
+
+rem ======================================================================
+rem Update a single package
+:update_single_package <packageName>
+setlocal enabledelayedexpansion
+set PACKAGE=%1
+set PACKAGE_NAME=%1_NAME
+set PACKAGE_VERSION=%1_VERSION
+set PACKAGE_TARGET=%1_FOLDER
+
+call :expand_variable PACKAGE_NAME
+call :expand_variable PACKAGE_VERSION
+call :expand_variable PACKAGE_TARGET
+call :get_installed_version %PACKAGE% INSTALLED_VERSION
+
+echo | set /p=Package !PACKAGE_NAME!... 
+
+if "!INSTALLED_VERSION!" == "" (
+  set INSTALLED_VERSION=-not installed-
+)
+
+if not "!INSTALLED_VERSION!" == "!PACKAGE_VERSION!" (
+  echo out of date.
+  echo Updating from version !INSTALLED_VERSION! to !PACKAGE_VERSION!
+  
+  call :uninstall_package %PACKAGE%
+  call :download_and_install_single_package %PACKAGE%
+  
+) else (
+  echo up to date: !INSTALLED_VERSION!
+)
+
 endlocal
 exit /B
 
@@ -489,13 +576,13 @@ if "%SELECTED%" == "FALSE" (
 )
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
-  echo | set /p=not installed,%TAB%
+  echo | set /p=not installed, 
   if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
     echo | set /p=not 
   )
   echo downloaded.
 ) else (
-  call :processVersionFile "%TOOLS_DIR%\%TARGET%\%VERSION_FILE%" INSTALLED_VERSION
+  call :get_installed_version %PACKAGE_SPEC% INSTALLED_VERSION
   echo installed [!INSTALLED_VERSION!].
 )
 
@@ -1047,16 +1134,6 @@ rem %1: Result variable
 rem %2: The Path
 :get_filename <resultVar> <filePath>
 set %1=%~nx2
-
-rem Read single value from given file.
-:processVersionFile <configFile> <resultVar>
-if exist %1 (
-  @for /F "tokens=*" %%a in ('type %1') do (
-    set %2=%%a
-    exit /b %errorlevel%
-  )
-)
-exit /b
 
 :normalizePath <inputPath> <resultVar>
 SET %2=%~dpfn1

@@ -119,11 +119,11 @@ set GLASSFISH_FOLDER=glassfish
 set GLASSFISH_TOOL_1=start_glassfish.bat
 
 set NOTEPAD_NAME=Notepad++
-set NOTEPAD_VERSION=7.3.1
-set NOTEPAD_URL=https://notepad-plus-plus.org/repository/7.x/7.3.1/npp.7.3.1.bin.x64.zip
+set NOTEPAD_VERSION=7.3.2
+set NOTEPAD_URL=https://notepad-plus-plus.org/repository/7.x/%NOTEPAD_VERSION%/npp.%NOTEPAD_VERSION%.bin.x64.zip
 set NOTEPAD_TYPE=ZIP
 set NOTEPAD_EXPLODED=--create--
-set NOTEPAD_PACKAGE=npp.7.3.1.bin.x64.zip
+set NOTEPAD_PACKAGE=npp.%NOTEPAD_VERSION%.bin.x64.zip
 set NOTEPAD_FOLDER=npp
 
 set SUBLIME_NAME=Sublime Text
@@ -169,11 +169,11 @@ set CONSOLE_PACKAGE=Console-2.00b148-Beta_32bit.zip
 set CONSOLE_FOLDER=console
 
 set SOURCETREE_NAME=SourceTree
-set SOURCETREE_VERSION=1.10.20.1
-set SOURCETREE_URL=https://downloads.atlassian.com/software/sourcetree/windows/ga/SourceTreeSetup-1.10.20.1.exe
+set SOURCETREE_VERSION=1.10.23.1
+set SOURCETREE_URL=https://downloads.atlassian.com/software/sourcetree/windows/ga/SourceTreeSetup-%SOURCETREE_VERSION%.exe
 set SOURCETREE_TYPE=NUPKG
-set SOURCETREE_EXPLODED=SourceTree-1.10.20.1-full.nupkg
-set SOURCETREE_PACKAGE=SourceTreeSetup-1.10.20.1.exe
+set SOURCETREE_EXPLODED=SourceTree-%SOURCETREE_VERSION%-full.nupkg
+set SOURCETREE_PACKAGE=SourceTreeSetup-%SOURCETREE_VERSION%.exe
 set SOURCETREE_FOLDER=sourcetree
 set SOURCETREE_TOOL_1=start_sourcetree.bat
 
