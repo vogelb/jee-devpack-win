@@ -19,6 +19,7 @@ call :include_config %CONF_DIR%\tomcat.bat
 call :include_config %CONF_DIR%\forge.bat
 call :include_config %CONF_DIR%\scala.bat
 call :include_config %CONF_DIR%\git.bat
+call :include_config %CONF_DIR%\meld.bat
 
 rem -----------------------------------------------------------------
 rem Add workspace parameters as required
