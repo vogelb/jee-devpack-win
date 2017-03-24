@@ -160,12 +160,12 @@ set SBT_EXPLODED=sbt-0.13.9
 set SBT_PACKAGE=%SBT_EXPLODED%.zip
 set SBT_FOLDER=sbt
 
-set CONSOLE_NAME=Console 2
-set CONSOLE_VERSION=2.0
-set CONSOLE_URL=http://downloads.sourceforge.net/project/console/console-devel/2.00/Console-2.00b148-Beta_32bit.zip
+set CONSOLE_NAME=ConsoleZ
+set CONSOLE_VERSION=1.18.1
+set CONSOLE_URL=https://github.com/cbucher/console/releases/download/1.18.0/ConsoleZ.x64.1.18.0.17048.zip
 set CONSOLE_TYPE=ZIP
-set CONSOLE_EXPLODED=Console2
-set CONSOLE_PACKAGE=Console-2.00b148-Beta_32bit.zip
+set CONSOLE_EXPLODED=--create--
+set CONSOLE_PACKAGE=ConsoleZ.x64.1.18.0.17048.zip
 set CONSOLE_FOLDER=console
 
 set SOURCETREE_NAME=SourceTree
