@@ -359,6 +359,8 @@ if "%INSTALL_ECLIPSE%" == "CPP" (
   call :download_package ECLIPSE_CPP
 )
 
+call :execute_downloads
+
 exit /B
 
 
@@ -572,14 +574,18 @@ if "%SELECTED%" == "FALSE" (
 )
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
-  echo | set /p=not installed / 
+  if "%SELECTED%" == "FALSE" (
+    echo | set /p=not installed / 
+  ) else (
+    echo | set /p=[31mnot installed[0m / 
+  )
   if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
     echo | set /p=not 
   )
   echo downloaded
 ) else (
   call :get_installed_version %PACKAGE_SPEC% INSTALLED_VERSION
-  echo installed [!INSTALLED_VERSION!]
+  echo [32minstalled[0m [!INSTALLED_VERSION!]
 )
 
 exit /B
@@ -626,15 +632,9 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
     %TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" >NUL
     echo ok.
   )
-  echo UNZIPPED=%UNZIPPED%
-  echo TARGET=%TARGET%
   if not "%UNZIPPED%" == "??" (
-	echo rename...
-	dir
     if exist %UNZIPPED% (
-	  echo %UNZIPPED% exists
 	  if not exist %TARGET% (      
-	    echo %TARGET% not exists
         echo | set /p=Renaming %UNZIPPED% to %TARGET%... 
         move %UNZIPPED% %TARGET% >NUL
         echo ok.
