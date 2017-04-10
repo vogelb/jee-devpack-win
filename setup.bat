@@ -752,7 +752,7 @@ set VERSION=!%PACKAGE_SPEC%_VERSION!
 
 if "%OPTION%" == "" (
   echo Unknown package: %PACKAGE_SPEC%
-  echo Use setup packages to display the list of available packages.
+  echo Use   setup packages   to display the list of available packages.
   echo.
   exit /B
 )
