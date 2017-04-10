@@ -220,7 +220,7 @@ echo =====================================
 echo.
 
 if not "%1" == "" (
-  call :download_and_install_single_package
+  call :download_and_install_single_package %1
 ) else (
 
   findstr /m "SET SVN_USER" conf\devpack.bat > NUL
