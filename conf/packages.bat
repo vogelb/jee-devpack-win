@@ -3,7 +3,7 @@ rem ===================================================================
 rem Java DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=JDK8 JDK8_32 JDK7 JDK6 ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD SUBLIME FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN
+set DEVPACK_PACKAGES=JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD SUBLIME FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN
 
 set BABUN_NAME=Babun
 set BABUN_VERSION=1.2.0
@@ -17,10 +17,19 @@ set BABUN_POSTINSTALL=babun_postinstall.bat
 set JDK8_NAME=Oracle JDK 8
 set JDK8_VERSION=8u121
 set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-windows-x64.exe
-set JDK8_TYPE=JDK
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
+set JDK8_TYPE=JDK
 set JDK8_PACKAGE=jdk-8u121-windows-x64.exe
 set JDK8_FOLDER=jdk_8
+
+set JDK8_APIDOC_NAME=Oracle JDK 8 Apidoc
+set JDK8_APIDOC_VERSION=8u121
+set JDK8_APIDOC_URL=http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-docs-all.zip
+set JDK8_APIDOC_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
+set JDK8_APIDOC_TYPE=ZIP
+set JDK8_APIDOC_EXPLODED=docs
+set JDK8_APIDOC_PACKAGE=jdk-8u121-docs-all.zip
+set JDK8_APIDOC_FOLDER=%JDK8_FOLDER%\docs
 
 set JDK8_32_NAME=Oracle JDK 8x32
 set JDK8_32_VERSION=8u111
