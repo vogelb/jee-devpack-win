@@ -359,7 +359,8 @@ if "%INSTALL_ECLIPSE%" == "CPP" (
   call :download_package ECLIPSE_CPP
 )
 
-endlocal
+exit /B
+
 
 rem ======================================================================
 rem Download JDK6
@@ -368,53 +369,44 @@ if "%INSTALL_JDK6%" == "TRUE" (
   echo | set /p=Package JDK 6... 
   if not exist %TOOLS_DIR%\%JDK6_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK6_PACKAGE%" (
     echo.
+	echo.
+	echo #####################################################################################################
     echo JDK 6 cannot be automatically downloaded because it requires an Oracle web account.
     echo Please Download it manually and place into the configured download folder %DOWNLOADS_DIR%.
-    echo Installation cancelled.
+	echo Installation cancelled.
+	echo #####################################################################################################
+    echo.
     exit /B 
   )
   echo already available.
 )
 
-rem ======================================================================
-rem Download JDK7
-:download_jdk7
-if "%INSTALL_JDK7%" == "TRUE" (
-  echo | set /p=Package JDK 7... 
-  if not exist %TOOLS_DIR%\%JDK7_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK7_PACKAGE%" (
-    echo Downloading now.
-    %WGET% %JDK7_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK7_URL%
-    goto download_jdk8
-  )
-  echo already available.
-)
-
-rem ======================================================================
-rem Download JDK8 64bit
-:download_jdk8
-if "%INSTALL_JDK8%" == "TRUE" (
-  echo | set /p=Package JDK 8... 
-  if not exist %TOOLS_DIR%\%JDK8_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK8_PACKAGE%" (
-    echo Downloading now.
-    %WGET% %JDK8_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK8_URL%
-    goto download_jdk8_32
-  )
-  echo already available.
-)
-
+exit /B
 
 rem ======================================================================
 rem Download JDK8 32bit
-:download_jdk8_32
-if "%INSTALL_JDK8_32%" == "TRUE" (
-  echo | set /p=Package JDK 8_32... 
-  if not exist %TOOLS_DIR%\%JDK8_32_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK8_32_PACKAGE%" (
-    echo Downloading JDK 8_32...
-    %WGET% %JDK8_32_OPTIONS% --directory-prefix %DOWNLOADS_DIR% %JDK8_32_URL%
-    goto execute_downloads
-  )
-  echo already available.
+:download_single_package <packageSpec>
+setlocal enabledelayedexpansion
+set PACKAGE=%1
+set PACKAGE_NAME=%1_NAME
+set PACKAGE_OPTIONS=%1_OPTIONS
+set PACKAGE_FOLDER=%1_FOLDER
+set PACKAGE_PACKAGE=%1_PACKAGE
+
+call :expand_variable PACKAGE_NAME
+call :expand_variable PACKAGE_FOLDER
+call :expand_variable PACKAGE_PACKAGE
+
+echo !%PACKAGE%_OPTIONS!
+echo URL=!%PACKAGE%_URL!
+echo | set /p=Package !PACKAGE_NAME!... 
+if not exist %TOOLS_DIR%\!PACKAGE_FOLDER! if not exist "%DOWNLOADS_DIR%\%PACKAGE_PACKAGE%" (
+  %WGET% !%PACKAGE%_OPTIONS! --directory-prefix %DOWNLOADS_DIR% !%PACKAGE%_URL!
+  exit /B
 )
+echo already available.
+
+exit /B
 
 rem ======================================================================
 rem Execute download of marked packages.
@@ -607,6 +599,13 @@ set VERSION=!%PACKAGE_SPEC%_VERSION!
 
 echo | set /p=Package %OPTION%... 
 
+if "%OPTION%" == "" (
+  echo Unknown package: %PACKAGE_SPEC%
+  echo Use setup packages to display the list of available packages.
+  echo.
+  exit /B
+)
+
 if not exist "%TOOLS_DIR%\%TARGET%" (
 
   if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
@@ -627,13 +626,19 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
     %TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" >NUL
     echo ok.
   )
-
+  echo UNZIPPED=%UNZIPPED%
+  echo TARGET=%TARGET%
   if not "%UNZIPPED%" == "??" (
-    if exist %UNZIPPED% if not exist %TARGET% (
-
-      echo | set /p=Renaming %UNZIPPED% to %TARGET%... 
-      move %UNZIPPED% %TARGET% >NUL
-      echo ok.
+	echo rename...
+	dir
+    if exist %UNZIPPED% (
+	  echo %UNZIPPED% exists
+	  if not exist %TARGET% (      
+	    echo %TARGET% not exists
+        echo | set /p=Renaming %UNZIPPED% to %TARGET%... 
+        move %UNZIPPED% %TARGET% >NUL
+        echo ok.
+	  )
     )
     if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
   )
@@ -734,6 +739,13 @@ set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
 set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
 
+if "%OPTION%" == "" (
+  echo Unknown package: %PACKAGE_SPEC%
+  echo Use setup packages to display the list of available packages.
+  echo.
+  exit /B
+)
+
 echo | set /p=Package %OPTION%... 
 
 if exist "%TOOLS_DIR%\%TARGET%" (
@@ -772,6 +784,12 @@ rem Download routine
 rem Add download package to download list
 :download_package
 set PACKAGE_SPEC=%~1
+
+if "%PACKAGE_SPEC%" == "JDK6" (
+  call :download_jdk6
+  exit /B
+)
+
 setlocal enabledelayedexpansion
 set OPTION=!%PACKAGE_SPEC%_NAME!
 set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
@@ -779,19 +797,22 @@ set PACKAGE_URL=!%PACKAGE_SPEC%_URL!
 set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
 set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
+set WGET_OPTIONS=!%PACKAGE_SPEC%_OPTIONS!
 
 echo | set /p=Package %OPTION% [%PACKAGE%]... 
-
 if not exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
   if "%PACKAGE%" == "%GIT_REPO%" (
     call :checkout_git_repo %PACKAGE_URL% %TARGET%
   ) else (
-    echo %PACKAGE_URL% >> %DOWNLOADS%
-    echo marked for download.	
+    if [!WGET_OPTIONS!] == [] (
+      echo %PACKAGE_URL% >> %DOWNLOADS%  
+      echo marked for download.	
+	) else (
+	  call :download_single_package %PACKAGE_SPEC%
+	)
   )
   exit /B
 )
-endlocal
 echo already available.
 exit /B
 
