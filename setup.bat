@@ -141,6 +141,9 @@ rem List available packages
 setlocal enabledelayedexpansion
 echo.
 echo List of available packages:
+echo.
+echo Package ID%TAB%%TAB%Package%TAB%%TAB%%TAB%Version
+echo =============================================================
 for %%p in ( %DEVPACK_PACKAGES% )  do (
   set PACKAGE=%%p
   set SELECTED=!INSTALL_%%p!
@@ -149,15 +152,13 @@ for %%p in ( %DEVPACK_PACKAGES% )  do (
   
   call :strlen PACKAGE_LEN PACKAGE
   call :strlen OPTION_LEN OPTION
-  
-  echo | set /p=Package 
-  
-  if !PACKAGE_LEN! LEQ 6 (
-    echo | set /p=!PACKAGE!:%TAB%%TAB%%TAB%
+    
+  if !PACKAGE_LEN! LEQ 7 (
+    echo | set /p=!PACKAGE!%TAB%%TAB%%TAB%
   ) else if !PACKAGE_LEN! LEQ 14 (
-    echo | set /p=!PACKAGE!:%TAB%%TAB%
+    echo | set /p=!PACKAGE!%TAB%%TAB%
   ) else (
-    echo | set /p=!PACKAGE!:%TAB%
+    echo | set /p=!PACKAGE!%TAB%
   )
   
   if !OPTION_LEN! LEQ 7 (
@@ -452,6 +453,9 @@ echo.
 echo Package Status:
 echo.
 
+echo Package%TAB%%TAB%%TAB%Version%TAB%%TAB%Status
+echo ======================================================================
+
 for %%p in ( %DEVPACK_PACKAGES% )  do (
   call :query_package %%p
 )
@@ -557,33 +561,33 @@ set VERSION=!%PACKAGE_SPEC%_VERSION!
 call :strlen OPTION_LEN OPTION 
 call :strlen VERSION_LEN VERSION
 
-if %OPTION_LEN% LEQ 6 (
-  echo | set /p=Package %OPTION%:%TAB%%TAB%%TAB%
-) else if %OPTION_LEN% LEQ 14 (
-  echo | set /p=Package %OPTION%:%TAB%%TAB%
+if %OPTION_LEN% LEQ 7 (
+  echo | set /p=%OPTION%%TAB%%TAB%%TAB%
+) else if %OPTION_LEN% LEQ 16 (
+  echo | set /p=%OPTION%%TAB%%TAB%
 ) else (
-  echo | set /p=Package %OPTION%:%TAB%
+  echo | set /p=%OPTION%%TAB%
 )
 
 if "%SELECTED%" == "FALSE" (
-  echo | set /p=not selected,%TAB%%TAB%
+  echo | set /p=not selected%TAB%
 ) else (
   if %VERSION_LEN% LEQ 8 (
-    echo | set /p=version %VERSION%,%TAB%%TAB%
+    echo | set /p=%VERSION%%TAB%%TAB%
   ) else (
-    echo | set /p=version %VERSION%,%TAB%
+    echo | set /p=%VERSION%%TAB%
   )
 )
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
-  echo | set /p=not installed, 
+  echo | set /p=not installed / 
   if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
     echo | set /p=not 
   )
-  echo downloaded.
+  echo downloaded
 ) else (
   call :get_installed_version %PACKAGE_SPEC% INSTALLED_VERSION
-  echo installed [!INSTALLED_VERSION!].
+  echo installed [!INSTALLED_VERSION!]
 )
 
 exit /B
