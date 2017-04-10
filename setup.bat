@@ -246,6 +246,17 @@ exit /B
 rem ======================================================================
 rem Download and install a single package
 :download_and_install_single_package <packageName>
+setlocal enabledelayedexpansion
+set PACKAGE_NAME=!%1_NAME!
+
+if "%PACKAGE_NAME%" == "" (
+  echo.
+  echo Unknown package %1.
+  echo Use   setup packages   to display the list of available packages.
+  echo.
+  exit /B
+)
+
 echo.
 echo Downloading...
 if exist %DOWNLOADS% del %DOWNLOADS%
@@ -607,7 +618,7 @@ echo | set /p=Package %OPTION%...
 
 if "%OPTION%" == "" (
   echo Unknown package: %PACKAGE_SPEC%
-  echo Use setup packages to display the list of available packages.
+  echo Use   setup packages   to display the list of available packages.
   echo.
   exit /B
 )
