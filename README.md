@@ -52,7 +52,15 @@ The source code can be obtained here: www.7-zip.org
 | - Select and customize a template or create a new one          | -- templates\default.bat            |
 | - Add or remove packages as required.                          |                                     | 
 
-### 3. To download and install the configured software packages, run
+### 3. Adapt the dev pack configuration to your needs
+| | |
+| -------------------------------------- | ----------------------------------- |
+| - Working drive is w:\                 |   -- conf/devpack.bat -> WORK_DRIVE |
+| - Tools installation dir is w:\tools   |  -- conf/devpack.bat -> TOOLS_DIR   |
+| - Workspace location is w:\workspace   |  -- conf/devpack.bat -> WORKSPACE   |
+| - Paths and aliases                    |	-- setenv.bat                      |
+
+### 4. To download and install the configured software packages, run
 
 	$ setup install
 	
@@ -71,20 +79,12 @@ Get the list of available packages:
 	
 	$ setup packages
 	
-### 4. Adapt the dev pack configuration to your needs
-| | |
-| -------------------------------------- | ----------------------------------- |
-| - Working drive is w:\                 |   -- conf/devpack.bat -> WORK_DRIVE |
-|- Tools installation dir is w:\tools    |  -- conf/devpack.bat -> TOOLS_DIR |
-|- Workspace location is w:\workspace    |  -- conf/devpack.bat -> WORKSPACE |
-|- Paths and aliases                     |	-- setenv.bat |
-
 ## Updates
 The DevPack has an update mechanism. Update the package versions and URLs in conf/packages.bat and issue
 
 	$ setup update
 	
-This will check the installed against configured versions and uninstall, downloas and install mismatching packages (no check for higher version number).
+This will check the installed against configured versions and uninstall, download and install **mismatching** packages (no check for higher version number).
 
 ## How to use
 
@@ -110,7 +110,6 @@ Tools:
 
 - You can edit a file in notepad++ / sublime by typing `edit <filename>` resp. `sublime <filename>` on the command line
 
-
 ## Locations and shared usage
 
 - Global maven settings are in \tools\mvn\conf
@@ -119,4 +118,3 @@ Tools:
 - The toolchains.xml is packaged in \conf and copied to the user/.m2 directory in init_workspace.bat (if enabled)
 
 In order to share installed tools and local maven config & repository between several instances of the dev pack (e.g. one dev pack per project), configure TOOLS_DIR, PUBLIC_M2_CONFIG and PRIVATE_M2_CONFIG in conf\devpack.bat to point to a global location.
-

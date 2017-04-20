@@ -596,7 +596,13 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
   echo downloaded
 ) else (
   call :get_installed_version %PACKAGE_SPEC% INSTALLED_VERSION
-  echo [32minstalled[0m [!INSTALLED_VERSION!]
+  if "!INSTALLED_VERSION!" == "%VERSION%" (
+    echo [32minstalled[0m [!INSTALLED_VERSION!]
+  ) else if "%SELECTED%" == "TRUE" (
+    echo [31mout of date[0m [!INSTALLED_VERSION!]
+  ) else (
+	echo present
+  )
 )
 
 exit /B
