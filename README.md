@@ -80,7 +80,12 @@ Get the list of available packages:
 	$ setup packages
 	
 ## Updates
-The DevPack has an update mechanism. Update the package versions and URLs in conf/packages.bat and issue
+The DevPack has an update mechanism. When the package configuration is updated on GitHub just issue
+
+	$ git pull
+	$ setup update
+
+To update packages yourself, change the package versions and URLs in conf/packages.bat and issue
 
 	$ setup update
 	

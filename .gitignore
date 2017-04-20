@@ -30,3 +30,5 @@ conf/postgres.bat
 start_postgres.bat
 postgres.log
 conf/meld.bat
+/start_eclipse.bat
+tools/ansic0n/

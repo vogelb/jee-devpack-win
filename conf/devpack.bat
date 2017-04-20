@@ -13,6 +13,9 @@ if "%DEVPACK_BASE%" == "" (
 rem Extend command prompt with git branch
 set DEVPACK_GIT_PROMPT=TRUE
 
+rem Extend command shell with colour
+set DEVPACK_COLOUR=TRUE
+
 rem Use virtual harddisk
 rem Set to true to install DevPack in a virtual disk
 set DEVPACK_VHD=FALSE

@@ -10,6 +10,10 @@ rem - Eclipse JEE package
 rem - JBoss Forge
 rem ===================================================================
 
+rem Set to TRUE if you want Ansi console extension installed
+rem Recommended for Windows 8.x and below.
+set INSTALL_ANSICON=TRUE
+
 rem Set to TRUE if you want Maven installed
 set INSTALL_MAVEN=TRUE
 

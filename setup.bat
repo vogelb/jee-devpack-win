@@ -76,7 +76,7 @@ echo set SELECTED_TEMPLATE=%TEMPLATE_NAME%>%LAST_TEMPLATE%
 
 rem Unmount mounted drive. Might be another instance!
 set DEVPACK_BASE=
-call :call_debug %SETUP_WORKING_DIR%\conf\devpack.bat
+call %SETUP_WORKING_DIR%\conf\devpack.bat
 
 rem If installation is started from running devpack, restart from base dir.
 if "%WORK_DRIVE%:" == "%SETUP_WORKING_DRIVE%" (
@@ -102,9 +102,33 @@ cd /d %WORK_DRIVE%:\
 set WGET=%SETUP_WORKING_DIR%\bin\wget
 set WGET_OPTIONS=--no-check-certificate --no-cookies
 
+if "%DEVPACK_COLOUR%" == "TRUE" (
+  call %BIN_DIR%\ansicon.bat
+  set PROMPT_NOT_INSTALLED=[31mnot installed[0m
+  set PROMPT_INSTALLED=[32minstalled[0m
+  set PROMPT_OUTDATED=[31mout of date[0m
+  set PROMPT_MANUALLY_INSTALLED=[33minstalled[0m
+) else (
+  set PROMPT_NOT_INSTALLED=not installed
+  set PROMPT_INSTALLED=installed
+  set PROMPT_OUTDATED=out of date
+)
+
 rem ===== Read Package Configuration =====
 call %SETUP_WORKING_DIR%\conf\packages.bat
 call %TEMPLATE%
+
+if "%INSTALL_ECLIPSE%" == "JAVA" (
+  set INSTALL_ECLIPSE_JAVA=TRUE
+)
+
+if "%INSTALL_ECLIPSE%" == "EE" (
+  set INSTALL_ECLIPSE_EE=TRUE
+)
+
+if "%INSTALL_ECLIPSE%" == "CPP" (
+  set INSTALL_ECLIPSE_CPP=TRUE
+)
 
 if "%COMMAND%" == "info" goto info
 if "%COMMAND%" == "status" goto info
@@ -190,6 +214,9 @@ if not "%1" == "" (
     set SELECTED=!INSTALL_%%p!
     if "!SELECTED!" == "TRUE" (
       call :update_single_package !PACKAGE!
+      if !ERRORLEVEL! neq 0 (
+        exit /B !ERRORLEVEL!
+      )  
     )
   )
   if "%INSTALL_ECLIPSE%" == "EE" (
@@ -260,6 +287,7 @@ if "%PACKAGE_NAME%" == "" (
 echo.
 echo Downloading...
 if exist %DOWNLOADS% del %DOWNLOADS%
+if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 call :download_package %1
 call :execute_downloads
 echo.
@@ -331,6 +359,9 @@ if not "!INSTALLED_VERSION!" == "!PACKAGE_VERSION!" (
   echo Updating from version !INSTALLED_VERSION! to !PACKAGE_VERSION!
   
   call :uninstall_package %PACKAGE%
+  if %errorlevel% gtr 0 (
+    exit /B %errorlevel%
+  )
   call :download_and_install_single_package %PACKAGE%
   
 ) else (
@@ -338,7 +369,7 @@ if not "!INSTALLED_VERSION!" == "!PACKAGE_VERSION!" (
 )
 
 endlocal
-exit /B
+exit /B 0
 
 rem ======================================================================
 rem Download selected packages
@@ -372,7 +403,7 @@ if "%INSTALL_ECLIPSE%" == "CPP" (
 
 call :execute_downloads
 
-exit /B
+exit /B 0
 
 
 rem ======================================================================
@@ -394,7 +425,7 @@ if "%INSTALL_JDK6%" == "TRUE" (
   echo already available.
 )
 
-exit /B
+exit /B 0
 
 rem ======================================================================
 rem Download JDK8 32bit
@@ -415,11 +446,11 @@ echo URL=!%PACKAGE%_URL!
 echo | set /p=Package !PACKAGE_NAME!... 
 if not exist %TOOLS_DIR%\!PACKAGE_FOLDER! if not exist "%DOWNLOADS_DIR%\%PACKAGE_PACKAGE%" (
   %WGET% !%PACKAGE%_OPTIONS! --directory-prefix %DOWNLOADS_DIR% !%PACKAGE%_URL!
-  exit /B
+  exit /B 0
 )
 echo already available.
 
-exit /B
+exit /B 0
 
 rem ======================================================================
 rem Execute download of marked packages.
@@ -512,16 +543,25 @@ for %%p in ( %DEVPACK_PACKAGES% ) do (
   set PURGE_PACKAGE=INSTALL_%%p
   call :expand_variable PURGE_PACKAGE
   
-  if "!PURGE_PACKAGE!" == "FALSE" (
+  if not "!PURGE_PACKAGE!" == "TRUE" (
     call :uninstall_package %%p
+    if !ERRORLEVEL! neq 0 (
+      exit /B !ERRORLEVEL!
+    )
     if "%%p" == "SCALA" (
       call :uninstall_package SBT
+      if !ERRORLEVEL! neq 0 (
+        exit /B !ERRORLEVEL!
+      )
     )
   )
 )
 
 if "%INSTALL_ECLIPSE%" == "FALSE" (
   call :uninstall_package ECLIPSE_EE
+  if !ERRORLEVEL! neq 0 (
+    exit /B !ERRORLEVEL!
+  )
 )
 echo.
 echo All done.
@@ -554,8 +594,8 @@ rem Print the status of a package
 rem %1: Package identifier
 :query_package
 set PACKAGE_SPEC=%~1
-setlocal enabledelayedexpansion
 
+setlocal enabledelayedexpansion
 set SELECTED=!INSTALL_%PACKAGE_SPEC%!
 set OPTION=!%PACKAGE_SPEC%_NAME!
 set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
@@ -574,7 +614,7 @@ if %OPTION_LEN% LEQ 7 (
   echo | set /p=%OPTION%%TAB%
 )
 
-if "%SELECTED%" == "FALSE" (
+if NOT "%SELECTED%" == "TRUE" (
   echo | set /p=not selected%TAB%
 ) else (
   if %VERSION_LEN% LEQ 8 (
@@ -586,7 +626,7 @@ if "%SELECTED%" == "FALSE" (
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
   if "%SELECTED%" == "TRUE" (
-    echo | set /p=[31mnot installed[0m / 
+    echo | set /p=%PROMPT_NOT_INSTALLED% / 
   ) else (
     echo | set /p=not installed / 
   )
@@ -597,9 +637,13 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 ) else (
   call :get_installed_version %PACKAGE_SPEC% INSTALLED_VERSION
   if "!INSTALLED_VERSION!" == "%VERSION%" (
-    echo [32minstalled[0m [!INSTALLED_VERSION!]
+    if "%SELECTED%" == "TRUE" (
+      echo %PROMPT_INSTALLED% [!INSTALLED_VERSION!]
+	) else (
+	  echo %PROMPT_MANUALLY_INSTALLED% [!INSTALLED_VERSION!]
+	)
   ) else if "%SELECTED%" == "TRUE" (
-    echo [31mout of date[0m [!INSTALLED_VERSION!]
+    echo %PROMPT_OUTDATED% [!INSTALLED_VERSION!]
   ) else (
 	echo present
   )
@@ -760,22 +804,25 @@ if "%OPTION%" == "" (
   echo Unknown package: %PACKAGE_SPEC%
   echo Use   setup packages   to display the list of available packages.
   echo.
-  exit /B
+  exit /B 1
 )
 
 echo | set /p=Package %OPTION%... 
 
 if exist "%TOOLS_DIR%\%TARGET%" (
   pushd %TOOLS_DIR%
-  
   call :clean_folder "%TARGET%"
-  
+  if !ERRORLEVEL! neq 0 (
+    exit /B !ERRORLEVEL!
+  )
   set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
     call :expand_variable CONFIG_NAME
     if not "!CONFIG_NAME!" == "" (
       call :clean_file %CONF_DIR%\!CONFIG_NAME!.bat
+      if !ERRORLEVEL! neq 0 (
+	    exit /B !ERRORLEVEL!
+      )
     )
-  
   for /l %%x in (1, 1, 10) do (
     set TOOL_NAME=%PACKAGE_SPEC%_TOOL_%%x
     set TOOL_VALUE=%PACKAGE_SPEC%_TOOL_%%x
@@ -784,17 +831,19 @@ if exist "%TOOLS_DIR%\%TARGET%" (
     
     if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
       call :clean_file %~dp0!TOOL_VALUE!
+      if !ERRORLEVEL! neq 0 (
+	    exit /B !ERRORLEVEL!
+      )
     )
   )
-  
   echo uninstalled.
   
   popd
-  exit /B
+  exit /B !ERRORLEVEL!
 )
 endlocal
 echo not installed.
-exit /B
+exit /B 0
 
 rem ======================================================================
 rem Download routine
@@ -822,7 +871,7 @@ if not exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
     call :checkout_git_repo %PACKAGE_URL% %TARGET%
   ) else (
     if [!WGET_OPTIONS!] == [] (
-      echo %PACKAGE_URL% >> %DOWNLOADS%  
+      echo %PACKAGE_URL% >> %DOWNLOADS%
       echo marked for download.	
 	) else (
 	  call :download_single_package %PACKAGE_SPEC%
@@ -899,7 +948,7 @@ xcopy /E %DOWNLOADS_DIR%\JDK\tools %TARGET%\ >NUL
 echo done.
 
 echo | set /p=cleaning up... 
-rmdir /S /Q %DOWNLOADS_DIR%\JDK >NUL
+call :clean_folder %DOWNLOADS_DIR%\JDK
 if not "%KEEP_PACKAGES%" == "TRUE" del %PACKAGE%
 echo done.
 echo Package %OPTION% done.
@@ -1096,12 +1145,12 @@ for /r %%x in (*.pack) do (
 
 echo ... cleaning up ...
 del .data .pdata .rdata .reloc .text CERTIFICATE
-rmdir /S /Q .rsrc >NUL
+call :clean_folder .rsrc
 popd
 
 echo ... copying files ...
 xcopy /E /I /Y %DOWNLOADS_DIR%\JDK %TOOLS_DIR%\%TARGET% >NUL
-rmdir /S /Q %DOWNLOADS_DIR%\JDK >NUL
+call :clean_folder %DOWNLOADS_DIR%\JDK
 if not "%KEEP_PACKAGES%" == "TRUE" del %DOWNLOADS_DIR%\%PACKAGE%
 echo ... done.
 
@@ -1160,15 +1209,27 @@ rem ======================================================================
 rem Delete a file
 rem %1: File path
 :clean_file <filePath>
-if exist %1 del /Q %1 >NUL
-exit /B
+if exist %1 (
+  del /Q %1 >NUL
+  if exist %~1 (
+    echo Error cleaning file %~1
+    exit /B 1
+  )
+)
+exit /B 0
 
 rem ======================================================================
 rem Recursively delete a folder
 rem %1: Folder path
 :clean_folder <folderPath>
-if exist %1 rmdir /S /Q %1 >NUL
-exit /B
+if exist %1 (
+  cmd /c rd /S /Q %1 > NUL
+  if exist %~1 (
+    echo Error cleaning folder %~1
+    exit /B 1
+  )
+)
+exit /B 0
 
 rem ======================================================================
 rem Get the file name from a path

@@ -3,7 +3,15 @@ rem ===================================================================
 rem Java DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD SUBLIME FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN
+set DEVPACK_PACKAGES=ANSICON JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD SUBLIME FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN
+
+set ANSICON_NAME=Ansic0n
+set ANSICON_VERSION=1.66
+set ANSICON_URL=http://adoxa.altervista.org/ansicon/ansi166.zip
+set ANSICON_TYPE=ZIP
+set ANSICON_PACKAGE=ansi166.zip
+set ANSICON_EXPLODED=--create--
+set ANSICON_FOLDER=ansic0n
 
 set BABUN_NAME=Babun
 set BABUN_VERSION=1.2.0
@@ -61,7 +69,8 @@ set ECLIPSE_EE_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technolo
 set ECLIPSE_EE_TYPE=ZIP
 set ECLIPSE_EE_EXPLODED=eclipse-jee-neon-R-win32-x86_64
 set ECLIPSE_EE_PACKAGE=%ECLIPSE_EE_EXPLODED%.zip
-set ECLIPSE_EE_FOLDER=eclipse
+set ECLIPSE_EE_FOLDER=eclipse_ee
+set ECLIPSE_EE_TOOL_1=start_eclipse_ee.bat
 
 set ECLIPSE_JAVA_NAME=Eclipse Java
 set ECLIPSE_JAVA_VERSION=Neon.2
@@ -70,6 +79,7 @@ set ECLIPSE_JAVA_TYPE=ZIP
 set ECLIPSE_JAVA_EXPLODED=eclipse-java-neon-2-win32-x86_64
 set ECLIPSE_JAVA_PACKAGE=%ECLIPSE_JAVA_EXPLODED%.zip
 set ECLIPSE_JAVA_FOLDER=eclipse
+set ECLIPSE_JAVA_TOOL_1=start_eclipse.bat
 
 set ECLIPSE_CPP_NAME=Eclipse C/C++
 set ECLIPSE_CPP_VERSION=Neon.2
@@ -77,7 +87,8 @@ set ECLIPSE_CPP_URL=http://ftp.fau.de/eclipse/technology/epp/downloads/release/n
 set ECLIPSE_CPP_TYPE=ZIP
 set ECLIPSE_CPP_EXPLODED=eclipse-cpp-neon-2-win32-x86_64
 set ECLIPSE_CPP_PACKAGE=%ECLIPSE_CPP_EXPLODED%.zip
-set ECLIPSE_CPP_FOLDER=eclipse
+set ECLIPSE_CPP_FOLDER=eclipse_cpp
+set ECLIPSE_CPP_TOOL_1=start_eclipse_cpp.bat
 
 rem Option to install preconfigured eclipse workspace
 set ECLIPSE_WORKSPACE_NAME=Eclipse workspace
@@ -170,12 +181,21 @@ set SBT_PACKAGE=%SBT_EXPLODED%.zip
 set SBT_FOLDER=sbt
 
 set CONSOLE_NAME=ConsoleZ
-set CONSOLE_VERSION=1.18.1
+set CONSOLE_VERSION=1.18.0
 set CONSOLE_URL=https://github.com/cbucher/console/releases/download/1.18.0/ConsoleZ.x64.1.18.0.17048.zip
 set CONSOLE_TYPE=ZIP
 set CONSOLE_EXPLODED=--create--
 set CONSOLE_PACKAGE=ConsoleZ.x64.1.18.0.17048.zip
 set CONSOLE_FOLDER=console
+
+rem set CONSOLE_NAME=Console 2
+rem set CONSOLE_VERSION=2.0
+rem set CONSOLE_URL=http://downloads.sourceforge.net/project/console/console-devel/2.00/Console-2.00b148-Beta_32bit.zip
+rem set CONSOLE_TYPE=ZIP
+rem set CONSOLE_EXPLODED=Console2
+rem set CONSOLE_PACKAGE=Console-2.00b148-Beta_32bit.zip
+rem set CONSOLE_FOLDER=console
+
 
 set SOURCETREE_NAME=SourceTree
 set SOURCETREE_VERSION=1.10.23.1
