@@ -585,10 +585,10 @@ if "%SELECTED%" == "FALSE" (
 )
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
-  if "%SELECTED%" == "FALSE" (
-    echo | set /p=not installed / 
-  ) else (
+  if "%SELECTED%" == "TRUE" (
     echo | set /p=[31mnot installed[0m / 
+  ) else (
+    echo | set /p=not installed / 
   )
   if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
     echo | set /p=not 

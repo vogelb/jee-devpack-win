@@ -41,8 +41,8 @@ set INSTALL_JAVA_SOURCE=TRUE
 rem Set to TRUE if you want Java 8 installed
 set INSTALL_JDK8=TRUE
 
-rem Set to TRUE if you want Java 8 installed
-set INSTALL_JDK8_JAVADOC=TRUE
+rem Set to TRUE if you want Java 8 API Doc installed
+set INSTALL_JDK8_APIDOC=TRUE
 
 rem Set to TRUE if you want Java 8 32bit installed
 set INSTALL_JDK8_32=FALSE
