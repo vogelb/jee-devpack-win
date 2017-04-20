@@ -3,7 +3,7 @@ rem ===================================================================
 rem Java DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=ANSICON JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD SUBLIME FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN
+set DEVPACK_PACKAGES=ANSICON JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN
 
 set ANSICON_NAME=Ansic0n
 set ANSICON_VERSION=1.66
@@ -139,20 +139,20 @@ set GLASSFISH_FOLDER=glassfish
 set GLASSFISH_TOOL_1=start_glassfish.bat
 
 set NOTEPAD_NAME=Notepad++
-set NOTEPAD_VERSION=7.3.2
-set NOTEPAD_URL=https://notepad-plus-plus.org/repository/7.x/%NOTEPAD_VERSION%/npp.%NOTEPAD_VERSION%.bin.x64.zip
+set NOTEPAD_VERSION=7.3.3
+set NOTEPAD_URL=https://notepad-plus-plus.org/repository/7.x/7.3.3/npp.7.3.3.bin.zip
 set NOTEPAD_TYPE=ZIP
 set NOTEPAD_EXPLODED=--create--
-set NOTEPAD_PACKAGE=npp.%NOTEPAD_VERSION%.bin.x64.zip
+set NOTEPAD_PACKAGE=npp.%NOTEPAD_VERSION%.bin.zip
 set NOTEPAD_FOLDER=npp
 
-set SUBLIME_NAME=Sublime Text
-set SUBLIME_VERSION=2.0.2
-set SUBLIME_URL=http://c758482.r82.cf2.rackcdn.com/Sublime Text 2.0.2 x64.zip
-set SUBLIME_TYPE=ZIP
-set SUBLIME_EXPLODED=--create--
-set SUBLIME_PACKAGE=Sublime Text 2.0.2 x64.zip
-set SUBLIME_FOLDER=sublime
+set ATOM_NAME=Atom
+set ATOM_VERSION=1.16.0
+set ATOM_URL=https://github.com/atom/atom/releases/download/v1.16.0/atom-windows.zip
+set ATOM_TYPE=ZIP
+set ATOM_EXPLODED=Atom
+set ATOM_PACKAGE=atom-windows.zip
+set ATOM_FOLDER=atom
 
 set FORGE_NAME=JBoss Forge
 set FORGE_VERSION=2.15.2

@@ -32,3 +32,4 @@ postgres.log
 conf/meld.bat
 /start_eclipse.bat
 tools/ansic0n/
+tools/Atom/

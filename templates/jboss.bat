@@ -63,8 +63,8 @@ set INSTALL_WILDFLY=TRUE
 rem Set to TRUE if you want Glassfish installed
 set INSTALL_GLASSFISH=FALSE
 
-rem Set to TRUE if you want Sublime installed
-set INSTALL_SUBLIME=FALSE
+rem Set to TRUE if you want Atom installed
+set INSTALL_ATOM=FALSE
 
 rem Set to TRUE if you want to install babun (cygwin shell)
 set INSTALL_BABUN=FALSE
