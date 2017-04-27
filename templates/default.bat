@@ -35,6 +35,9 @@ rem Set to TRUE if you want to install a preconfigured workspace
 rem Additional settings required in package configuration (or here)
 set INSTALL_ECLIPSE_WORKSPACE=FALSE
 
+rem Set to TRUE if you want to install Visual Studio Code
+set INSTALL_VS=FALSE
+
 rem Set to TRUE if you want Notepad++ installed
 set INSTALL_NOTEPAD=TRUE
 

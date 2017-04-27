@@ -1,0 +1,13 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\shell\SourceTree]
+@="Open SourceTree Here"
+
+[HKEY_CLASSES_ROOT\Directory\shell\SourceTree\command]
+@="\"W:\\tools\\sourcetree\\sourcetree.exe\" -f %V"
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\SourceTree]
+@="Open SourceTree Here"
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\SourceTree\command]
+@="\"W:\\tools\\sourcetree\\sourcetree.exe\" -f %V"

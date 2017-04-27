@@ -233,3 +233,12 @@ set POSTGRES_EXPLODED=pgsql
 set POSTGRES_FOLDER=postgres
 set POSTGRES_CONFIG=postgres
 set POSTGRES_TOOL_1=start_postgres.bat
+
+set VS_NAME=Visual Studio Code
+set VS_VERSION=1.11.2
+set VS_URL=https://az764295.vo.msecnd.net/stable/6eaebe3b9c70406d67c97779468c324a7a95db0e/VSCode-win32-1.11.2.zip
+set VS_TYPE=ZIP
+set VS_PACKAGE=VSCode-win32-1.11.2.zip
+set VS_EXPLODED=--create--
+set VS_FOLDER=vstudio
+set VS_TOOL_1=start_visual_studio.bat

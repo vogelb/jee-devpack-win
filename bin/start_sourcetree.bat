@@ -5,4 +5,4 @@ rem ===================================================================
 call bin\mount_devpack.bat
 cd /d %WORK_DRIVE%:\
 call setenv.bat
-call bin\sourcetree.bat
+call %BIN_DIR%\sourcetree.bat %*
