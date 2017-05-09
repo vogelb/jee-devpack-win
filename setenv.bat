@@ -21,6 +21,7 @@ call :include_config %CONF_DIR%\forge.bat
 call :include_config %CONF_DIR%\scala.bat
 call :include_config %CONF_DIR%\git.bat
 call :include_config %CONF_DIR%\meld.bat
+call :include_config %CONF_DIR%\node.bat
 
 rem -----------------------------------------------------------------
 rem Add workspace parameters as required

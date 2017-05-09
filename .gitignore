@@ -35,3 +35,6 @@
 /templates/template.bat
 /start_postgres.bat
 /postgres.log
+tools/nodejs/
+tools/gitbook-editor/
+conf/node.bat

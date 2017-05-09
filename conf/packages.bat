@@ -3,7 +3,8 @@ rem ===================================================================
 rem Java DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=ANSICON JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN
+set DEVPACK_PACKAGES=ANSICON JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN NODE GITBOOK GITBOOK_EDITOR 
+set DEVPACK_NO_PURGE=ECLIPSE_WORKSPACE
 
 set ANSICON_NAME=Ansic0n
 set ANSICON_VERSION=1.66
@@ -242,3 +243,27 @@ set VS_PACKAGE=VSCode-win32-1.11.2.zip
 set VS_EXPLODED=--create--
 set VS_FOLDER=vstudio
 set VS_TOOL_1=start_visual_studio.bat
+
+set NODE_NAME=node.js
+set NODE_VERSION=6.10.3
+set NODE_URL=https://nodejs.org/dist/v6.10.3/node-v6.10.3-win-x64.zip
+set NODE_TYPE=ZIP
+set NODE_PACKAGE=node-v%NODE_VERSION%-win-x64.zip
+set NODE_EXPLODED=node-v%NODE_VERSION%-win-x64
+set NODE_FOLDER=nodejs
+set NODE_CONFIG=node
+
+set GITBOOK_NAME=GitBook CLI
+set GITBOOK_VERSION=2.3.0
+set GITBOOK_URL=gitbook-cli
+set GITBOOK_TYPE=NPM
+set GITBOOK_FOLDER=nodejs\gitbook
+
+set GITBOOK_EDITOR_NAME=GitBook Editor
+set GITBOOK_EDITOR_VERSION=7.0.12
+set GITBOOK_EDITOR_URL=http://downloads.editor.gitbook.com/download/version/7.0.12
+set GITBOOK_EDITOR_OPTIONS=-O %DOWNLOADS_DIR%\GitBook.Editor.Setup.exe --user-agent "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:53.0)"
+set GITBOOK_EDITOR_TYPE=NUPKG
+set GITBOOK_EDITOR_EXPLODED=GitBook_Editor-7.0.12-full.nupkg
+set GITBOOK_EDITOR_PACKAGE=GitBook.Editor.Setup.exe
+set GITBOOK_EDITOR_FOLDER=gitbook-editor

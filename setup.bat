@@ -108,10 +108,12 @@ if "%DEVPACK_COLOUR%" == "TRUE" (
   set PROMPT_INSTALLED=[32minstalled[0m
   set PROMPT_OUTDATED=[31mout of date[0m
   set PROMPT_MANUALLY_INSTALLED=[33minstalled[0m
+  set PROMPT_UNINSTALLED=[33muninstalled[0m
 ) else (
   set PROMPT_NOT_INSTALLED=not installed
   set PROMPT_INSTALLED=installed
   set PROMPT_OUTDATED=out of date
+  set PROMPT_UNINSTALLED=uninstalled
 )
 
 rem ===== Read Package Configuration =====
@@ -313,7 +315,9 @@ if "!PACKAGE_TYPE!" == "JDK6" (
 ) else if "!PACKAGE_TYPE!" == "NUPKG" (
     call :install_nupkg_package %1
 ) else if "!PACKAGE_TYPE!" == "ZIP" (
-    call :install_package %1
+    call :install_zip_package %1
+) else if "!PACKAGE_TYPE!" == "NPM" (
+    call :install_npm_package %1
 ) else (
     echo Error installing package %1: Unknown package type "!PACKAGE_TYPE!"
 )
@@ -324,10 +328,20 @@ rem ======================================================================
 rem Get installed version
 :get_installed_version <packageName> <outputVar>
 set PACKAGE_TARGET=%1_FOLDER
+set PACKAGE_URL=%1_URL
+set PACKAGE_TYPE=%1_TYPE
 call :expand_variable PACKAGE_TARGET
+call :expand_variable PACKAGE_TYPE
+call :expand_variable PACKAGE_URL
 
-if exist "%TOOLS_DIR%\!PACKAGE_TARGET!\%VERSION_FILE%" (
-  @for /F "tokens=*" %%a in ('type "%TOOLS_DIR%\!PACKAGE_TARGET!\%VERSION_FILE%"') do (
+set PACKAGE_VERSION_FILE=%TOOLS_DIR%\!PACKAGE_TARGET!\%VERSION_FILE%
+if "!PACKAGE_TYPE!" == "NPM" (
+  set PACKAGE_VERSION_FILE=%TOOLS_DIR%\nodejs\node_modules\!PACKAGE_URL!\%VERSION_FILE%
+)
+
+if exist "%PACKAGE_VERSION_FILE%" (
+  
+  @for /F "tokens=*" %%a in ('type "%PACKAGE_VERSION_FILE%"') do (
     set %2=%%a
     exit /b %errorlevel%
   )
@@ -359,8 +373,8 @@ if not "!INSTALLED_VERSION!" == "!PACKAGE_VERSION!" (
   echo Updating from version !INSTALLED_VERSION! to !PACKAGE_VERSION!
   
   call :uninstall_package %PACKAGE%
-  if %errorlevel% gtr 0 (
-    exit /B %errorlevel%
+  if !errorlevel! gtr 0 (
+    exit /B !errorlevel!
   )
   call :download_and_install_single_package %PACKAGE%
   
@@ -441,10 +455,10 @@ call :expand_variable PACKAGE_NAME
 call :expand_variable PACKAGE_FOLDER
 call :expand_variable PACKAGE_PACKAGE
 
-echo !%PACKAGE%_OPTIONS!
 echo URL=!%PACKAGE%_URL!
 echo | set /p=Package !PACKAGE_NAME!... 
 if not exist %TOOLS_DIR%\!PACKAGE_FOLDER! if not exist "%DOWNLOADS_DIR%\%PACKAGE_PACKAGE%" (
+  echo %WGET% !%PACKAGE%_OPTIONS! --directory-prefix %DOWNLOADS_DIR% !%PACKAGE%_URL!
   %WGET% !%PACKAGE%_OPTIONS! --directory-prefix %DOWNLOADS_DIR% !%PACKAGE%_URL!
   exit /B 0
 )
@@ -516,16 +530,16 @@ for %%p in ( %DEVPACK_PACKAGES% ) do (
 )
 
 if "%INSTALL_ECLIPSE%" == "EE" (
-  call :install_package ECLIPSE_EE
+  call :install_zip_package ECLIPSE_EE
 )
 if "%INSTALL_ECLIPSE%" == "JAVA" (
-  call :install_package ECLIPSE_JAVA
+  call :install_zip_package ECLIPSE_JAVA
 )
 if "%INSTALL_ECLIPSE%" == "CPP" (
-  call :install_package ECLIPSE_CPP
+  call :install_zip_package ECLIPSE_CPP
 )
 if "%INSTALL_SCALA%" == "TRUE" (
-  call :install_package SBT
+  call :install_zip_package SBT
 )
 
 call %WORK_DRIVE%:\setenv.bat
@@ -540,20 +554,28 @@ echo.
 echo -^> Purging disabled packages...
 
 for %%p in ( %DEVPACK_PACKAGES% ) do (
-  set PURGE_PACKAGE=INSTALL_%%p
-  call :expand_variable PURGE_PACKAGE
+  set FOUND=FALSE
+  for %%n in ( %DEVPACK_NO_PURGE% ) do (
+    if %%n == %%p (
+	  SET FOUND=TRUE
+    )
+    if "!FOUND!" == "FALSE" (
+      set PURGE_PACKAGE=INSTALL_%%p
+      call :expand_variable PURGE_PACKAGE
   
-  if not "!PURGE_PACKAGE!" == "TRUE" (
-    call :uninstall_package %%p
-    if !ERRORLEVEL! neq 0 (
-      exit /B !ERRORLEVEL!
-    )
-    if "%%p" == "SCALA" (
-      call :uninstall_package SBT
-      if !ERRORLEVEL! neq 0 (
-        exit /B !ERRORLEVEL!
+      if not "!PURGE_PACKAGE!" == "TRUE" (
+        call :uninstall_package %%p
+        if !ERRORLEVEL! neq 0 (
+          exit /B !ERRORLEVEL!
+        )
+        if "%%p" == "SCALA" (
+          call :uninstall_package SBT
+          if !ERRORLEVEL! neq 0 (
+            exit /B !ERRORLEVEL!
+          )
+		)
       )
-    )
+	)
   )
 )
 
@@ -651,11 +673,47 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 
 exit /B
 
+
+rem ======================================================================
+rem Install a node.js package using npm
+rem %1: package identifier
+:install_npm_package
+set PACKAGE_SPEC=%~1
+setlocal enabledelayedexpansion
+set OPTION=!%PACKAGE_SPEC%_NAME!
+set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
+set VERSION=!%PACKAGE_SPEC%_VERSION!
+set URL=!%PACKAGE_SPEC%_URL!
+rem Set target folder for version info
+set TARGET=nodejs\node_modules\%URL%
+
+if "%OPTION%" == "" (
+  echo Unknown package: %PACKAGE_SPEC%
+  echo Use   setup packages   to display the list of available packages.
+  echo.
+  exit /B 1
+)
+
+echo | set /p=Package %OPTION%... 
+
+if not exist %TOOLS_DIR%\nodejs (
+  echo This package requires node.js. Please add node.js to your DevPack and try again.
+  exit /B 1
+)
+
+call npm install -g %URL%@%VERSION%
+
+call :postinstall_package
+
+echo Package %OPTION% done.
+echo.
+exit /B
+
 rem ======================================================================
 rem Install an archived package
 rem Unzips the package into target folder.
 rem %1: package identifier
-:install_package
+:install_zip_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
 set OPTION=!%PACKAGE_SPEC%_NAME!
@@ -664,14 +722,14 @@ set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
 set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
 
-echo | set /p=Package %OPTION%... 
-
 if "%OPTION%" == "" (
   echo Unknown package: %PACKAGE_SPEC%
   echo Use   setup packages   to display the list of available packages.
   echo.
   exit /B
 )
+
+echo | set /p=Package %OPTION%... 
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
 
@@ -795,6 +853,8 @@ rem Remove target folder.
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
 set OPTION=!%PACKAGE_SPEC%_NAME!
+set TYPE=!%PACKAGE_SPEC%_TYPE!
+set URL=!%PACKAGE_SPEC%_URL!
 set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
 set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
 set TARGET=!%PACKAGE_SPEC%_FOLDER!
@@ -808,14 +868,32 @@ if "%OPTION%" == "" (
 )
 
 echo | set /p=Package %OPTION%... 
-
-if exist "%TOOLS_DIR%\%TARGET%" (
+if "%TYPE%" == "NPM" (
+  where npm >NUL 2>&1
+  if errorlevel 1 (
+    echo not installed.
+    exit /B 0
+  )
+  call npm uninstall -g %URL%
+) else if exist "%TOOLS_DIR%\%TARGET%" (
   pushd %TOOLS_DIR%
   call :clean_folder "%TARGET%"
   if !ERRORLEVEL! neq 0 (
     exit /B !ERRORLEVEL!
   )
-  set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
+  popd
+) else (
+  echo not installed.
+  exit /B 0
+)
+
+call :postuninstall_package
+  
+echo %PROMPT_UNINSTALLED%.
+exit /B 0
+
+:postuninstall_package
+set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
     call :expand_variable CONFIG_NAME
     if not "!CONFIG_NAME!" == "" (
       call :clean_file %CONF_DIR%\!CONFIG_NAME!.bat
@@ -836,14 +914,7 @@ if exist "%TOOLS_DIR%\%TARGET%" (
       )
     )
   )
-  echo uninstalled.
-  
-  popd
-  exit /B !ERRORLEVEL!
-)
-endlocal
-echo not installed.
-exit /B 0
+exit /B
 
 rem ======================================================================
 rem Download routine

@@ -94,3 +94,12 @@ set INSTALL_MELD=FALSE
 
 rem Set to TRUE is you want to install PostgreSQL
 set INSTALL_POSTGRES=FALSE
+
+rem Set to TRUE is you want to install node.js
+set INSTALL_NODE=FALSE
+
+rem Set to TRUE is you want to install GitBook
+set INSTALL_GITBOOK=FALSE
+
+rem Set to TRUE is you want to install GitBook Editor
+set INSTALL_GITBOOK_EDITOR=FALSE
