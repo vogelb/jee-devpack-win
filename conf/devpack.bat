@@ -37,8 +37,8 @@ rem Private maven settings (e.g. server passwords)
 set PRIVATE_M2_CONFIG=%WORK_DRIVE%:\conf\mvn-private-settings.xml
 
 rem Configure your favourite editor here
-set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\atom\atom.exe
-rem set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\npp\notepad++.exe
+rem set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\atom\atom.exe
+set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\npp\notepad++.exe
 
 rem Set your Cygwin home to enable cygwin integration
 set CYGWIN_HOME=c:\cygwin

@@ -141,6 +141,7 @@ if "%COMMAND%" == "purge" goto purge
 if "%COMMAND%" == "uninstall" goto uninstall
 if "%COMMAND%" == "clean" goto clean_devpack
 if "%COMMAND%" == "packages" goto list_packages
+if "%COMMAND%" == "templates" goto list_templates
 
 echo.
 echo J2EE Devpack setup
@@ -155,6 +156,8 @@ echo   download                  - Only download packages
 echo   purge                     - Remove disabled packages
 echo   uninstall [^<packageName^>] - Uninstall DevPack / single package
 echo   packages                  - List available packages
+echo   templates                 - List available templates
+:list_templates
 echo.
 echo Available templates:
 dir /B templates

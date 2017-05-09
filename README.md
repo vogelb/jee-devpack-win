@@ -18,12 +18,15 @@ The Dev Pack supports the following packages:
 - Scala and sbt
 - Apache Maven
 - Eclipse EE / Java / C++
-- Visual Studio Code
 - TomEE Plus
 - RedHat WildFly
 - Oracle GlassFish
 - Notepad++
-- Sublime Text
+- Atom
+- Visual Studio Code
+- node.js
+- gitbook
+- gitbook editor
 - 7-Zip
 - SourceTree
 - PostgreSQL
