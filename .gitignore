@@ -38,3 +38,7 @@
 tools/nodejs/
 tools/gitbook-editor/
 conf/node.bat
+tools/vagrant/
+tools/dotnet/
+conf/dotnet.bat
+conf/vagrant.bat

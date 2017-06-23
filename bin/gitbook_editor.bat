@@ -12,4 +12,4 @@ if not exist %TOOLS_DIR%\gitbook-editor (
 
 cd /d %WORK_DRIVE%:\
 call setenv.bat
-call %TOOLS_DIR%\gitbook-editor\Editor.exe %*
+start "Gitbook" /MIN cmd /C %TOOLS_DIR%\gitbook-editor\Editor.exe %*
