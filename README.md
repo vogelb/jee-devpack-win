@@ -1,10 +1,10 @@
-# Eclipse based Java Dev Pack for Windows
+# Configurable DevPack for Windows
 [On GitHub](https://github.com/vogelb/jee-devpack-win)
 
-This is a lightweight Java [DevPack](http://blog.tknerr.de/blog/2014/10/09/devpack-philosophy-aka-works-on-your-machine/) for windows.
+This is a lightweight [DevPack](http://blog.tknerr.de/blog/2014/10/09/devpack-philosophy-aka-works-on-your-machine/) for windows.
 It includes standard packages needed to develop in such an environment and is based on a simple installation folder SUBSTed into a self contained work drive (no VM).
 
-The repository name suggests a Java EE environment, however the dev pack has evolved to be more multipurpose over time.
+The repository name suggests a Java EE environment, however the DevPack has evolved to be more multipurpose over time.
 
 ## General Idea
 
@@ -23,6 +23,7 @@ The Dev Pack supports the following packages:
 - Oracle GlassFish
 - Notepad++
 - Atom
+- .NET Core SDK
 - Visual Studio Code
 - node.js
 - gitbook
@@ -82,6 +83,10 @@ Packages can also be installed and uninstalled regardless of the current templat
 Get the list of available packages:
 	
 	$ setup packages
+
+Get the list of available templates:
+	
+	$ setup templates
 	
 ## Updates
 The DevPack has an update mechanism. When the package configuration is updated on GitHub just issue

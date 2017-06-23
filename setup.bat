@@ -160,7 +160,7 @@ echo   templates                 - List available templates
 :list_templates
 echo.
 echo Available templates:
-dir /B templates
+dir /B templates | findstr .bat | findstr /V template.bat
 
 goto done
 
