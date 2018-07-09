@@ -12,10 +12,15 @@ set BIN_DIR=%WORKING_DIR%bin
 set SOURCE_DIR=%WORKING_DIR%source
 
 set M2_HOME=%TOOLS_DIR%\mvn
+
+for /f %%i in ('%BIN_DIR%\default_jdk.bat') do set JAVA_HOME=%%i
+
+if not exist %JAVA_HOME%\bin\java.exe goto default_jdk
+goto main
+
+:default_jdk
 set JAVA_HOME=%TOOLS_DIR%\jdk_8
-
-if "%DEVPACK_OPATH%" == "" goto save_path
-
+echo %JAVA_HOME%
 goto main
 
 :include_config <configPath>
@@ -30,6 +35,7 @@ rem -------------------------------------------------
 :main
 rem -------------------------------------------------
 
+if "%DEVPACK_OPATH%" == "" goto save_path
 set PATH=%DEVPACK_OPATH%
 
 rem -----------------------------------------------------------------
@@ -44,6 +50,8 @@ call :include_config meld
 call :include_config node
 call :include_config vagrant
 call :include_config dotnet
+call :include_config gradle
+call :include_config vstudio
 
 rem -----------------------------------------------------------------
 rem Add workspace parameters as required

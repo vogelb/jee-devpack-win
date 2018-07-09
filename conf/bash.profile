@@ -14,6 +14,7 @@ alias ...="cd ../.."
 alias dir="ls -alF --color=auto"
 alias mci="mvn clean install"
 alias mcp="mvn clean package"
+alias start="cmd /c start"
 
 ################## START GIT PROMPT ##############################
 RED="\033[0;31m"

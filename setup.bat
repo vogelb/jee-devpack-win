@@ -109,11 +109,15 @@ if "%DEVPACK_COLOUR%" == "TRUE" (
   set PROMPT_OUTDATED=[31mout of date[0m
   set PROMPT_MANUALLY_INSTALLED=[33minstalled[0m
   set PROMPT_UNINSTALLED=[33muninstalled[0m
+  set PROMPT_WARN=[31mWarning[0m
+  set PROMPT_OK=[32mok[0m
 ) else (
   set PROMPT_NOT_INSTALLED=not installed
   set PROMPT_INSTALLED=installed
   set PROMPT_OUTDATED=out of date
   set PROMPT_UNINSTALLED=uninstalled
+  set PROMPT_WARN=Warning
+  set PROMPT_OK=ok
 )
 
 rem ===== Read Package Configuration =====
@@ -747,16 +751,15 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
   if "%UNZIPPED%" == "--create--" (
     echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%... 
     %TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%TARGET% >NUL
-    set UNZIPPED=%TARGET%
-    echo ok.
+    echo %PROMPT_OK%.
   ) else (
     echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%... 
-    %TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" >NUL
-    echo ok.
+    %TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%TOOLS_DIR% >NUL
+    echo %PROMPT_OK%.
   )
   if not "%UNZIPPED%" == "??" (
     if exist %UNZIPPED% (
-	  if not exist %TARGET% (      
+	  if not exist %TARGET% (
         echo | set /p=Renaming %UNZIPPED% to %TARGET%... 
         move %UNZIPPED% %TARGET% >NUL
         echo ok.

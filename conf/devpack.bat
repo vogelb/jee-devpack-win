@@ -10,6 +10,9 @@ if "%DEVPACK_BASE%" == "" (
 	set DEVPACK_BASE=c:\dev\devpack
 )
 
+rem Set the default JDK
+set DEVPACK_DEFAULT_JDK=JDK10
+
 rem Extend command prompt with git branch
 set DEVPACK_GIT_PROMPT=TRUE
 

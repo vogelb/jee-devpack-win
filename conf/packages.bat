@@ -3,7 +3,7 @@ rem ===================================================================
 rem DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=ANSICON JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN NODE GITBOOK GITBOOK_EDITOR VAGRANT
+set DEVPACK_PACKAGES=ANSICON JDK10 JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN NODE GITBOOK GITBOOK_EDITOR VAGRANT GRADLE ANDROID
 set DEVPACK_NO_PURGE=ECLIPSE_WORKSPACE
 
 set ANSICON_NAME=Ansic0n
@@ -22,6 +22,14 @@ set BABUN_EXPLODED=babun-1.2.0
 set BABUN_PACKAGE=babun-1.2.0-dist.zip
 set BABUN_FOLDER=babun-1.2.0
 set BABUN_POSTINSTALL=babun_postinstall.bat
+
+set JDK10_NAME=Oracle JDK 10
+set JDK10_VERSION=10.0.1
+set JDK10_URL=http://download.oracle.com/otn-pub/java/jdk/10.0.1+10/fb4372174a714e6b8c52526dc134031e/jdk-10.0.1_windows-x64_bin.exe
+set JDK10_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
+set JDK10_TYPE=JDK
+set JDK10_PACKAGE=jdk-%JDK10_VERSION%_windows-x64_bin.exe
+set JDK10_FOLDER=jdk_10
 
 set JDK8_NAME=Oracle JDK 8
 set JDK8_VERSION=8u131
@@ -65,11 +73,11 @@ set JDK6_PACKAGE=jdk-6u45-windows-x64.exe
 set JDK6_FOLDER=jdk_6
 
 set ECLIPSE_EE_NAME=Eclipse EE
-set ECLIPSE_EE_VERSION=Neon.2
-set ECLIPSE_EE_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/neon/2/eclipse-jee-neon-2-win32-x86_64.zip
+set ECLIPSE_EE_VERSION=Photon.R
+set ECLIPSE_EE_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/photon/R/eclipse-jee-photon-R-win32-x86_64.zip
 set ECLIPSE_EE_TYPE=ZIP
-set ECLIPSE_EE_EXPLODED=eclipse-jee-neon-R-win32-x86_64
-set ECLIPSE_EE_PACKAGE=%ECLIPSE_EE_EXPLODED%.zip
+set ECLIPSE_EE_EXPLODED=eclipse
+set ECLIPSE_EE_PACKAGE=eclipse-jee-photon-R-win32-x86_64.zip
 set ECLIPSE_EE_FOLDER=eclipse_ee
 set ECLIPSE_EE_TOOL_1=start_eclipse_ee.bat
 
@@ -182,11 +190,11 @@ set SBT_PACKAGE=%SBT_EXPLODED%.zip
 set SBT_FOLDER=sbt
 
 set CONSOLE_NAME=ConsoleZ
-set CONSOLE_VERSION=1.18.0
-set CONSOLE_URL=https://github.com/cbucher/console/releases/download/1.18.0/ConsoleZ.x64.1.18.0.17048.zip
+set CONSOLE_VERSION=1.18.1
+set CONSOLE_URL=https://github.com/cbucher/console/releases/download/1.18.1/ConsoleZ.x64.1.18.1.17087.zip
 set CONSOLE_TYPE=ZIP
 set CONSOLE_EXPLODED=--create--
-set CONSOLE_PACKAGE=ConsoleZ.x64.1.18.0.17048.zip
+set CONSOLE_PACKAGE=ConsoleZ.x64.1.18.1.17087.zip
 set CONSOLE_FOLDER=console
 
 rem set CONSOLE_NAME=Console 2
@@ -199,7 +207,7 @@ rem set CONSOLE_FOLDER=console
 
 
 set SOURCETREE_NAME=SourceTree
-set SOURCETREE_VERSION=1.10.23.1
+set SOURCETREE_VERSION=2.6.9
 set SOURCETREE_URL=https://downloads.atlassian.com/software/sourcetree/windows/ga/SourceTreeSetup-%SOURCETREE_VERSION%.exe
 set SOURCETREE_TYPE=NUPKG
 set SOURCETREE_EXPLODED=SourceTree-%SOURCETREE_VERSION%-full.nupkg
@@ -252,6 +260,8 @@ set VS_PACKAGE=VSCode-win32-1.11.2.zip
 set VS_EXPLODED=--create--
 set VS_FOLDER=vstudio
 set VS_TOOL_1=start_visual_studio.bat
+set VS_CONFIG=vstudio
+
 
 set NODE_NAME=Node.js
 set NODE_VERSION=6.10.3
@@ -285,3 +295,13 @@ set VAGRANT_PACKAGE=vagrant_1.9.5.msi
 set VAGRANT_EXPLODED=
 set VAGRANT_FOLDER=vagrant
 set VAGRANT_CONFIG=vagrant
+
+set GRADLE_NAME=Gradle
+set GRADLE_VERSION=2.2
+set GRADLE_URL=https://services.gradle.org/distributions/gradle-%GRADLE_VERSION%-all.zip
+set GRADLE_TYPE=ZIP
+set GRADLE_PACKAGE=gradle-%GRADLE_VERSION%-all.zip
+set GRADLE_EXPLODED=gradle-%GRADLE_VERSION%
+set GRADLE_FOLDER=gradle
+set GRADLE_CONFIG=gradle
+
