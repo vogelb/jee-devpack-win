@@ -52,6 +52,7 @@ call :include_config vagrant
 call :include_config dotnet
 call :include_config gradle
 call :include_config vstudio
+call :include_config ant
 
 rem -----------------------------------------------------------------
 rem Add workspace parameters as required

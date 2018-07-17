@@ -3,7 +3,7 @@ rem ===================================================================
 rem DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=ANSICON JDK10 JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN NODE GITBOOK GITBOOK_EDITOR VAGRANT GRADLE ANDROID
+set DEVPACK_PACKAGES=ANSICON JDK10 JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN NODE GITBOOK GITBOOK_EDITOR VAGRANT GRADLE ANT
 set DEVPACK_NO_PURGE=ECLIPSE_WORKSPACE
 
 set ANSICON_NAME=Ansic0n
@@ -13,6 +13,15 @@ set ANSICON_TYPE=ZIP
 set ANSICON_PACKAGE=ansi166.zip
 set ANSICON_EXPLODED=--create--
 set ANSICON_FOLDER=ansic0n
+
+set ANT_NAME=Apache Ant
+set ANT_VERSION=1.10.5
+set ANT_URL=http://www.pirbot.com/mirrors/apache//ant/binaries/apache-ant-1.10.5-bin.zip
+set ANT_TYPE=ZIP
+set ANT_PACKAGE=apache-ant-1.10.5-bin.zip
+set ANT_EXPLODED=apache-ant-1.10.5
+set ANT_FOLDER=ant
+set ANT_CONFIG=ant
 
 set BABUN_NAME=Babun
 set BABUN_VERSION=1.2.0
@@ -82,20 +91,20 @@ set ECLIPSE_EE_FOLDER=eclipse_ee
 set ECLIPSE_EE_TOOL_1=start_eclipse_ee.bat
 
 set ECLIPSE_JAVA_NAME=Eclipse Java
-set ECLIPSE_JAVA_VERSION=Neon.2
-set ECLIPSE_JAVA_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/neon/2/eclipse-java-neon-2-win32-x86_64.zip
+set ECLIPSE_JAVA_VERSION=Photon.R
+set ECLIPSE_JAVA_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/photon/R/eclipse-java-photon-R-win32-x86_64.zip
 set ECLIPSE_JAVA_TYPE=ZIP
-set ECLIPSE_JAVA_EXPLODED=eclipse-java-neon-2-win32-x86_64
-set ECLIPSE_JAVA_PACKAGE=%ECLIPSE_JAVA_EXPLODED%.zip
+set ECLIPSE_JAVA_EXPLODED=eclipse
+set ECLIPSE_JAVA_PACKAGE=eclipse-java-photon-R-win32-x86_64.zip
 set ECLIPSE_JAVA_FOLDER=eclipse
 set ECLIPSE_JAVA_TOOL_1=start_eclipse.bat
 
 set ECLIPSE_CPP_NAME=Eclipse C/C++
-set ECLIPSE_CPP_VERSION=Neon.2
-set ECLIPSE_CPP_URL=http://ftp.fau.de/eclipse/technology/epp/downloads/release/neon/2/eclipse-cpp-neon-2-win32-x86_64.zip
+set ECLIPSE_CPP_VERSION=Photon.R
+set ECLIPSE_CPP_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/photon/R/eclipse-cpp-photon-R-win32-x86_64.zip
 set ECLIPSE_CPP_TYPE=ZIP
-set ECLIPSE_CPP_EXPLODED=eclipse-cpp-neon-2-win32-x86_64
-set ECLIPSE_CPP_PACKAGE=%ECLIPSE_CPP_EXPLODED%.zip
+set ECLIPSE_CPP_EXPLODED=eclipse
+set ECLIPSE_CPP_PACKAGE=eclipse-cpp-photon-R-win32-x86_64.zip
 set ECLIPSE_CPP_FOLDER=eclipse_cpp
 set ECLIPSE_CPP_TOOL_1=start_eclipse_cpp.bat
 
