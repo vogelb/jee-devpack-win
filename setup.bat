@@ -1021,7 +1021,7 @@ popd
 echo done.
 
 echo | set /p=copying files... 
-xcopy /E %DOWNLOADS_DIR%\JDK\tools %TARGET%\ >NUL
+xcopy /E %DOWNLOADS_DIR%\JDK\tools %TOOLS_DIR%\%TARGET%\ >NUL
 echo done.
 
 echo | set /p=cleaning up... 
