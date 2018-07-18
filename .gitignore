@@ -49,3 +49,4 @@ conf/vstudio.bat
 conf/gradle.bat
 conf/ant.bat
 tools/ant/
+tools/jdk_6/

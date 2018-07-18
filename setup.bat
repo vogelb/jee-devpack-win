@@ -144,7 +144,7 @@ if "%COMMAND%" == "download" goto download
 if "%COMMAND%" == "purge" goto purge
 if "%COMMAND%" == "uninstall" goto uninstall
 if "%COMMAND%" == "clean" goto clean_devpack
-if "%COMMAND%" == "packages" goto list_packages
+if "%COMMAND%" == "packages" goto manage_packages
 if "%COMMAND%" == "templates" goto list_templates
 
 echo.
@@ -159,7 +159,7 @@ echo   update [^<packageName^>]    - Update DevPack / configured / single packag
 echo   download                  - Only download packages
 echo   purge                     - Remove disabled packages
 echo   uninstall [^<packageName^>] - Uninstall DevPack / single package
-echo   packages                  - List available packages
+echo   packages [list ^| purge]   - List available packages / purge downloaded packages
 echo   templates                 - List available templates
 :list_templates
 echo.
@@ -167,6 +167,91 @@ echo Available templates:
 dir /B templates | findstr .bat | findstr /V template.bat
 
 goto done
+
+rem ======================================================================
+rem Package management
+:manage_packages
+if "%1" == "" (
+	goto list_packages
+)
+if "%1" == "list" (
+	goto list_packages
+)
+if "%1" == "purge" (
+	goto purge_packages
+)
+echo Unknown command %1.
+
+goto done
+
+
+rem ======================================================================
+rem Purge downloaded packages
+:purge_packages
+setlocal enabledelayedexpansion
+echo.
+echo Purging downloaded packages from %DOWNLOADS_DIR%...
+echo =====================================================================
+echo.
+
+move /Y %DOWNLOADS_DIR% %DOWNLOADS_DIR%_purging >NUL
+
+if errorlevel 1 (
+  echo Error renaming downloads dir %DOWNLOADS_DIR%
+  exit /B
+)
+
+md %DOWNLOADS_DIR% >NUL
+if errorlevel 1 (
+  echo Error creating downloads dir %DOWNLOADS_DIR%
+  exit /B
+)
+
+for %%p in ( %DEVPACK_PACKAGES% ) do (
+  set PACKAGE=%%p
+  set SELECTED=!INSTALL_%%p!
+  set OPTION=!%%p_NAME!
+  set VERSION=!%%p_VERSION!
+  set PACKAGE_FILE=!%%p_PACKAGE!
+  
+  if not "!PACKAGE_FILE!" == "" (
+	if "!SELECTED!" == "TRUE" (
+		call :debug Checking configured package !PACKAGE! [!PACKAGE_FILE!]
+	  
+		if exist %DOWNLOADS_DIR%_purging\!PACKAGE_FILE! (
+		  echo | set /p= Saving configured package !PACKAGE!: !PACKAGE_FILE!...
+		  move %DOWNLOADS_DIR%_purging\!PACKAGE_FILE! %DOWNLOADS_DIR% >NUL
+		  if errorlevel 1 (
+			echo Error saving package !PACKAGE_FILE! 
+			exit /B
+		  )
+		  echo done.
+		)
+    )
+  
+    if not "!VERSION!" == "" (
+      call :debug Checking installed package !PACKAGE!
+      call :get_installed_version !PACKAGE! INSTALLED_VERSION
+      if "!INSTALLED_VERSION!" == "!VERSION!" (
+  	    if exist %DOWNLOADS_DIR%_purging\!PACKAGE_FILE! (
+	      echo | set /p= Saving installed package !PACKAGE!: !PACKAGE_FILE!...
+	      move %DOWNLOADS_DIR%_purging\!PACKAGE_FILE! %DOWNLOADS_DIR% >NUL
+	      if errorlevel 1 (
+		    echo Error saving package !PACKAGE!
+		    exit /B
+	      )
+	      echo done.
+	    )
+      )
+    )
+  )
+)
+echo Cleaning up...
+call :clean_folder %DOWNLOADS_DIR%_purging
+
+echo.
+echo All done.
+exit /B
 
 rem ======================================================================
 rem List available packages
@@ -287,8 +372,8 @@ set PACKAGE_NAME=!%1_NAME!
 
 if "%PACKAGE_NAME%" == "" (
   echo.
-  echo Unknown package %1.
-  echo Use   setup packages   to display the list of available packages.
+  call :warn Unknown package %1.
+  call :warn Use   setup packages   to display the list of available packages.
   echo.
   exit /B
 )
@@ -1001,8 +1086,10 @@ if exist %TOOLS_DIR%\%TARGET% (
 )
 
 echo installing now.
-echo | set /p=extracting package... 
-%TOOLS_DIR%\7-Zip\7z x -y %PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
+echo | set /p=extracting package %PACKAGE% to %DOWNLOADS_DIR%\JDK...
+call :clean_folder %DOWNLOADS_DIR%\JDK
+md %DOWNLOADS_DIR%\JDK
+%TOOLS_DIR%\7-Zip\7z x -y %DOWNLOADS_DIR%\%PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
 pushd %DOWNLOADS_DIR%\JDK
 
 extrac32 .rsrc\JAVA_CAB10\111
@@ -1028,6 +1115,9 @@ echo | set /p=cleaning up...
 call :clean_folder %DOWNLOADS_DIR%\JDK
 if not "%KEEP_PACKAGES%" == "TRUE" del %PACKAGE%
 echo done.
+
+call :postinstall_package
+
 echo Package %OPTION% done.
 echo.
 exit /B
@@ -1308,6 +1398,14 @@ if exist %1 (
 )
 exit /B 0
 
+:warn <message>
+if "%DEVPACK_COLOUR%" == "TRUE" (
+	echo [33m%*[0m
+) else (
+	echo %*
+)
+exit /B 0
+
 rem ======================================================================
 rem Get the file name from a path
 rem %1: Result variable
@@ -1317,6 +1415,10 @@ set %1=%~nx2
 
 :normalizePath <inputPath> <resultVar>
 SET %2=%~dpfn1
+exit /B
+
+:debug
+if "%DEBUG%" == "TRUE" echo %*
 exit /B
 
 :call_debug
