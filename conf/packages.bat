@@ -41,16 +41,16 @@ set JDK10_PACKAGE=jdk-%JDK10_VERSION%_windows-x64_bin.exe
 set JDK10_FOLDER=jdk_10
 
 set JDK8_NAME=Oracle JDK 8
-set JDK8_VERSION=8u131
-set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-windows-x64.exe
+set JDK8_VERSION=8u181
+set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-windows-x64.exe
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
 set JDK8_TYPE=JDK
 set JDK8_PACKAGE=jdk-%JDK8_VERSION%-windows-x64.exe
 set JDK8_FOLDER=jdk_8
 
 set JDK8_APIDOC_NAME=Oracle JDK 8 Apidoc
-set JDK8_APIDOC_VERSION=8u131
-set JDK8_APIDOC_URL=http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-docs-all.zip
+set JDK8_APIDOC_VERSION=8u181
+set JDK8_APIDOC_URL=http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-docs-all.zip
 set JDK8_APIDOC_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
 set JDK8_APIDOC_TYPE=ZIP
 set JDK8_APIDOC_EXPLODED=docs
