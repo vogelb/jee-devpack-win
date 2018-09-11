@@ -45,17 +45,14 @@ set GIT_REPO=--git-repo--
 
 :loop_commandline
 if "%1" == "-debug" goto debug_found
-goto test_template
+if "%1" == "-t" goto template_found
+goto endloop_commandline
 
 :debug_found
   shift
   set DEBUG=TRUE
   echo on
   goto loop_commandline
-
-:test_template
-  if "%1" == "-t" goto template_found
-  goto endloop_commandline
 
 :template_found
   shift
@@ -408,6 +405,8 @@ if "!PACKAGE_TYPE!" == "JDK6" (
     call :install_nupkg_package %1
 ) else if "!PACKAGE_TYPE!" == "ZIP" (
     call :install_zip_package %1
+) else if "!PACKAGE_TYPE!" == "FILE" (
+    call :install_file %1
 ) else if "!PACKAGE_TYPE!" == "NPM" (
     call :install_npm_package %1
 ) else (
@@ -430,14 +429,16 @@ set PACKAGE_VERSION_FILE=%TOOLS_DIR%\!PACKAGE_TARGET!\%VERSION_FILE%
 if "!PACKAGE_TYPE!" == "NPM" (
   set PACKAGE_VERSION_FILE=%TOOLS_DIR%\nodejs\node_modules\!PACKAGE_URL!\%VERSION_FILE%
 )
-
-if exist "%PACKAGE_VERSION_FILE%" (
-  
+if "!PACKAGE_TYPE!" == "FILE" (
+  set PACKAGE_VERSION_FILE=%TOOLS_DIR%\!PACKAGE_TARGET!\%1_%VERSION_FILE%
+)
+if exist "%PACKAGE_VERSION_FILE%" ( 
   @for /F "tokens=*" %%a in ('type "%PACKAGE_VERSION_FILE%"') do (
     set %2=%%a
     exit /b %errorlevel%
   )
 )
+set %2=NOT_INSTALLED
 exit /B
 
 rem ======================================================================
@@ -581,7 +582,7 @@ rem Print DevPack status information
 echo.
 echo Setup Information
 echo =================
-if exist conf\template.bat (
+if exist %LAST_TEMPLATE% (
   echo Currently installed template: %TEMPLATE%
   echo.
   echo Base path: %DEVPACK_BASE%
@@ -758,8 +759,18 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 	)
   ) else if "%SELECTED%" == "TRUE" (
     echo %PROMPT_OUTDATED% [!INSTALLED_VERSION!]
+  ) else if "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+    if "%SELECTED%" == "TRUE" (
+      echo | set /p=%PROMPT_NOT_INSTALLED% / 
+    ) else (
+      echo | set /p=not installed / 
+    )
+    if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+      echo | set /p=not 
+    )
+    echo downloaded
   ) else (
-	echo present
+	echo present [!INSTALLED_VERSION!]
   )
 )
 
@@ -802,6 +813,49 @@ echo.
 exit /B
 
 rem ======================================================================
+rem Install a single file
+rem Copies the file into target folder.
+rem %1: package identifier
+:install_file
+set PACKAGE_SPEC=%~1
+setlocal enabledelayedexpansion
+set OPTION=!%PACKAGE_SPEC%_NAME!
+set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
+set TARGET=!%PACKAGE_SPEC%_FOLDER!
+set VERSION=!%PACKAGE_SPEC%_VERSION!
+
+if "%OPTION%" == "" (
+  echo Unknown package: %PACKAGE_SPEC%
+  echo Use   setup packages   to display the list of available packages.
+  echo.
+  exit /B
+)
+
+echo | set /p=Package %OPTION%... 
+
+if not exist "%TOOLS_DIR%\%TARGET%\%PACKAGE%" (
+
+  if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+    echo Error: Package %PACKAGE% was not downloaded!
+    exit /B
+  )
+
+  echo installing now.
+  pushd %TOOLS_DIR%
+  
+  copy "%DOWNLOADS_DIR%\%PACKAGE%" "%TOOLS_DIR%\%TARGET%"
+
+  call :postinstall_package
+
+  echo Package %OPTION% done.
+  echo.
+  exit /B
+)
+endlocal
+echo already installed.
+exit /B
+
+rem ======================================================================
 rem Install an archived package
 rem Unzips the package into target folder.
 rem %1: package identifier
@@ -841,7 +895,8 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
     echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%... 
     %TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%TOOLS_DIR% >NUL
     echo %PROMPT_OK%.
-  )
+  )  
+  
   if not "%UNZIPPED%" == "??" (
     if exist %UNZIPPED% (
 	  if not exist %TARGET% (
@@ -849,7 +904,11 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
         move %UNZIPPED% %TARGET% >NUL
         echo ok.
 	  )
-    )
+    ) else (
+        echo Error: Unzipped package %UNZIPPED% not found. Please check package configuration.
+		echo.
+		exit /B 1
+	)
     if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
   )
   
@@ -909,7 +968,13 @@ rem ======================================================================
 rem Package post-installation.
 rem Create version file, handle configured tools.
 :postinstall_package
-  echo %VERSION%> "%TOOLS_DIR%\%TARGET%\%VERSION_FILE%"
+  set PACKAGE_TYPE=%PACKAGE_SPEC%_TYPE
+  call :expand_variable PACKAGE_TYPE
+  if "%PACKAGE_TYPE%" == "FILE" (
+    echo %VERSION%> "%TOOLS_DIR%\%TARGET%\%PACKAGE_SPEC%_%VERSION_FILE%"
+  ) else (
+    echo %VERSION%> "%TOOLS_DIR%\%TARGET%\%VERSION_FILE%"
+  )
   
   set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
   set POSTINSTALL=%PACKAGE_SPEC%_POSTINSTALL
@@ -966,6 +1031,13 @@ if "%TYPE%" == "NPM" (
     exit /B 0
   )
   call npm uninstall -g %URL%
+) else if "%TYPE%" == "FILE" (
+  pushd %TOOLS_DIR%
+  call :clean_file "%TOOLS_DIR%\%TARGET%\%PACKAGE%"
+  if !ERRORLEVEL! neq 0 (
+    exit /B !ERRORLEVEL!
+  )
+  popd
 ) else if exist "%TOOLS_DIR%\%TARGET%" (
   pushd %TOOLS_DIR%
   call :clean_folder "%TARGET%"
@@ -984,14 +1056,22 @@ echo %PROMPT_UNINSTALLED%.
 exit /B 0
 
 :postuninstall_package
-set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
-    call :expand_variable CONFIG_NAME
-    if not "!CONFIG_NAME!" == "" (
-      call :clean_file %CONF_DIR%\!CONFIG_NAME!.bat
-      if !ERRORLEVEL! neq 0 (
-	    exit /B !ERRORLEVEL!
-      )
+  set PACKAGE_TYPE=%PACKAGE_SPEC%_TYPE
+  call :expand_variable PACKAGE_TYPE
+  if "%PACKAGE_TYPE%" == "FILE" (
+    set PACKAGE_TARGET=%PACKAGE_SPEC%_FOLDER
+	call :expand_variable PACKAGE_TARGET
+	call :clean_file %TOOLS_DIR%\%PACKAGE_TARGET%\%PACKAGE_SPEC%_%VERSION_FILE%
+  )
+  
+  set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
+  call :expand_variable CONFIG_NAME
+  if not "!CONFIG_NAME!" == "" (
+    call :clean_file %CONF_DIR%\!CONFIG_NAME!.bat
+    if !ERRORLEVEL! neq 0 (
+	  exit /B !ERRORLEVEL!
     )
+  )
   for /l %%x in (1, 1, 10) do (
     set TOOL_NAME=%PACKAGE_SPEC%_TOOL_%%x
     set TOOL_VALUE=%PACKAGE_SPEC%_TOOL_%%x
@@ -1021,6 +1101,7 @@ if "%PACKAGE_SPEC%" == "JDK6" (
 setlocal enabledelayedexpansion
 set OPTION=!%PACKAGE_SPEC%_NAME!
 set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
+set TYPE=!%PACKAGE_SPEC%_TYPE!
 set PACKAGE_URL=!%PACKAGE_SPEC%_URL!
 set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
 set TARGET=!%PACKAGE_SPEC%_FOLDER!
@@ -1028,18 +1109,22 @@ set VERSION=!%PACKAGE_SPEC%_VERSION!
 set WGET_OPTIONS=!%PACKAGE_SPEC%_OPTIONS!
 
 echo | set /p=Package %OPTION% [%PACKAGE%]... 
-if not exist "%DOWNLOADS_DIR%\%PACKAGE%" if not exist "%TOOLS_DIR%\%TARGET%" (
-  if "%PACKAGE%" == "%GIT_REPO%" (
-    call :checkout_git_repo %PACKAGE_URL% %TARGET%
-  ) else (
-    if [!WGET_OPTIONS!] == [] (
-      echo %PACKAGE_URL% >> %DOWNLOADS%
-      echo marked for download.	
-	) else (
-	  call :download_single_package %PACKAGE_SPEC%
+if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
+  if "%TYPE%" == "FILE" set DO_DOWNLOAD=1
+  if not exist "%TOOLS_DIR%\%TARGET%" set DO_DOWNLOAD=1
+  if defined DO_DOWNLOAD (
+    if "%PACKAGE%" == "%GIT_REPO%" (
+      call :checkout_git_repo %PACKAGE_URL% %TARGET%
+    ) else (
+      if [!WGET_OPTIONS!] == [] (
+        echo %PACKAGE_URL% >> %DOWNLOADS%
+        echo marked for download.	
+	  ) else (
+	    call :download_single_package %PACKAGE_SPEC%
+	  )
 	)
+	exit /B
   )
-  exit /B
 )
 echo already available.
 exit /B

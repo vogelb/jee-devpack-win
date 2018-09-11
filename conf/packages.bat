@@ -3,14 +3,14 @@ rem ===================================================================
 rem DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=ANSICON JDK10 JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES BABUN NODE GITBOOK GITBOOK_EDITOR VAGRANT GRADLE ANT
+set DEVPACK_PACKAGES=ANSICON JDK10 JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES POSTGRES_JDBC BABUN NODE GITBOOK GITBOOK_EDITOR VAGRANT GRADLE ANT SQUIRREL
 set DEVPACK_NO_PURGE=ECLIPSE_WORKSPACE
 
 set ANSICON_NAME=Ansic0n
-set ANSICON_VERSION=1.66
-set ANSICON_URL=http://adoxa.altervista.org/ansicon/ansi166.zip
+set ANSICON_VERSION=1.85
+set ANSICON_URL=https://github.com/adoxa/ansicon/releases/download/v1.85/ansi185-bin.zip
 set ANSICON_TYPE=ZIP
-set ANSICON_PACKAGE=ansi166.zip
+set ANSICON_PACKAGE=ansi185-bin.zip
 set ANSICON_EXPLODED=--create--
 set ANSICON_FOLDER=ansic0n
 
@@ -81,12 +81,21 @@ set JDK6_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelic
 set JDK6_PACKAGE=jdk-6u45-windows-x64.exe
 set JDK6_FOLDER=jdk_6
 
+rem set ECLIPSE_EE_NAME=Eclipse EE
+rem set ECLIPSE_EE_VERSION=Photon.R
+rem set ECLIPSE_EE_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/photon/R/eclipse-jee-photon-R-win32-x86_64.zip
+rem set ECLIPSE_EE_TYPE=ZIP
+rem set ECLIPSE_EE_EXPLODED=eclipse
+rem set ECLIPSE_EE_PACKAGE=eclipse-jee-photon-R-win32-x86_64.zip
+rem set ECLIPSE_EE_FOLDER=eclipse_ee
+rem set ECLIPSE_EE_TOOL_1=start_eclipse_ee.bat
+
 set ECLIPSE_EE_NAME=Eclipse EE
-set ECLIPSE_EE_VERSION=Photon.R
-set ECLIPSE_EE_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/photon/R/eclipse-jee-photon-R-win32-x86_64.zip
+set ECLIPSE_EE_VERSION=Neon
+set ECLIPSE_EE_URL=http://ftp.fau.de/eclipse/technology/epp/downloads/release/neon/3/eclipse-jee-neon-3-win32-x86_64.zip
 set ECLIPSE_EE_TYPE=ZIP
 set ECLIPSE_EE_EXPLODED=eclipse
-set ECLIPSE_EE_PACKAGE=eclipse-jee-photon-R-win32-x86_64.zip
+set ECLIPSE_EE_PACKAGE=eclipse-jee-neon-3-win32-x86_64.zip
 set ECLIPSE_EE_FOLDER=eclipse_ee
 set ECLIPSE_EE_TOOL_1=start_eclipse_ee.bat
 
@@ -252,6 +261,14 @@ set POSTGRES_FOLDER=postgres
 set POSTGRES_CONFIG=postgres
 set POSTGRES_TOOL_1=start_postgres.bat
 
+set POSTGRES_JDBC_NAME=PostgreSQL JDBC Driver
+set POSTGRES_JDBC_VERSION=42.2.50
+set POSTGRES_JDBC_URL=https://jdbc.postgresql.org/download/postgresql-42.2.5.jar
+set POSTGRES_JDBC_TYPE=FILE
+set POSTGRES_JDBC_PACKAGE=postgresql-42.2.5.jar
+set POSTGRES_JDBC_EXPLODED=
+set POSTGRES_JDBC_FOLDER=postgres/lib
+
 set DOTNET_NAME=.NET Core SDK
 set DOTNET_VERSION=1.0.4
 set DOTNET_URL=https://download.microsoft.com/download/E/7/8/E782433E-7737-4E6C-BFBF-290A0A81C3D7/dotnet-dev-win-x64.1.0.4.zip
@@ -314,3 +331,11 @@ set GRADLE_EXPLODED=gradle-%GRADLE_VERSION%
 set GRADLE_FOLDER=gradle
 set GRADLE_CONFIG=gradle
 
+set SQUIRREL_NAME=Squirrel SQL
+set SQUIRREL_VERSION=3.8.1
+set SQUIRREL_URL=https://netcologne.dl.sourceforge.net/project/squirrel-sql/1-stable/3.8.1-plainzip/squirrelsql-3.8.1-standard.zip
+set SQUIRREL_TYPE=ZIP
+set SQUIRREL_PACKAGE=squirrelsql-%SQUIRREL_VERSION%-standard.zip
+set SQUIRREL_EXPLODED=squirrelsql-%SQUIRREL_VERSION%-standard
+set SQUIRREL_FOLDER=squirrel
+set SQUIRREL_TOOL_1=start_squirrel.bat

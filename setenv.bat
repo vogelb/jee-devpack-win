@@ -43,6 +43,7 @@ rem load optional package configuration
 call :include_config postgres
 call :include_config jboss
 call :include_config tomcat
+call :include_config tomee
 call :include_config forge
 call :include_config scala
 call :include_config git
