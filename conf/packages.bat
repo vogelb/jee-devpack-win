@@ -3,7 +3,7 @@ rem ===================================================================
 rem DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=ANSICON JDK10 JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES POSTGRES_JDBC BABUN NODE GITBOOK GITBOOK_EDITOR VAGRANT GRADLE ANT SQUIRREL
+set DEVPACK_PACKAGES=ANSICON JDK10 JDK8 JDK8_32 JDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES POSTGRES_JDBC BABUN NODE GITBOOK GITBOOK_EDITOR VAGRANT GRADLE ANT SQUIRREL
 set DEVPACK_NO_PURGE=ECLIPSE_WORKSPACE
 
 set ANSICON_NAME=Ansic0n
@@ -127,12 +127,22 @@ set ECLIPSE_WORKSPACE_EXPLODED=workspace
 set ECLIPSE_WORKSPACE_FOLDER=..\workspace
 
 set MAVEN_NAME=Maven
-set MAVEN_VERSION=3.3.9
-set MAVEN_URL=http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+set MAVEN_VERSION=3.5.4
+set MAVEN_URL=http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.zip
 set MAVEN_TYPE=ZIP
-set MAVEN_EXPLODED=apache-maven-3.3.9
+set MAVEN_EXPLODED=apache-maven-3.5.4
 set MAVEN_PACKAGE=%MAVEN_EXPLODED%-bin.zip
 set MAVEN_FOLDER=mvn
+
+set TOMCAT_NAME=Apache Tomcat
+set TOMCAT_VERSION=7.0.90
+set TOMCAT_URL=http://mirror.23media.de/apache/tomcat/tomcat-7/v7.0.90/bin/apache-tomcat-7.0.90-windows-x64.zip
+set TOMCAT_TYPE=ZIP
+set TOMCAT_EXPLODED=apache-tomcat-7.0.90
+set TOMCAT_PACKAGE=apache-tomcat-7.0.90-windows-x64.zip
+set TOMCAT_FOLDER=tomcat
+set TOMCAT_CONFIG=tomcat
+set TOMCAT_TOOL_1=start_tomcat.bat
 
 set TOMEE_NAME=Tom EE
 set TOMEE_VERSION=1.7.2
@@ -141,7 +151,7 @@ set TOMEE_TYPE=ZIP
 set TOMEE_EXPLODED=apache-tomee-plus-1.7.2
 set TOMEE_PACKAGE=apache-tomee-1.7.2-plus.zip
 set TOMEE_FOLDER=tomee
-set TOMEE_CONFIG=tomcat
+set TOMEE_CONFIG=tomee
 set TOMEE_TOOL_1=start_tomee.bat
 
 set WILDFLY_NAME=Wildfly
@@ -223,7 +233,6 @@ rem set CONSOLE_EXPLODED=Console2
 rem set CONSOLE_PACKAGE=Console-2.00b148-Beta_32bit.zip
 rem set CONSOLE_FOLDER=console
 
-
 set SOURCETREE_NAME=SourceTree
 set SOURCETREE_VERSION=2.6.9
 set SOURCETREE_URL=https://downloads.atlassian.com/software/sourcetree/windows/ga/SourceTreeSetup-%SOURCETREE_VERSION%.exe
@@ -287,7 +296,6 @@ set VS_EXPLODED=--create--
 set VS_FOLDER=vstudio
 set VS_TOOL_1=start_visual_studio.bat
 set VS_CONFIG=vstudio
-
 
 set NODE_NAME=Node.js
 set NODE_VERSION=6.10.3
