@@ -5,6 +5,23 @@ rem - Use maven from the dev pack
 rem - Use maven setting from the dev pack
 rem =====================================
 
+:loop_commandline
+if "%1" == "-s" goto private_settings_found
+if "%1" == "-gs" goto private_settings_found
+goto endloop_commandline
+
+:private_settings_found
+  shift
+  set PRIVATE_M2_CONFIG=%1
+  goto loop_commandline
+
+:public_settings_found
+  shift
+  set PUBLIC_M2_CONFIG=%1
+  goto loop_commandline
+
+:endloop_commandline
+
 set M2_SETTINGS=-gs %PUBLIC_M2_CONFIG% -s %PRIVATE_M2_CONFIG%
 
 rem call maven
