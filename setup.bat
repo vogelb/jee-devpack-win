@@ -42,6 +42,7 @@ set DEBUG=FALSE
 set TAB=	
 set VERSION_FILE=version.txt
 set GIT_REPO=--git-repo--
+set TEMP_FOLDER=_DEVPACK_TEMP_
 
 :loop_commandline
 if "%1" == "-debug" goto debug_found
@@ -95,6 +96,7 @@ rem ===== Mount work drive and read configuration ====
 call %SETUP_WORKING_DIR%\bin\mount_devpack.bat
 
 cd /d %WORK_DRIVE%:\
+call setenv.bat
 
 set WGET=%SETUP_WORKING_DIR%\bin\wget
 set WGET_OPTIONS=--no-check-certificate --no-cookies
@@ -107,6 +109,7 @@ if "%DEVPACK_COLOUR%" == "TRUE" (
   set PROMPT_MANUALLY_INSTALLED=[33minstalled[0m
   set PROMPT_UNINSTALLED=[33muninstalled[0m
   set PROMPT_WARN=[31mWarning[0m
+  set PROMPT_ERROR=[31mError[0m
   set PROMPT_OK=[32mok[0m
 ) else (
   set PROMPT_NOT_INSTALLED=not installed
@@ -114,24 +117,13 @@ if "%DEVPACK_COLOUR%" == "TRUE" (
   set PROMPT_OUTDATED=out of date
   set PROMPT_UNINSTALLED=uninstalled
   set PROMPT_WARN=Warning
+  set PROMPT_ERROR=Error
   set PROMPT_OK=ok
 )
 
 rem ===== Read Package Configuration =====
 call %SETUP_WORKING_DIR%\conf\packages.bat
-call %TEMPLATE%
-
-if "%INSTALL_ECLIPSE%" == "JAVA" (
-  set INSTALL_ECLIPSE_JAVA=TRUE
-)
-
-if "%INSTALL_ECLIPSE%" == "EE" (
-  set INSTALL_ECLIPSE_EE=TRUE
-)
-
-if "%INSTALL_ECLIPSE%" == "CPP" (
-  set INSTALL_ECLIPSE_CPP=TRUE
-)
+call :load_template %TEMPLATE%
 
 if "%COMMAND%" == "info" goto info
 if "%COMMAND%" == "status" goto info
@@ -164,6 +156,23 @@ echo Available templates:
 dir /B templates | findstr .bat | findstr /V template.bat
 
 goto done
+
+:load_template <template>
+call %1
+
+if "%INSTALL_ECLIPSE%" == "JAVA" (
+  set INSTALL_ECLIPSE_JAVA=TRUE
+)
+
+if "%INSTALL_ECLIPSE%" == "EE" (
+  set INSTALL_ECLIPSE_EE=TRUE
+)
+
+if "%INSTALL_ECLIPSE%" == "CPP" (
+  set INSTALL_ECLIPSE_CPP=TRUE
+)
+
+exit /B
 
 rem ======================================================================
 rem Package management
@@ -405,6 +414,8 @@ if "!PACKAGE_TYPE!" == "JDK6" (
     call :install_nupkg_package %1
 ) else if "!PACKAGE_TYPE!" == "ZIP" (
     call :install_zip_package %1
+) else if "!PACKAGE_TYPE!" == "ZIPPED_INSTALLER" (
+	call :install_zipped_installer %1
 ) else if "!PACKAGE_TYPE!" == "FILE" (
     call :install_file %1
 ) else if "!PACKAGE_TYPE!" == "NPM" (
@@ -622,17 +633,8 @@ for %%p in ( %DEVPACK_PACKAGES% ) do (
   )
 )
 
-if "%INSTALL_ECLIPSE%" == "EE" (
-  call :install_zip_package ECLIPSE_EE
-)
-if "%INSTALL_ECLIPSE%" == "JAVA" (
-  call :install_zip_package ECLIPSE_JAVA
-)
-if "%INSTALL_ECLIPSE%" == "CPP" (
-  call :install_zip_package ECLIPSE_CPP
-)
 if "%INSTALL_SCALA%" == "TRUE" (
-  call :install_zip_package SBT
+  call :install_single_package SBT
 )
 
 call %WORK_DRIVE%:\setenv.bat
@@ -856,6 +858,54 @@ echo already installed.
 exit /B
 
 rem ======================================================================
+rem Install an archived installer
+rem Unzips the package into target folder.
+rem %1: package identifier
+:install_zipped_installer
+set PACKAGE_SPEC=%~1
+setlocal enabledelayedexpansion
+set OPTION=!%PACKAGE_SPEC%_NAME!
+set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
+set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
+set TARGET=!%PACKAGE_SPEC%_FOLDER!
+set VERSION=!%PACKAGE_SPEC%_VERSION!
+set INSTALLER=!%PACKAGE_SPEC%_EXEC!
+
+if "%OPTION%" == "" (
+  echo Unknown package: %PACKAGE_SPEC%
+  echo Use   setup packages   to display the list of available packages.
+  echo.
+  exit /B
+)
+
+echo | set /p=Package %OPTION%... 
+
+echo installing now.
+
+call :clean_folder %DOWNLOADS_DIR%\%TEMP_FOLDER%
+mkdir %DOWNLOADS_DIR%\%TEMP_FOLDER%
+echo | set /p=Unpacking %OPTION% %VERSION% to %DOWNLOADS_DIR%\%TEMP_FOLDER%... 
+%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%DOWNLOADS_DIR%\%TEMP_FOLDER% >NUL
+echo %PROMPT_OK%.
+
+echo | set /p=Starting installer %DOWNLOADS_DIR%\%TEMP_FOLDER%\%INSTALLER%...
+%DOWNLOADS_DIR%\%TEMP_FOLDER%\%INSTALLER%
+if errorlevel 1 (
+	echo %PROMPT_ERROR%
+	exit /B
+)
+echo %PROMPT_OK%.
+
+echo | set /p=Cleaning up...
+call :clean_folder %DOWNLOADS_DIR%\%TEMP_FOLDER%
+echo %PROMPT_OK%.
+
+popd
+echo Package %OPTION% done.
+echo.
+exit /B
+
+rem ======================================================================
 rem Install an archived package
 rem Unzips the package into target folder.
 rem %1: package identifier
@@ -897,7 +947,7 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
     echo %PROMPT_OK%.
   )  
   
-  if not "%UNZIPPED%" == "??" (
+  if not "%UNZIPPED%" == "??" if not "%UNZIPPED%" == "--create--" (
     if exist %UNZIPPED% (
 	  if not exist %TARGET% (
         echo | set /p=Renaming %UNZIPPED% to %TARGET%... 
@@ -987,6 +1037,7 @@ rem Create version file, handle configured tools.
   
   if not "!CONFIG_NAME!" == "%PACKAGE_SPEC%_CONFIG" (
     if exist %CONF_DIR%\!CONFIG_NAME!.config copy %CONF_DIR%\!CONFIG_NAME!.config %CONF_DIR%\!CONFIG_NAME!.bat >NUL
+	call %CONF_DIR%\!CONFIG_NAME!.bat
   )
   
   for /l %%x in (1, 1, 10) do (
