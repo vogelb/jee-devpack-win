@@ -948,14 +948,14 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
   )  
   
   if not "%UNZIPPED%" == "??" if not "%UNZIPPED%" == "--create--" (
-    if exist %UNZIPPED% (
+    if exist "%UNZIPPED%" (
 	  if not exist %TARGET% (
         echo | set /p=Renaming %UNZIPPED% to %TARGET%... 
         move %UNZIPPED% %TARGET% >NUL
         echo ok.
 	  )
     ) else (
-        echo Error: Unzipped package %UNZIPPED% not found. Please check package configuration.
+        echo Error: Unzipped package '%UNZIPPED%' [%PACKAGE_SPEC%_EXPLODED] not found. Please check package configuration.
 		echo.
 		exit /B 1
 	)
