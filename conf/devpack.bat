@@ -10,6 +10,9 @@ if "%DEVPACK_BASE%" == "" (
 	set DEVPACK_BASE=c:\dev\devpack
 )
 
+rem Set the working drive letter here. The default is W.
+set WORK_DRIVE=W
+
 rem Set the default JDK
 set DEVPACK_DEFAULT_JDK=JDK10
 
@@ -23,9 +26,6 @@ rem Use virtual harddisk
 rem Set to true to install DevPack in a virtual disk
 set DEVPACK_VHD=FALSE
 
-rem Set the working drive letter here. The default is W.
-set WORK_DRIVE=W
-
 rem Tools (java, maven, eclipse, ...) installation dir
 rem Set to a global folder in order to reuse installed packages
 set TOOLS_DIR=%WORK_DRIVE%:\tools
@@ -38,6 +38,9 @@ set PUBLIC_M2_CONFIG=%WORK_DRIVE%:\conf\mvn-public-settings.xml
 
 rem Private maven settings (e.g. server passwords)
 set PRIVATE_M2_CONFIG=%WORK_DRIVE%:\conf\mvn-private-settings.xml
+
+rem Maven Toolchains configuration
+set M2_TOOLCHAINS=%WORK_DRIVE%:\conf\toolchains.xml
 
 rem Configure your favourite editor here
 rem set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\atom\atom.exe
