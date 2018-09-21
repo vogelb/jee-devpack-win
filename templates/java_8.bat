@@ -16,7 +16,6 @@ rem ===================================================================
 
 rem Set to TRUE if you want Ansi console extension installed
 rem Recommended for Windows 8.x and below.
-set INSTALL_ANSICON=TRUE
 set INSTALL_ANSICON=FALSE
 
 rem Set to TRUE if you want Maven installed
