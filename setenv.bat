@@ -14,13 +14,12 @@ set SOURCE_DIR=%WORKING_DIR%source
 set M2_HOME=%TOOLS_DIR%\mvn
 
 for /f %%i in ('%BIN_DIR%\default_jdk.bat') do set JAVA_HOME=%%i
-
 if not exist %JAVA_HOME%\bin\java.exe goto default_jdk
 goto main
 
 :default_jdk
+echo WARNING: Configured JDK %JAVA_HOME% is not installed.
 set JAVA_HOME=%TOOLS_DIR%\jdk_8
-echo %JAVA_HOME%
 goto main
 
 :include_config <configPath>
@@ -34,6 +33,7 @@ goto main
 rem -------------------------------------------------
 :main
 rem -------------------------------------------------
+echo Using JDK: %JAVA_HOME%
 
 if "%DEVPACK_OPATH%" == "" goto save_path
 set PATH=%DEVPACK_OPATH%
