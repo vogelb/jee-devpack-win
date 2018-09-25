@@ -734,7 +734,7 @@ if %OPTION_LEN% LEQ 7 (
 if NOT "%SELECTED%" == "TRUE" (
   echo | set /p=not selected%TAB%
 ) else (
-  if %VERSION_LEN% LEQ 8 (
+  if %VERSION_LEN% LEQ 7 (
     echo | set /p=%VERSION%%TAB%%TAB%
   ) else (
     echo | set /p=%VERSION%%TAB%
@@ -760,7 +760,11 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 	  echo %PROMPT_MANUALLY_INSTALLED% [!INSTALLED_VERSION!]
 	)
   ) else if "%SELECTED%" == "TRUE" (
-    echo %PROMPT_OUTDATED% [!INSTALLED_VERSION!]
+      if "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+		echo %PROMPT_OUTDATED% [Unknown Version]
+	  ) else (
+	    echo %PROMPT_OUTDATED% [!INSTALLED_VERSION!]
+	  )
   ) else if "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
     if "%SELECTED%" == "TRUE" (
       echo | set /p=%PROMPT_NOT_INSTALLED% / 
@@ -918,6 +922,8 @@ set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
 set TARGET=!%PACKAGE_SPEC%_FOLDER!
 set VERSION=!%PACKAGE_SPEC%_VERSION!
 
+call :get_file_extension EXTENSION %PACKAGE%
+
 if "%OPTION%" == "" (
   echo Unknown package: %PACKAGE_SPEC%
   echo Use   setup packages   to display the list of available packages.
@@ -930,32 +936,37 @@ echo | set /p=Package %OPTION%...
 if not exist "%TOOLS_DIR%\%TARGET%" (
 
   if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
-    echo Error: Package %PACKAGE% was not downloaded!
+    echo %PROMPT_ERROR%: Package %PACKAGE% was not downloaded!
     exit /B
   )
 
   echo installing now.
   pushd %TOOLS_DIR%
+  
+  set OUTPUT_FOLDER=%TOOLS_DIR%
+  if "%UNZIPPED%" == "--create--" set OUTPUT_FOLDER=%TOOLS_DIR%\%TARGET%
+  
+  set UNZIP=%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o!OUTPUT_FOLDER!
+  if "%EXTENSION%" == ".gz" set UNZIP=!TOOLS_DIR!\7-Zip\7z x -bsp0 -y -so "!DOWNLOADS_DIR!\!PACKAGE!" ^| !TOOLS_DIR!\7-Zip\7z x -aoa -si -ttar -o!OUTPUT_FOLDER!
 
-  if "%UNZIPPED%" == "--create--" (
-    echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%\%TARGET%... 
-    %TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%TARGET% >NUL
-    echo %PROMPT_OK%.
-  ) else (
-    echo | set /p=Unpacking %OPTION% %VERSION% to %TOOLS_DIR%... 
-    %TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%TOOLS_DIR% >NUL
-    echo %PROMPT_OK%.
-  )  
+  echo | set /p=Unpacking %OPTION% %VERSION% to !OUTPUT_FOLDER!... 
+  cmd /c !UNZIP! >NUL
+  if errorlevel 1 (
+    echo %PROMPT_ERROR%: Package extraction failed
+	exit /B
+  )
+  
+  echo %PROMPT_OK%.
   
   if not "%UNZIPPED%" == "??" if not "%UNZIPPED%" == "--create--" (
     if exist "%UNZIPPED%" (
 	  if not exist %TARGET% (
         echo | set /p=Renaming %UNZIPPED% to %TARGET%... 
         move %UNZIPPED% %TARGET% >NUL
-        echo ok.
+        echo %PROMPT_OK%.
 	  )
     ) else (
-        echo Error: Unzipped package '%UNZIPPED%' [%PACKAGE_SPEC%_EXPLODED] not found. Please check package configuration.
+        echo %PROMPT_ERROR%: Unzipped package '%UNZIPPED%' [%PACKAGE_SPEC%_EXPLODED] not found. Please check package configuration.
 		echo.
 		exit /B 1
 	)
@@ -1562,4 +1573,23 @@ call %*
 if "%DEBUG%" == "TRUE" echo on
 exit /B
 
+rem ======================================================================
+rem Get the file extension from a path
+rem %1: Result variable
+rem %2: The Path
+:get_file_extension <resultVar> <filePath>
+set %1=%~x2
+exit /B
+
+:debug
+if "%DEBUG%" == "TRUE" echo %*
+exit /B
+
+:call_debug
+call %*
+if "%DEBUG%" == "TRUE" echo on
+exit /B
+
 :done
+
+

@@ -12,13 +12,17 @@ The idea of the dev pack is to provide a self contained local development enviro
 The packages themselves are not included in the devPack but are downloaded during installation.
 
 The Dev Pack supports the following packages:
+- Oracle JDK 10
 - Oracle JDK 8 x64
 - Oracle JDK 8 x86
 - Oracle JDK 7 + 6
+- OpenJDK 7, 8 & 10
 - Scala and sbt
 - Apache Maven
+- Apache Ant
 - Eclipse EE / Java / C++
-- TomEE Plus
+- Apache TomEE Plus
+- Apache Tomcat
 - RedHat WildFly
 - Oracle GlassFish
 - Notepad++
@@ -26,11 +30,10 @@ The Dev Pack supports the following packages:
 - .NET Core SDK
 - Visual Studio Code
 - node.js
-- gitbook
-- gitbook editor
 - 7-Zip
 - SourceTree
 - PostgreSQL
+- Squirrel SQL
 - Some aliases and scripts to help you get going. Most scripts are designed to work out of the explorer (double click).
 
 ## Use of 7-Zip
