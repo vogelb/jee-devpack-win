@@ -33,6 +33,9 @@ goto main
 rem -------------------------------------------------
 :main
 rem -------------------------------------------------
+
+title Dev Console [%DEVPACK_NAME%]
+
 echo Using JDK: %JAVA_HOME%
 
 if "%DEVPACK_OPATH%" == "" goto save_path

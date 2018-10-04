@@ -11,4 +11,9 @@ if exist %WORKSPACE% (
 ) else (
 	set START_DIR="%WORK_DRIVE%:"\
 )
-console -w "Dev Console" -d %START_DIR%" -r "/K call %WORK_DRIVE%:\setenv.bat" -c conf\console.xml
+
+if exist %TOOLS_DIR%\console (
+	console -d %START_DIR%" -r "/K call %WORK_DRIVE%:\setenv.bat" -c conf\console.xml
+) else (
+	cmd /K call %WORK_DRIVE%:\setenv.bat
+)

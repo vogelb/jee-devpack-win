@@ -1,0 +1,11 @@
+Windows Registry Editor Version 5.00
+
+; Enable Windows cmd shell auto completion.
+; Set control character to 9 (TAB)
+; Use e.g. 4 for CTRL-D, 6 for CTRL-F
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor\CompletionChar]
+@="9"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor\PathCompletionChar]
+@="9"
