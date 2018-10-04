@@ -13,6 +13,7 @@ if "%DEVPACK_BASE%" == "" (
 rem Set the working drive letter here. The default is W.
 set WORK_DRIVE=W
 set DEVPACK_NAME=POS-WS
+set DEVPACK_NAME=Java Dev Pack
 
 rem Set the default JDK
 set DEVPACK_DEFAULT_JDK=JDK10
