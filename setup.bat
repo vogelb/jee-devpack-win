@@ -638,6 +638,7 @@ if "%INSTALL_SCALA%" == "TRUE" (
 )
 
 call %WORK_DRIVE%:\setenv.bat
+call :generate_toolchains
 
 exit /B
 
@@ -680,6 +681,10 @@ if "%INSTALL_ECLIPSE%" == "FALSE" (
     exit /B !ERRORLEVEL!
   )
 )
+
+call %WORK_DRIVE%:\setenv.bat
+call :generate_toolchains
+
 echo.
 echo All done.
 
@@ -700,6 +705,9 @@ if "%1" == "" (
   rem Uninstall single package
   call :uninstall_package %1
 )
+
+call %WORK_DRIVE%:\setenv.bat
+call :generate_toolchains
 
 echo.
 echo All done.
@@ -1474,8 +1482,74 @@ echo Package %OPTION% done.
 echo.
 exit /B
 
+
+:generate_toolchain <Type> <Vendor> <Version> <Path>
+echo   ^<toolchain^>
+  echo     ^<type^>jdk^</type^>
+  echo     ^<provides^>
+  echo       ^<id^>%1-%3^</id^>
+  echo       ^<vendor^>%2^</vendor^>
+  echo       ^<version^>%3^</version^>
+  echo     ^</provides^>
+  echo     ^<configuration^>
+  echo       ^<jdkHome^>%4^</jdkHome^>
+  echo       ^<bootClassPath^>
+  echo         ^<includes^>
+  echo           ^<include^>jre/lib/*.jar^</include^>
+  echo         ^</includes^>
+  echo       ^</bootClassPath^>
+  echo     ^</configuration^>
+  echo   ^</toolchain^>
+
+exit /B
+
 rem ======================================================================
-rem Clean installing dev pack
+rem Generate toolchains.xml
+:generate_toolchains
+if not "%GENERATE_M2_TOOLCHAINS%" == "TRUE" (
+  exit /B
+)
+echo.
+echo Generating toolchains.xml...
+echo hello >%CONF_DIR%\toolchains.xml
+echo ^<?xml version=\"1.0\" encoding=\"UTF8\"?^> >%CONF_DIR%\toolchains.xml
+echo ^<toolchains^>>>%CONF_DIR%\toolchains.xml
+
+call :get_installed_version JDK10 INSTALLED_VERSION
+if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  call :generate_toolchain JavaSE oracle 1.10 %TOOLS_DIR%\%JDK10_FOLDER% >>%CONF_DIR%\toolchains.xml
+)
+
+call :get_installed_version OPENJDK10 INSTALLED_VERSION
+if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  call :generate_toolchain OpenJDK OpenJDK 1.10 %TOOLS_DIR%\%OPENJDK10_FOLDER% >>%CONF_DIR%\toolchains.xml
+)
+
+call :get_installed_version JDK8 INSTALLED_VERSION
+if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  call :generate_toolchain JavaSE oracle 1.8 %TOOLS_DIR%\%JDK8_FOLDER% >>%CONF_DIR%\toolchains.xml
+)
+call :get_installed_version OPENJDK8 INSTALLED_VERSION
+if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  call :generate_toolchain OpenJDK OpenJDK 1.8 %TOOLS_DIR%\%OPENJDK8_FOLDER% >>%CONF_DIR%\toolchains.xml
+)
+
+call :get_installed_version JDK7 INSTALLED_VERSION
+if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  call :generate_toolchain JavaSE oracle 1.7 %TOOLS_DIR%\%JDK7_FOLDER% >>%CONF_DIR%\toolchains.xml
+)
+
+call :get_installed_version OPENJDK7 INSTALLED_VERSION
+if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  call :generate_toolchain OpenJDK OpenJDK 1.7 %TOOLS_DIR%\%OPENJDK7_FOLDER% >>%CONF_DIR%\toolchains.xml
+)
+
+echo ^</toolchains^>>>%CONF_DIR%\toolchains.xml
+
+exit /B
+
+rem ======================================================================
+rem Clean installed dev pack
 rem Remove all user files, e.g. for distribution
 :clean_devpack
 echo.

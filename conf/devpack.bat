@@ -43,6 +43,9 @@ set PRIVATE_M2_CONFIG=%WORK_DRIVE%:\conf\mvn-private-settings.xml
 rem Maven Toolchains configuration
 set M2_TOOLCHAINS=%WORK_DRIVE%:\conf\toolchains.xml
 
+rem Auto-Generate toolchains (after setup install / uninstall / purge)
+set GENERATE_M2_TOOLCHAINS=TRUE
+
 rem Configure your favourite editor here
 rem set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\atom\atom.exe
 set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\npp\notepad++.exe
