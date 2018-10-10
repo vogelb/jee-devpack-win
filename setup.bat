@@ -135,6 +135,7 @@ if "%COMMAND%" == "uninstall" goto uninstall
 if "%COMMAND%" == "clean" goto clean_devpack
 if "%COMMAND%" == "packages" goto manage_packages
 if "%COMMAND%" == "templates" goto list_templates
+if "%COMMAND%" == "toolchains" goto generate_toolchains
 
 echo.
 echo J2EE Devpack setup
@@ -150,6 +151,7 @@ echo   purge                     - Remove disabled packages
 echo   uninstall [^<packageName^>] - Uninstall DevPack / single package
 echo   packages [list ^| purge]   - List available packages / purge downloaded packages
 echo   templates                 - List available templates
+echo   toolchains                - Generate maven toolchains configuration (%M2_TOOLCHAINS%)
 :list_templates
 echo.
 echo Available templates:
@@ -466,14 +468,14 @@ call :expand_variable PACKAGE_VERSION
 call :expand_variable PACKAGE_TARGET
 call :get_installed_version %PACKAGE% INSTALLED_VERSION
 
-echo | set /p=Package !PACKAGE_NAME!... 
+echo | set /p=Package !PACKAGE_NAME!, requested version !PACKAGE_VERSION!... 
 
 if "!INSTALLED_VERSION!" == "" (
   set INSTALLED_VERSION=-not installed-
 )
 
 if not "!INSTALLED_VERSION!" == "!PACKAGE_VERSION!" (
-  echo out of date.
+  echo out of date [!INSTALLED_VERSION!]
   echo Updating from version !INSTALLED_VERSION! to !PACKAGE_VERSION!
   
   call :uninstall_package %PACKAGE%
@@ -957,7 +959,7 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
   set UNZIP=%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o!OUTPUT_FOLDER!
   if "%EXTENSION%" == ".gz" set UNZIP=!TOOLS_DIR!\7-Zip\7z x -bsp0 -y -so "!DOWNLOADS_DIR!\!PACKAGE!" ^| !TOOLS_DIR!\7-Zip\7z x -aoa -si -ttar -o!OUTPUT_FOLDER!
 
-  echo | set /p=Unpacking %OPTION% %VERSION% to !OUTPUT_FOLDER!... 
+  echo | set /p=Unpacking %OPTION% %VERSION% [!PACKAGE!] to !OUTPUT_FOLDER!... 
   cmd /c !UNZIP! >NUL
   if errorlevel 1 (
     echo %PROMPT_ERROR%: Package extraction failed
@@ -1511,40 +1513,39 @@ if not "%GENERATE_M2_TOOLCHAINS%" == "TRUE" (
 )
 echo.
 echo Generating toolchains.xml...
-echo hello >%CONF_DIR%\toolchains.xml
-echo ^<?xml version=\"1.0\" encoding=\"UTF8\"?^> >%CONF_DIR%\toolchains.xml
-echo ^<toolchains^>>>%CONF_DIR%\toolchains.xml
+echo ^<?xml version=\"1.0\" encoding=\"UTF8\"?^> >M2_TOOLCHAINS
+echo ^<toolchains^>>>M2_TOOLCHAINS
 
 call :get_installed_version JDK10 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain JavaSE oracle 1.10 %TOOLS_DIR%\%JDK10_FOLDER% >>%CONF_DIR%\toolchains.xml
+  call :generate_toolchain JavaSE oracle 1.10 %TOOLS_DIR%\%JDK10_FOLDER% >>M2_TOOLCHAINS
 )
 
 call :get_installed_version OPENJDK10 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain OpenJDK OpenJDK 1.10 %TOOLS_DIR%\%OPENJDK10_FOLDER% >>%CONF_DIR%\toolchains.xml
+  call :generate_toolchain OpenJDK OpenJDK 1.10 %TOOLS_DIR%\%OPENJDK10_FOLDER% >>M2_TOOLCHAINS
 )
 
 call :get_installed_version JDK8 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain JavaSE oracle 1.8 %TOOLS_DIR%\%JDK8_FOLDER% >>%CONF_DIR%\toolchains.xml
+  call :generate_toolchain JavaSE oracle 1.8 %TOOLS_DIR%\%JDK8_FOLDER% >>M2_TOOLCHAINS
 )
 call :get_installed_version OPENJDK8 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain OpenJDK OpenJDK 1.8 %TOOLS_DIR%\%OPENJDK8_FOLDER% >>%CONF_DIR%\toolchains.xml
+  call :generate_toolchain OpenJDK OpenJDK 1.8 %TOOLS_DIR%\%OPENJDK8_FOLDER% >>M2_TOOLCHAINS
 )
 
 call :get_installed_version JDK7 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain JavaSE oracle 1.7 %TOOLS_DIR%\%JDK7_FOLDER% >>%CONF_DIR%\toolchains.xml
+  call :generate_toolchain JavaSE oracle 1.7 %TOOLS_DIR%\%JDK7_FOLDER% >>M2_TOOLCHAINS
 )
 
 call :get_installed_version OPENJDK7 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain OpenJDK OpenJDK 1.7 %TOOLS_DIR%\%OPENJDK7_FOLDER% >>%CONF_DIR%\toolchains.xml
+  call :generate_toolchain OpenJDK OpenJDK 1.7 %TOOLS_DIR%\%OPENJDK7_FOLDER% >>M2_TOOLCHAINS
 )
 
-echo ^</toolchains^>>>%CONF_DIR%\toolchains.xml
+echo ^</toolchains^>>>M2_TOOLCHAINS
 
 exit /B
 

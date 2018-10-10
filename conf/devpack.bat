@@ -46,9 +46,12 @@ set M2_TOOLCHAINS=%WORK_DRIVE%:\conf\toolchains.xml
 rem Auto-Generate toolchains (after setup install / uninstall / purge)
 set GENERATE_M2_TOOLCHAINS=TRUE
 
-rem Configure your favourite editor here
+rem Configure your favorite editor here
 rem set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\atom\atom.exe
 set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\npp\notepad++.exe
+
+rem Configure your favorite file explorer here
+set DEVPACK_EXPLORER=explorer
 
 rem Set your Cygwin home to enable cygwin integration
 set CYGWIN_HOME=c:\cygwin
