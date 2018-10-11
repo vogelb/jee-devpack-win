@@ -3,7 +3,7 @@ rem ===================================================================
 rem DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=ANSICON JDK10 OPENJDK10 JDK8 OPENJDK8 JDK8_32 JDK7 OPENJDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES POSTGRES_JDBC BABUN NODE GRADLE ANT SQUIRREL
+set DEVPACK_PACKAGES=ANSICON JDK10 OPENJDK10 JDK8 OPENJDK8 JDK8_32 JDK7 OPENJDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES POSTGRES_JDBC NODE GRADLE ANT SQUIRREL
 set DEVPACK_NO_PURGE=ECLIPSE_WORKSPACE
 
 set ANSICON_NAME=Ansic0n
@@ -22,15 +22,6 @@ set ANT_PACKAGE=apache-ant-1.10.5-bin.zip
 set ANT_EXPLODED=apache-ant-1.10.5
 set ANT_FOLDER=ant
 set ANT_CONFIG=ant
-
-set BABUN_NAME=Babun
-set BABUN_VERSION=1.2.0
-set BABUN_URL=https://bintray.com/artifact/download/tombujok/babun/babun-1.2.0-dist.zip
-set BABUN_TYPE=ZIP
-set BABUN_EXPLODED=babun-1.2.0
-set BABUN_PACKAGE=babun-1.2.0-dist.zip
-set BABUN_FOLDER=babun-1.2.0
-set BABUN_POSTINSTALL=babun_postinstall.bat
 
 set OPENJDK10_NAME=Open JDK 10
 set OPENJDK10_VERSION=10.0.2
@@ -154,11 +145,19 @@ set ECLIPSE_WORKSPACE_EXPLODED=workspace
 set ECLIPSE_WORKSPACE_FOLDER=..\workspace
 
 set MAVEN_NAME=Maven
-set MAVEN_VERSION=3.5.4
-set MAVEN_URL=http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.zip
+set MAVEN_3_3_VERSION=3.3.9
+set MAVEN_3_3_URL=https://archive.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+set MAVEN_3_3_EXPLODED=apache-maven-%MAVEN_3_3_VERSION%
+set MAVEN_3_3_PACKAGE=apache-maven-%MAVEN_3_3_VERSION%-bin.zip
+set MAVEN_3_5_VERSION=3.5.4
+set MAVEN_3_5_URL=http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.zip
+set MAVEN_3_5_EXPLODED=apache-maven-%MAVEN_3_5_VERSION%
+set MAVEN_3_5_PACKAGE=apache-maven-%MAVEN_3_5_VERSION%-bin.zip
+set MAVEN_VERSION=%MAVEN_3_5_VERSION%
+set MAVEN_URL=%MAVEN_3_5_URL%
+set MAVEN_EXPLODED=%MAVEN_3_5_EXPLODED%
+set MAVEN_PACKAGE=%MAVEN_3_5_PACKAGE%
 set MAVEN_TYPE=ZIP
-set MAVEN_EXPLODED=apache-maven-3.5.4
-set MAVEN_PACKAGE=%MAVEN_EXPLODED%-bin.zip
 set MAVEN_FOLDER=mvn
 
 set TOMCAT_NAME=Apache Tomcat
@@ -288,10 +287,16 @@ set MELD_FOLDER=meld
 set MELD_CONFIG=meld
 
 set POSTGRES_NAME=PostgreSQL
-set POSTGRES_VERSION=9.6.2
-set POSTGRES_URL=http://get.enterprisedb.com/postgresql/postgresql-9.6.2-2-windows-x64-binaries.zip
+set POSTGRES_9_4_VERSION=9.4.19-1
+set POSTGRES_9_4_URL=http://get.enterprisedb.com/postgresql/postgresql-%POSTGRES_9_4_VERSION%-windows-x64-binaries.zip
+set POSTGRES_9_4_PACKAGE=postgresql-%POSTGRES_9_4_VERSION%-windows-x64-binaries.zip
+set POSTGRES_9_6_VERSION=9.6.2-2
+set POSTGRES_9_6_URL=http://get.enterprisedb.com/postgresql/postgresql-%POSTGRES_9_6_VERSION%-windows-x64-binaries.zip
+set POSTGRES_9_6_PACKAGE=postgresql-%POSTGRES_9_6_VERSION%-windows-x64-binaries.zip
+set POSTGRES_VERSION=%POSTGRES_9_6_VERSION%
+set POSTGRES_URL=%POSTGRES_9_6_URL%
+set POSTGRES_PACKAGE=%POSTGRES_9_6_PACKAGE%
 set POSTGRES_TYPE=ZIP
-set POSTGRES_PACKAGE=postgresql-9.6.2-2-windows-x64-binaries.zip
 set POSTGRES_EXPLODED=pgsql
 set POSTGRES_FOLDER=postgres
 set POSTGRES_CONFIG=postgres

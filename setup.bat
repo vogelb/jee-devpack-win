@@ -33,9 +33,9 @@ set CONF_DIR=%~dp0conf
 
 if exist %LAST_TEMPLATE% call %LAST_TEMPLATE%
 if not "%SELECTED_TEMPLATE%" == "" (
-	set TEMPLATE=%TEMPLATE_DIR%\%SELECTED_TEMPLATE%
+    set TEMPLATE=%TEMPLATE_DIR%\%SELECTED_TEMPLATE%
 ) else (
-	set TEMPLATE=%TEMPLATE_DIR%\default.bat
+    set TEMPLATE=%TEMPLATE_DIR%\default.bat
 )
 set DOWNLOADS=%DOWNLOADS_DIR%\download_packages.txt
 set DEBUG=FALSE
@@ -143,15 +143,18 @@ echo.
 echo Usage: setup [-t template] command
 echo.
 echo Available commands:
-echo   status                    - Show currently installed packages
-echo   install [^<packageName^>]   - Install DevPack / configured / single packages
-echo   update [^<packageName^>]    - Update DevPack / configured / single packages
-echo   download                  - Only download packages
-echo   purge                     - Remove disabled packages
-echo   uninstall [^<packageName^>] - Uninstall DevPack / single package
-echo   packages [list ^| purge]   - List available packages / purge downloaded packages
-echo   templates                 - List available templates
-echo   toolchains                - Generate maven toolchains configuration (%M2_TOOLCHAINS%)
+echo   status                                   - Show currently installed packages
+echo   install [^<packageName^>]                  - Install DevPack / configured / single packages
+echo   update [^<packageName^>]                   - Update DevPack / configured / single packages
+echo   download                                 - Only download packages
+echo   purge                                    - Remove disabled packages
+echo   uninstall [^<packageName^>]                - Uninstall DevPack / single package
+echo   packages [list ^| purge ^| ^<package name^>] - Package Management
+echo                                              - list           : List available packages
+echo                                              - purge          : Purge downloaded packages
+echo                                              - ^<package name^> : Get package info
+echo   templates                                - List available templates
+echo   toolchains                               - Generate maven toolchains configuration (%M2_TOOLCHAINS%)
 :list_templates
 echo.
 echo Available templates:
@@ -180,18 +183,30 @@ rem ======================================================================
 rem Package management
 :manage_packages
 if "%1" == "" (
-	goto list_packages
+    goto list_packages
 )
 if "%1" == "list" (
-	goto list_packages
+    goto list_packages
 )
 if "%1" == "purge" (
-	goto purge_packages
+    goto purge_packages
 )
-echo Unknown command %1.
 
+setlocal enabledelayedexpansion
+call :get_package_info %1
+
+echo.
+echo Package Info:        %1
+echo -------------------------------------------------------------------------------
+echo Selected:            !PACKAGE_INFO_SELECTION!
+echo Package Name:        !PACKAGE_INFO_NAME!
+echo Package Version:     !PACKAGE_INFO_VERSION!
+echo Download URL:        !PACKAGE_INFO_URL!
+echo Package Name:        !PACKAGE_INFO_PACKAGE!
+echo Exploded Package:    !PACKAGE_INFO_EXPLODED!
+echo Installation Folder: !PACKAGE_INFO_FOLDER!
+echo.
 goto done
-
 
 rem ======================================================================
 rem Purge downloaded packages
@@ -216,40 +231,40 @@ if errorlevel 1 (
 )
 
 for %%p in ( %DEVPACK_PACKAGES% ) do (
+  call :get_package_info %%p
   set PACKAGE=%%p
-  set SELECTED=!INSTALL_%%p!
-  set OPTION=!%%p_NAME!
-  set VERSION=!%%p_VERSION!
-  set PACKAGE_FILE=!%%p_PACKAGE!
+  set SELECTED=!PACKAGE_INFO_SELECTION!
+  set OPTION=!PACKAGE_INFO_NAME!
+  set VERSION=!PACKAGE_INFO_VERSION!
+  set PACKAGE_FILE=!PACKAGE_INFO_PACKAGE!
   
   if not "!PACKAGE_FILE!" == "" (
-	if "!SELECTED!" == "TRUE" (
-		call :debug Checking configured package !PACKAGE! [!PACKAGE_FILE!]
-	  
-		if exist %DOWNLOADS_DIR%_purging\!PACKAGE_FILE! (
-		  echo | set /p= Saving configured package !PACKAGE!: !PACKAGE_FILE!...
-		  move %DOWNLOADS_DIR%_purging\!PACKAGE_FILE! %DOWNLOADS_DIR% >NUL
-		  if errorlevel 1 (
-			echo Error saving package !PACKAGE_FILE! 
-			exit /B
-		  )
-		  echo done.
-		)
+    if "!SELECTED!" == "TRUE" (
+      call :debug Checking configured package !PACKAGE! [!PACKAGE_FILE!]
+      if exist %DOWNLOADS_DIR%_purging\!PACKAGE_FILE! (
+        echo | set /p= Saving configured package !PACKAGE!: !PACKAGE_FILE!...
+        move %DOWNLOADS_DIR%_purging\!PACKAGE_FILE! %DOWNLOADS_DIR% >NUL
+        if errorlevel 1 (
+          echo Error saving package !PACKAGE_FILE! 
+          exit /B
+        )
+        echo done.
+      )
     )
   
     if not "!VERSION!" == "" (
       call :debug Checking installed package !PACKAGE!
       call :get_installed_version !PACKAGE! INSTALLED_VERSION
       if "!INSTALLED_VERSION!" == "!VERSION!" (
-  	    if exist %DOWNLOADS_DIR%_purging\!PACKAGE_FILE! (
-	      echo | set /p= Saving installed package !PACKAGE!: !PACKAGE_FILE!...
-	      move %DOWNLOADS_DIR%_purging\!PACKAGE_FILE! %DOWNLOADS_DIR% >NUL
-	      if errorlevel 1 (
-		    echo Error saving package !PACKAGE!
-		    exit /B
-	      )
-	      echo done.
-	    )
+          if exist %DOWNLOADS_DIR%_purging\!PACKAGE_FILE! (
+          echo | set /p= Saving installed package !PACKAGE!: !PACKAGE_FILE!...
+          move %DOWNLOADS_DIR%_purging\!PACKAGE_FILE! %DOWNLOADS_DIR% >NUL
+          if errorlevel 1 (
+            echo Error saving package !PACKAGE!
+            exit /B
+          )
+          echo done.
+        )
       )
     )
   )
@@ -314,7 +329,8 @@ if not "%1" == "" (
   for %%p in ( %DEVPACK_PACKAGES% ) do (
     set PACKAGE=%%p
     set SELECTED=!INSTALL_%%p!
-    if "!SELECTED!" == "TRUE" (
+    if "!SELECTED!" == "" set SELECTED=FALSE
+    if not "!SELECTED!" == "FALSE" (
       call :update_single_package !PACKAGE!
       if !ERRORLEVEL! neq 0 (
         exit /B !ERRORLEVEL!
@@ -417,7 +433,7 @@ if "!PACKAGE_TYPE!" == "JDK6" (
 ) else if "!PACKAGE_TYPE!" == "ZIP" (
     call :install_zip_package %1
 ) else if "!PACKAGE_TYPE!" == "ZIPPED_INSTALLER" (
-	call :install_zipped_installer %1
+    call :install_zipped_installer %1
 ) else if "!PACKAGE_TYPE!" == "FILE" (
     call :install_file %1
 ) else if "!PACKAGE_TYPE!" == "NPM" (
@@ -431,12 +447,11 @@ exit /B
 rem ======================================================================
 rem Get installed version
 :get_installed_version <packageName> <outputVar>
-set PACKAGE_TARGET=%1_FOLDER
-set PACKAGE_URL=%1_URL
-set PACKAGE_TYPE=%1_TYPE
-call :expand_variable PACKAGE_TARGET
-call :expand_variable PACKAGE_TYPE
-call :expand_variable PACKAGE_URL
+set PACKAGE=%1
+call :get_package_info %PACKAGE%
+set PACKAGE_TARGET=!PACKAGE_INFO_FOLDER!
+set PACKAGE_URL=!PACKAGE_INFO_URL!
+set PACKAGE_TYPE=!PACKAGE_INFO_TYPE!
 
 set PACKAGE_VERSION_FILE=%TOOLS_DIR%\!PACKAGE_TARGET!\%VERSION_FILE%
 if "!PACKAGE_TYPE!" == "NPM" (
@@ -459,13 +474,12 @@ rem Update a single package
 :update_single_package <packageName>
 setlocal enabledelayedexpansion
 set PACKAGE=%1
-set PACKAGE_NAME=%1_NAME
-set PACKAGE_VERSION=%1_VERSION
-set PACKAGE_TARGET=%1_FOLDER
+call :get_package_info %PACKAGE%
+set PACKAGE_NAME=!PACKAGE_INFO_NAME!
+set PACKAGE_PACKAGE=!PACKAGE_INFO_PACKAGE!
+set PACKAGE_TARGET=!PACKAGE_INFO_FOLDER!
+set PACKAGE_VERSION=!PACKAGE_INFO_VERSION!
 
-call :expand_variable PACKAGE_NAME
-call :expand_variable PACKAGE_VERSION
-call :expand_variable PACKAGE_TARGET
 call :get_installed_version %PACKAGE% INSTALLED_VERSION
 
 echo | set /p=Package !PACKAGE_NAME!, requested version !PACKAGE_VERSION!... 
@@ -503,22 +517,12 @@ if exist %DOWNLOADS% del %DOWNLOADS%
 if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 
 for %%p in ( %DEVPACK_PACKAGES% ) do (
-  set DOWNLOAD_PACKAGE=INSTALL_%%p
-  call :expand_variable DOWNLOAD_PACKAGE
+  set DOWNLOAD_PACKAGE=!INSTALL_%%p!
+  if "!DOWNLOAD_PACKAGE!" == "" set DOWNLOAD_PACKAGE=FALSE
   
-  if "!DOWNLOAD_PACKAGE!" == "TRUE" (
+  if not "!DOWNLOAD_PACKAGE!" == "FALSE" (
     call :download_package %%p
   )
-)
-
-if "%INSTALL_ECLIPSE%" == "EE" (
-  call :download_package ECLIPSE_EE
-)
-if "%INSTALL_ECLIPSE%" == "JAVA" (
-  call :download_package ECLIPSE_JAVA
-)
-if "%INSTALL_ECLIPSE%" == "CPP" (
-  call :download_package ECLIPSE_CPP
 )
 
 call :execute_downloads
@@ -533,12 +537,12 @@ if "%INSTALL_JDK6%" == "TRUE" (
   echo | set /p=Package JDK 6... 
   if not exist %TOOLS_DIR%\%JDK6_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK6_PACKAGE%" (
     echo.
-	echo.
-	echo #####################################################################################################
+    echo.
+    echo #####################################################################################################
     echo JDK 6 cannot be automatically downloaded because it requires an Oracle web account.
     echo Please Download it manually and place into the configured download folder %DOWNLOADS_DIR%.
-	echo Installation cancelled.
-	echo #####################################################################################################
+    echo Installation cancelled.
+    echo #####################################################################################################
     echo.
     exit /B 
   )
@@ -548,18 +552,16 @@ if "%INSTALL_JDK6%" == "TRUE" (
 exit /B 0
 
 rem ======================================================================
-rem Download JDK8 32bit
+rem Download a configured package
 :download_single_package <packageSpec>
-setlocal enabledelayedexpansion
 set PACKAGE=%1
-set PACKAGE_NAME=%1_NAME
-set PACKAGE_OPTIONS=%1_OPTIONS
-set PACKAGE_FOLDER=%1_FOLDER
-set PACKAGE_PACKAGE=%1_PACKAGE
-
-call :expand_variable PACKAGE_NAME
-call :expand_variable PACKAGE_FOLDER
-call :expand_variable PACKAGE_PACKAGE
+setlocal enabledelayedexpansion
+call :get_package_info %PACKAGE%
+set SELECTED=!INSTALL_%PACKAGE%!
+set PACKAGE_NAME=!PACKAGE_INFO_NAME!
+set PACKAGE_PACKAGE=!PACKAGE_INFO_PACKAGE!
+set PACKAGE_FOLDER=!PACKAGE_INFO_FOLDER!
+set PACKAGE_OPTIONS=!PACKAGE_INFO_OPTIONS!
 
 echo URL=!%PACKAGE%_URL!
 echo | set /p=Package !PACKAGE_NAME!... 
@@ -582,7 +584,7 @@ type %DOWNLOADS%
 
 rem Provide user and prompt for password if required (e.g. download from internal nexus or web space)
 rem echo Please provide your nexus credentials.
-rem wget --directory-prefix %TOOLS_DIR% --http-user=%SVN_USER% --ask-password -i %DOWNLOADS%
+rem set WGET_OPTIONS=%WGET_OPTIONS% --http-user=%SVN_USER% --ask-password
 %WGET% %WGET_OPTIONS% --directory-prefix %DOWNLOADS_DIR% -i %DOWNLOADS%
 
 del %DOWNLOADS%
@@ -625,17 +627,17 @@ echo -^> Installing packages...
 setlocal enabledelayedexpansion
 
 for %%p in ( %DEVPACK_PACKAGES% ) do (
-  set INSTALL_PACKAGE=INSTALL_%%p
-  set PACKAGE_TYPE=%%p_TYPE
-  call :expand_variable INSTALL_PACKAGE
-  call :expand_variable PACKAGE_TYPE
+  set PACKAGE_SPEC=%%p
+  set INSTALL_PACKAGE=!INSTALL_%%p!
+  if "!INSTALL_PACKAGE!" == "" set INSTALL_PACKAGE=FALSE
+  set PACKAGE_TYPE=!%PACKAGE_SPEC%_TYPE!
   
-  if "!INSTALL_PACKAGE!" == "TRUE" (
-    call :install_single_package %%p
+  if not "!INSTALL_PACKAGE!" == "FALSE" (
+    call :install_single_package !PACKAGE_SPEC!
   )
 )
 
-if "%INSTALL_SCALA%" == "TRUE" (
+if not "%INSTALL_SCALA%" == "" if not "%INSTALL_SCALA%" == "FALSE" (
   call :install_single_package SBT
 )
 
@@ -655,13 +657,15 @@ for %%p in ( %DEVPACK_PACKAGES% ) do (
   set FOUND=FALSE
   for %%n in ( %DEVPACK_NO_PURGE% ) do (
     if %%n == %%p (
-	  SET FOUND=TRUE
+      SET FOUND=TRUE
     )
+  )
     if "!FOUND!" == "FALSE" (
       set PURGE_PACKAGE=INSTALL_%%p
       call :expand_variable PURGE_PACKAGE
+      if "!PURGE_PACKAGE!" == "INSTALL_%%p" set PURGE_PACKAGE=FALSE
   
-      if not "!PURGE_PACKAGE!" == "TRUE" (
+      if "!PURGE_PACKAGE!" == "FALSE" (
         call :uninstall_package %%p
         if !ERRORLEVEL! neq 0 (
           exit /B !ERRORLEVEL!
@@ -671,10 +675,9 @@ for %%p in ( %DEVPACK_PACKAGES% ) do (
           if !ERRORLEVEL! neq 0 (
             exit /B !ERRORLEVEL!
           )
-		)
+        )
       )
-	)
-  )
+    )
 )
 
 if "%INSTALL_ECLIPSE%" == "FALSE" (
@@ -703,13 +706,13 @@ if "%1" == "" (
   for %%p in ( %DEVPACK_PACKAGES% ) do (
     call :uninstall_package %%p
   )
+  call :generate_toolchains
 ) else (
   rem Uninstall single package
   call :uninstall_package %1
 )
 
 call %WORK_DRIVE%:\setenv.bat
-call :generate_toolchains
 
 echo.
 echo All done.
@@ -723,12 +726,14 @@ rem %1: Package identifier
 set PACKAGE_SPEC=%~1
 
 setlocal enabledelayedexpansion
+call :get_package_info %PACKAGE_SPEC%
 set SELECTED=!INSTALL_%PACKAGE_SPEC%!
-set OPTION=!%PACKAGE_SPEC%_NAME!
-set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
-set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
-set TARGET=!%PACKAGE_SPEC%_FOLDER!
-set VERSION=!%PACKAGE_SPEC%_VERSION!
+set OPTION=!PACKAGE_INFO_NAME!
+set PACKAGE=!PACKAGE_INFO_PACKAGE!
+set TARGET=!PACKAGE_INFO_FOLDER!
+set VERSION=!PACKAGE_INFO_VERSION!
+
+if "%SELECTED%" == "" set SELECTED=FALSE
 
 call :strlen OPTION_LEN OPTION 
 call :strlen VERSION_LEN VERSION
@@ -741,7 +746,7 @@ if %OPTION_LEN% LEQ 7 (
   echo | set /p=%OPTION%%TAB%
 )
 
-if NOT "%SELECTED%" == "TRUE" (
+if "%SELECTED%" == "FALSE" (
   echo | set /p=not selected%TAB%
 ) else (
   if %VERSION_LEN% LEQ 7 (
@@ -752,7 +757,7 @@ if NOT "%SELECTED%" == "TRUE" (
 )
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
-  if "%SELECTED%" == "TRUE" (
+  if NOT "%SELECTED%" == "FALSE" (
     echo | set /p=%PROMPT_NOT_INSTALLED% / 
   ) else (
     echo | set /p=not installed / 
@@ -764,19 +769,19 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
 ) else (
   call :get_installed_version %PACKAGE_SPEC% INSTALLED_VERSION
   if "!INSTALLED_VERSION!" == "%VERSION%" (
-    if "%SELECTED%" == "TRUE" (
+    if NOT "%SELECTED%" == "FALSE" (
       echo %PROMPT_INSTALLED% [!INSTALLED_VERSION!]
-	) else (
-	  echo %PROMPT_MANUALLY_INSTALLED% [!INSTALLED_VERSION!]
-	)
-  ) else if "%SELECTED%" == "TRUE" (
+    ) else (
+      echo %PROMPT_MANUALLY_INSTALLED% [!INSTALLED_VERSION!]
+    )
+  ) else if NOT "%SELECTED%" == "FALSE" (
       if "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-		echo %PROMPT_OUTDATED% [Unknown Version]
-	  ) else (
-	    echo %PROMPT_OUTDATED% [!INSTALLED_VERSION!]
-	  )
+        echo %PROMPT_OUTDATED% [Unknown Version]
+      ) else (
+        echo %PROMPT_OUTDATED% [!INSTALLED_VERSION!]
+      )
   ) else if "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-    if "%SELECTED%" == "TRUE" (
+    if NOT "%SELECTED%" == "FALSE" (
       echo | set /p=%PROMPT_NOT_INSTALLED% / 
     ) else (
       echo | set /p=not installed / 
@@ -786,7 +791,7 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
     )
     echo downloaded
   ) else (
-	echo present [!INSTALLED_VERSION!]
+    echo present [!INSTALLED_VERSION!]
   )
 )
 
@@ -799,10 +804,11 @@ rem %1: package identifier
 :install_npm_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
-set OPTION=!%PACKAGE_SPEC%_NAME!
-set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
-set VERSION=!%PACKAGE_SPEC%_VERSION!
-set URL=!%PACKAGE_SPEC%_URL!
+call :get_package_info %PACKAGE_SPEC%
+set OPTION=!PACKAGE_INFO_NAME!
+set PACKAGE=!PACKAGE_INFO_PACKAGE!
+set VERSION=!PACKAGE_INFO_VERSION!
+set URL=!PACKAGE_INFO_URL!
 rem Set target folder for version info
 set TARGET=nodejs\node_modules\%URL%
 
@@ -835,10 +841,11 @@ rem %1: package identifier
 :install_file
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
-set OPTION=!%PACKAGE_SPEC%_NAME!
-set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
-set TARGET=!%PACKAGE_SPEC%_FOLDER!
-set VERSION=!%PACKAGE_SPEC%_VERSION!
+call :get_package_info %PACKAGE_SPEC%
+set OPTION=!PACKAGE_INFO_NAME!
+set PACKAGE=!PACKAGE_INFO_PACKAGE!
+set TARGET=!PACKAGE_INFO_FOLDER!
+set VERSION=!PACKAGE_INFO_VERSION!
 
 if "%OPTION%" == "" (
   echo Unknown package: %PACKAGE_SPEC%
@@ -878,12 +885,14 @@ rem %1: package identifier
 :install_zipped_installer
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
-set OPTION=!%PACKAGE_SPEC%_NAME!
-set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
-set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
-set TARGET=!%PACKAGE_SPEC%_FOLDER!
-set VERSION=!%PACKAGE_SPEC%_VERSION!
-set INSTALLER=!%PACKAGE_SPEC%_EXEC!
+call :get_package_info %PACKAGE_SPEC%
+set OPTION=!PACKAGE_INFO_NAME!
+set TYPE=!PACKAGE_INFO_TYPE!
+set PACKAGE=!PACKAGE_INFO_PACKAGE!
+set UNZIPPED=!PACKAGE_INFO_EXPLODED!
+set TARGET=!PACKAGE_INFO_FOLDER!
+set VERSION=!PACKAGE_INFO_VERSION!
+set INSTALLER=!PACKAGE_INFO_EXEC!
 
 if "%OPTION%" == "" (
   echo Unknown package: %PACKAGE_SPEC%
@@ -905,8 +914,8 @@ echo %PROMPT_OK%.
 echo | set /p=Starting installer %DOWNLOADS_DIR%\%TEMP_FOLDER%\%INSTALLER%...
 %DOWNLOADS_DIR%\%TEMP_FOLDER%\%INSTALLER%
 if errorlevel 1 (
-	echo %PROMPT_ERROR%
-	exit /B
+    echo %PROMPT_ERROR%
+    exit /B
 )
 echo %PROMPT_OK%.
 
@@ -926,11 +935,13 @@ rem %1: package identifier
 :install_zip_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
-set OPTION=!%PACKAGE_SPEC%_NAME!
-set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
-set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
-set TARGET=!%PACKAGE_SPEC%_FOLDER!
-set VERSION=!%PACKAGE_SPEC%_VERSION!
+call :get_package_info %PACKAGE_SPEC%
+set OPTION=!PACKAGE_INFO_NAME!
+set TYPE=!PACKAGE_INFO_TYPE!
+set PACKAGE=!PACKAGE_INFO_PACKAGE!
+set UNZIPPED=!PACKAGE_INFO_EXPLODED!
+set TARGET=!PACKAGE_INFO_FOLDER!
+set VERSION=!PACKAGE_INFO_VERSION!
 
 call :get_file_extension EXTENSION %PACKAGE%
 
@@ -963,23 +974,23 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
   cmd /c !UNZIP! >NUL
   if errorlevel 1 (
     echo %PROMPT_ERROR%: Package extraction failed
-	exit /B
+    exit /B
   )
   
   echo %PROMPT_OK%.
   
   if not "%UNZIPPED%" == "??" if not "%UNZIPPED%" == "--create--" (
     if exist "%UNZIPPED%" (
-	  if not exist %TARGET% (
+      if not exist %TARGET% (
         echo | set /p=Renaming %UNZIPPED% to %TARGET%... 
         move %UNZIPPED% %TARGET% >NUL
         echo %PROMPT_OK%.
-	  )
+      )
     ) else (
         echo %PROMPT_ERROR%: Unzipped package '%UNZIPPED%' [%PACKAGE_SPEC%_EXPLODED] not found. Please check package configuration.
-		echo.
-		exit /B 1
-	)
+        echo.
+        exit /B 1
+    )
     if not "%KEEP_PACKAGES%" == "TRUE" del "%DOWNLOADS_DIR%\%PACKAGE%"
   )
   
@@ -1000,11 +1011,13 @@ rem %1: package identifier
 :install_msi_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
-set OPTION=!%PACKAGE_SPEC%_NAME!
-set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
-set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
-set TARGET=!%PACKAGE_SPEC%_FOLDER!
-set VERSION=!%PACKAGE_SPEC%_VERSION!
+call :get_package_info %PACKAGE_SPEC%
+set OPTION=!PACKAGE_INFO_NAME!
+set PACKAGE=!PACKAGE_INFO_PACKAGE!
+set UNZIPPED=!PACKAGE_INFO_EXPLODED!
+set TARGET=!PACKAGE_INFO_FOLDER!
+set VERSION=!PACKAGE_INFO_VERSION!
+
 echo.
 echo | set /p=Package %OPTION%... 
 
@@ -1039,26 +1052,23 @@ rem ======================================================================
 rem Package post-installation.
 rem Create version file, handle configured tools.
 :postinstall_package
-  set PACKAGE_TYPE=%PACKAGE_SPEC%_TYPE
-  call :expand_variable PACKAGE_TYPE
+  set PACKAGE_TYPE=!PACKAGE_INFO_TYPE!
   if "%PACKAGE_TYPE%" == "FILE" (
     echo %VERSION%> "%TOOLS_DIR%\%TARGET%\%PACKAGE_SPEC%_%VERSION_FILE%"
   ) else (
     echo %VERSION%> "%TOOLS_DIR%\%TARGET%\%VERSION_FILE%"
   )
   
-  set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
-  set POSTINSTALL=%PACKAGE_SPEC%_POSTINSTALL
-  call :expand_variable CONFIG_NAME
-  call :expand_variable POSTINSTALL
+  set CONFIG_NAME=!PACKAGE_INFO_CONFIG!
+  set POSTINSTALL=!PACKAGE_INFO_POSTINSTALL!
   
-  if not "!POSTINSTALL!" == "%PACKAGE_SPEC%_POSTINSTALL" (
+  if not "%POSTINSTALL%" == "" (
     if exist %BIN_DIR%\%POSTINSTALL% call %BIN_DIR%\%POSTINSTALL%
   )
   
-  if not "!CONFIG_NAME!" == "%PACKAGE_SPEC%_CONFIG" (
+  if not "%CONFIG_NAME%" == "" (
     if exist %CONF_DIR%\!CONFIG_NAME!.config copy %CONF_DIR%\!CONFIG_NAME!.config %CONF_DIR%\!CONFIG_NAME!.bat >NUL
-	call %CONF_DIR%\!CONFIG_NAME!.bat
+    call %CONF_DIR%\!CONFIG_NAME!.bat
   )
   
   for /l %%x in (1, 1, 10) do (
@@ -1132,8 +1142,8 @@ exit /B 0
   call :expand_variable PACKAGE_TYPE
   if "%PACKAGE_TYPE%" == "FILE" (
     set PACKAGE_TARGET=%PACKAGE_SPEC%_FOLDER
-	call :expand_variable PACKAGE_TARGET
-	call :clean_file %TOOLS_DIR%\%PACKAGE_TARGET%\%PACKAGE_SPEC%_%VERSION_FILE%
+    call :expand_variable PACKAGE_TARGET
+    call :clean_file %TOOLS_DIR%\%PACKAGE_TARGET%\%PACKAGE_SPEC%_%VERSION_FILE%
   )
   
   set CONFIG_NAME=%PACKAGE_SPEC%_CONFIG
@@ -1141,7 +1151,7 @@ exit /B 0
   if not "!CONFIG_NAME!" == "" (
     call :clean_file %CONF_DIR%\!CONFIG_NAME!.bat
     if !ERRORLEVEL! neq 0 (
-	  exit /B !ERRORLEVEL!
+      exit /B !ERRORLEVEL!
     )
   )
   for /l %%x in (1, 1, 10) do (
@@ -1153,7 +1163,7 @@ exit /B 0
     if NOT "!TOOL_VALUE!" == "!TOOL_NAME!" (
       call :clean_file %~dp0!TOOL_VALUE!
       if !ERRORLEVEL! neq 0 (
-	    exit /B !ERRORLEVEL!
+        exit /B !ERRORLEVEL!
       )
     )
   )
@@ -1171,14 +1181,17 @@ if "%PACKAGE_SPEC%" == "JDK6" (
 )
 
 setlocal enabledelayedexpansion
-set OPTION=!%PACKAGE_SPEC%_NAME!
-set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
-set TYPE=!%PACKAGE_SPEC%_TYPE!
-set PACKAGE_URL=!%PACKAGE_SPEC%_URL!
-set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
-set TARGET=!%PACKAGE_SPEC%_FOLDER!
-set VERSION=!%PACKAGE_SPEC%_VERSION!
-set WGET_OPTIONS=!%PACKAGE_SPEC%_OPTIONS!
+
+call :get_package_info %PACKAGE_SPEC%
+
+set OPTION=!PACKAGE_INFO_NAME!
+set TYPE=!PACKAGE_INFO_TYPE!
+set PACKAGE=!PACKAGE_INFO_PACKAGE!
+set PACKAGE_URL=!PACKAGE_INFO_URL!
+set UNZIPPED=!PACKAGE_INFO_EXPLODED!
+set TARGET=!PACKAGE_INFO_FOLDER!
+set WGET_OPTIONS=!PACKAGE_INFO_OPTIONS!
+set VERSION=!PACKAGE_INFO_VERSION!
 
 echo | set /p=Package %OPTION% [%PACKAGE%]... 
 if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
@@ -1190,12 +1203,12 @@ if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
     ) else (
       if [!WGET_OPTIONS!] == [] (
         echo %PACKAGE_URL% >> %DOWNLOADS%
-        echo marked for download.	
-	  ) else (
-	    call :download_single_package %PACKAGE_SPEC%
-	  )
-	)
-	exit /B
+        echo marked for download.
+      ) else (
+        call :download_single_package %PACKAGE_SPEC%
+      )
+    )
+    exit /B
   )
 )
 echo already available.
@@ -1215,7 +1228,7 @@ if not exist "%REPO_TARGET%" (
 
 echo | set /p=Checking out %PACKAGE%... 
 git clone %REPO_URL% "%REPO_TARGET%"
-echo done.	
+echo done.
 exit /B
 
 rem ======================================================================
@@ -1357,12 +1370,13 @@ rem  %1 package identifier
 :install_nupkg_package
 set PACKAGE_SPEC=%~1
 setlocal enabledelayedexpansion
-set OPTION=!%PACKAGE_SPEC%_NAME!
-set PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
-set PACKAGE_URL=!%PACKAGE_SPEC%_URL!
-set UNZIPPED=!%PACKAGE_SPEC%_EXPLODED!
-set TARGET=!%PACKAGE_SPEC%_FOLDER!
-set VERSION=!%PACKAGE_SPEC%_VERSION!
+call :get_package_info %PACKAGE_SPEC%
+set OPTION=!PACKAGE_INFO_NAME!
+set PACKAGE=!PACKAGE_INFO_PACKAGE!
+set TARGET=!PACKAGE_INFO_FOLDER!
+set VERSION=!PACKAGE_INFO_VERSION!
+set PACKAGE_URL=!PACKAGE_INFO_URL!
+set UNZIPPED=!PACKAGE_INFO_EXPLODED!
 
 set EXTRACT=%DOWNLOADS_DIR%\extract
 echo | set /p=Package %OPTION%... 
@@ -1487,21 +1501,21 @@ exit /B
 
 :generate_toolchain <Type> <Vendor> <Version> <Path>
 echo   ^<toolchain^>
-  echo     ^<type^>jdk^</type^>
-  echo     ^<provides^>
-  echo       ^<id^>%1-%3^</id^>
-  echo       ^<vendor^>%2^</vendor^>
-  echo       ^<version^>%3^</version^>
-  echo     ^</provides^>
-  echo     ^<configuration^>
-  echo       ^<jdkHome^>%4^</jdkHome^>
-  echo       ^<bootClassPath^>
-  echo         ^<includes^>
-  echo           ^<include^>jre/lib/*.jar^</include^>
-  echo         ^</includes^>
-  echo       ^</bootClassPath^>
-  echo     ^</configuration^>
-  echo   ^</toolchain^>
+echo     ^<type^>jdk^</type^>
+echo     ^<provides^>
+echo       ^<id^>%1-%3^</id^>
+echo       ^<vendor^>%2^</vendor^>
+echo       ^<version^>%3^</version^>
+echo     ^</provides^>
+echo     ^<configuration^>
+echo       ^<jdkHome^>%4^</jdkHome^>
+echo       ^<bootClassPath^>
+echo         ^<includes^>
+echo           ^<include^>jre/lib/*.jar^</include^>
+echo         ^</includes^>
+echo       ^</bootClassPath^>
+echo     ^</configuration^>
+echo   ^</toolchain^>
 
 exit /B
 
@@ -1511,41 +1525,42 @@ rem Generate toolchains.xml
 if not "%GENERATE_M2_TOOLCHAINS%" == "TRUE" (
   exit /B
 )
+setlocal enabledelayedexpansion
 echo.
 echo Generating toolchains.xml...
-echo ^<?xml version=\"1.0\" encoding=\"UTF8\"?^> >M2_TOOLCHAINS
-echo ^<toolchains^>>>M2_TOOLCHAINS
+echo ^<?xml version=\"1.0\" encoding=\"UTF8\"?^> >%M2_TOOLCHAINS%
+echo ^<toolchains^>>>%M2_TOOLCHAINS%
 
 call :get_installed_version JDK10 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain JavaSE oracle 1.10 %TOOLS_DIR%\%JDK10_FOLDER% >>M2_TOOLCHAINS
+  call :generate_toolchain JavaSE oracle 1.10 %TOOLS_DIR%\%JDK10_FOLDER% >>%M2_TOOLCHAINS%
 )
 
 call :get_installed_version OPENJDK10 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain OpenJDK OpenJDK 1.10 %TOOLS_DIR%\%OPENJDK10_FOLDER% >>M2_TOOLCHAINS
+  call :generate_toolchain OpenJDK OpenJDK 1.10 %TOOLS_DIR%\%OPENJDK10_FOLDER% >>%M2_TOOLCHAINS%
 )
 
 call :get_installed_version JDK8 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain JavaSE oracle 1.8 %TOOLS_DIR%\%JDK8_FOLDER% >>M2_TOOLCHAINS
+  call :generate_toolchain JavaSE oracle 1.8 %TOOLS_DIR%\%JDK8_FOLDER% >>%M2_TOOLCHAINS%
 )
 call :get_installed_version OPENJDK8 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain OpenJDK OpenJDK 1.8 %TOOLS_DIR%\%OPENJDK8_FOLDER% >>M2_TOOLCHAINS
+  call :generate_toolchain OpenJDK OpenJDK 1.8 %TOOLS_DIR%\%OPENJDK8_FOLDER% >>%M2_TOOLCHAINS%
 )
 
 call :get_installed_version JDK7 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain JavaSE oracle 1.7 %TOOLS_DIR%\%JDK7_FOLDER% >>M2_TOOLCHAINS
+  call :generate_toolchain JavaSE oracle 1.7 %TOOLS_DIR%\%JDK7_FOLDER% >>%M2_TOOLCHAINS%
 )
 
 call :get_installed_version OPENJDK7 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain OpenJDK OpenJDK 1.7 %TOOLS_DIR%\%OPENJDK7_FOLDER% >>M2_TOOLCHAINS
+  call :generate_toolchain OpenJDK OpenJDK 1.7 %TOOLS_DIR%\%OPENJDK7_FOLDER% >>%M2_TOOLCHAINS%
 )
 
-echo ^</toolchains^>>>M2_TOOLCHAINS
+echo ^</toolchains^>>>%M2_TOOLCHAINS%
 
 exit /B
 
@@ -1622,11 +1637,69 @@ exit /B 0
 
 :warn <message>
 if "%DEVPACK_COLOUR%" == "TRUE" (
-	echo [33m%*[0m
+    echo [33m%*[0m
 ) else (
-	echo %*
+    echo %*
 )
 exit /B 0
+
+
+rem ======================================================================
+rem Get package information
+rem Input:
+rem    %1: Package Spec
+rem Output:
+rem    PACKAGE_INFO_NAME
+rem    PACKAGE_INFO_VERSION
+rem    PACKAGE_INFO_URL
+rem    PACKAGE_INFO_TYPE
+rem    PACKAGE_INFO_EXPLODED
+rem    PACKAGE_INFO_PACKAGE
+rem    PACKAGE_INFO_FOLDER
+rem    PACKAGE_INFO_OPTIONS
+rem    PACKAGE_INFO_EXEC
+rem    PACKAGE_INFO_CONFIG
+rem    PACKAGE_INFO_POSTINSTALL
+:get_package_info <package spec>
+set PACKAGE_SPEC=%1
+set PACKAGE_SELECTION=!INSTALL_%PACKAGE_SPEC%!
+set PACKAGE_INFO_SELECTION=%PACKAGE_SELECTION%
+if "%PACKAGE_SELECTION%" == "TRUE" (
+  set PACKAGE_INFO_NAME=!%PACKAGE_SPEC%_NAME!
+  set PACKAGE_INFO_VERSION=!%PACKAGE_SPEC%_VERSION!
+  set PACKAGE_INFO_PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
+  set PACKAGE_INFO_URL=!%PACKAGE_SPEC%_URL!
+  set PACKAGE_INFO_EXPLODED=!%PACKAGE_SPEC%_EXPLODED!
+  set PACKAGE_INFO_FOLDER=!%PACKAGE_SPEC%_FOLDER!
+  set PACKAGE_INFO_OPTIONS=!%PACKAGE_SPEC%_OPTIONS!
+  set PACKAGE_INFO_EXEC=!%PACKAGE_SPEC%_EXEC!
+  set PACKAGE_INFO_CONFIG=!%PACKAGE_SPEC%_CONFIG!
+  set PACKAGE_INFO_POSTINSTALL=!%PACKAGE_SPEC%_POSTINSTALL!
+) else (
+  set PACKAGE_INFO_NAME=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_NAME!
+  if "!PACKAGE_INFO_NAME!" == "" set PACKAGE_INFO_NAME=!%PACKAGE_SPEC%_NAME!
+  set PACKAGE_INFO_VERSION=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_VERSION!
+  if "!PACKAGE_INFO_VERSION!" == "" set PACKAGE_INFO_VERSION=!%PACKAGE_SPEC%_VERSION!
+  set PACKAGE_INFO_PACKAGE=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_PACKAGE!
+  if "!PACKAGE_INFO_PACKAGE!" == "" set PACKAGE_INFO_PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
+  set PACKAGE_INFO_URL=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_URL!
+  if "!PACKAGE_INFO_URL!" == "" set PACKAGE_INFO_URL=!%PACKAGE_SPEC%_URL!
+  set PACKAGE_INFO_EXPLODED=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_EXPLODED!
+  if "!PACKAGE_INFO_EXPLODED!" == "" set PACKAGE_INFO_EXPLODED=!%PACKAGE_SPEC%_EXPLODED!
+  set PACKAGE_INFO_FOLDER=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_FOLDER!
+  if "!PACKAGE_INFO_FOLDER!" == "" set PACKAGE_INFO_FOLDER=!%PACKAGE_SPEC%_FOLDER!
+  set PACKAGE_INFO_OPTIONS=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_OPTIONS!
+  if "!PACKAGE_INFO_OPTIONS!" == "" set PACKAGE_INFO_OPTIONS=!%PACKAGE_SPEC%_OPTIONS!
+  set PACKAGE_INFO_EXEC=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_EXEC!
+  if "!PACKAGE_INFO_EXEC!" == "" set PACKAGE_INFO_EXEC=!%PACKAGE_SPEC%_EXEC!
+  set PACKAGE_INFO_CONFIG=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_CONFIG!
+  if "!PACKAGE_INFO_CONFIG!" == "" set PACKAGE_INFO_CONFIG=!%PACKAGE_SPEC%_CONFIG!
+  set PACKAGE_INFO_POSTINSTALL=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_POSTINSTALL!
+  if "!PACKAGE_INFO_POSTINSTALL!" == "" set PACKAGE_INFO_POSTINSTALL=!%PACKAGE_SPEC%_POSTINSTALL!
+)
+
+exit /B
+
 
 rem ======================================================================
 rem Get the file name from a path
