@@ -51,8 +51,8 @@ set OPENJDK7_EXPLODED=openjdk-1.7.0-u80-unofficial-windows-i586-image
 set OPENJDK7_FOLDER=openjdk_7
 
 set JDK10_NAME=Oracle JDK 10
-set JDK10_VERSION=10.0.1
-set JDK10_URL=http://download.oracle.com/otn-pub/java/jdk/10.0.1+10/fb4372174a714e6b8c52526dc134031e/jdk-10.0.1_windows-x64_bin.exe
+set JDK10_VERSION=10.0.2
+set JDK10_URL=http://download.oracle.com/otn-pub/java/jdk/10.0.2+13/19aef61b38124481863b1413dce1855f/jdk-10.0.2_windows-x64_bin.exe
 set JDK10_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
 set JDK10_TYPE=JDK
 set JDK10_PACKAGE=jdk-%JDK10_VERSION%_windows-x64_bin.exe
