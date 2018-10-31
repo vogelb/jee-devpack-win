@@ -7,13 +7,13 @@ cd /d %WORK_DRIVE%:\
 call setenv.bat
 
 if exist %WORKSPACE% (
-	set START_DIR="%WORKSPACE%"
+	set START_DIR=%WORKSPACE%
 ) else (
-	set START_DIR="%WORK_DRIVE%:"\
+	set START_DIR=%WORK_DRIVE%:\
 )
 
 if exist %TOOLS_DIR%\console (
-	console -d %START_DIR%" -r "/K call %WORK_DRIVE%:\setenv.bat" -c conf\console.xml
+	start %TOOLS_DIR%\console\conemu.exe -reuse -dir "%START_DIR%" -run cmd ""/K call %WORK_DRIVE%:\setenv.bat""
 ) else (
 	cmd /K call %WORK_DRIVE%:\setenv.bat
 )

@@ -243,13 +243,21 @@ set SBT_EXPLODED=sbt-0.13.9
 set SBT_PACKAGE=%SBT_EXPLODED%.zip
 set SBT_FOLDER=sbt
 
-set CONSOLE_NAME=ConsoleZ
-set CONSOLE_VERSION=1.18.3
-set CONSOLE_URL=https://github.com/cbucher/console/releases/download/1.18.3/ConsoleZ.x64.1.18.3.18143.zip
+set CONSOLE_NAME=ConEmu
+set CONSOLE_VERSION=180626
+set CONSOLE_URL=https://www.fosshub.com/ConEmu.html?dwl=ConEmuPack.180626.7z
 set CONSOLE_TYPE=ZIP
 set CONSOLE_EXPLODED=--create--
-set CONSOLE_PACKAGE=ConsoleZ.x64.1.18.3.18143.zip
+set CONSOLE_PACKAGE=ConEmuPack.180626.7z
 set CONSOLE_FOLDER=console
+
+rem set CONSOLE_NAME=ConsoleZ
+rem set CONSOLE_VERSION=1.18.3
+rem set CONSOLE_URL=https://github.com/cbucher/console/releases/download/1.18.3/ConsoleZ.x64.1.18.3.18143.zip
+rem set CONSOLE_TYPE=ZIP
+rem set CONSOLE_EXPLODED=--create--
+rem set CONSOLE_PACKAGE=ConsoleZ.x64.1.18.3.18143.zip
+rem set CONSOLE_FOLDER=console
 
 rem set CONSOLE_NAME=Console 2
 rem set CONSOLE_VERSION=2.0
