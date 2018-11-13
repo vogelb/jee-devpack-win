@@ -202,8 +202,8 @@ set GLASSFISH_FOLDER=glassfish
 set GLASSFISH_TOOL_1=start_glassfish.bat
 
 set NOTEPAD_NAME=Notepad++
-set NOTEPAD_VERSION=7.3.3
-set NOTEPAD_URL=https://notepad-plus-plus.org/repository/7.x/7.3.3/npp.7.3.3.bin.zip
+set NOTEPAD_VERSION=7.5.9
+set NOTEPAD_URL=https://notepad-plus-plus.org/repository/7.x/7.5.9/npp.7.5.9.bin.zip
 set NOTEPAD_TYPE=ZIP
 set NOTEPAD_EXPLODED=--create--
 set NOTEPAD_PACKAGE=npp.%NOTEPAD_VERSION%.bin.zip
@@ -250,22 +250,6 @@ set CONSOLE_TYPE=ZIP
 set CONSOLE_EXPLODED=--create--
 set CONSOLE_PACKAGE=ConEmuPack.180626.7z
 set CONSOLE_FOLDER=console
-
-rem set CONSOLE_NAME=ConsoleZ
-rem set CONSOLE_VERSION=1.18.3
-rem set CONSOLE_URL=https://github.com/cbucher/console/releases/download/1.18.3/ConsoleZ.x64.1.18.3.18143.zip
-rem set CONSOLE_TYPE=ZIP
-rem set CONSOLE_EXPLODED=--create--
-rem set CONSOLE_PACKAGE=ConsoleZ.x64.1.18.3.18143.zip
-rem set CONSOLE_FOLDER=console
-
-rem set CONSOLE_NAME=Console 2
-rem set CONSOLE_VERSION=2.0
-rem set CONSOLE_URL=http://downloads.sourceforge.net/project/console/console-devel/2.00/Console-2.00b148-Beta_32bit.zip
-rem set CONSOLE_TYPE=ZIP
-rem set CONSOLE_EXPLODED=Console2
-rem set CONSOLE_PACKAGE=Console-2.00b148-Beta_32bit.zip
-rem set CONSOLE_FOLDER=console
 
 set SOURCETREE_NAME=SourceTree
 set SOURCETREE_VERSION=2.6.9
