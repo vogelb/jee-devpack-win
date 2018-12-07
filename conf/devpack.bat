@@ -1,6 +1,6 @@
 @echo off
 rem ===================================================================
-rem JEE DevPack Configuration
+rem Java DevPack Configuration
 rem ===================================================================
 
 rem Load base config.
@@ -52,6 +52,10 @@ set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\npp\notepad++.exe
 
 rem Configure your favorite file explorer here
 set DEVPACK_EXPLORER=explorer
+
+set DEVPACK_GIT_USER=BVogel
+
+set DEVPACK_GIT_EMAIL=benno.vogel@gebit.de
 
 rem Set your Cygwin home to enable cygwin integration
 set CYGWIN_HOME=c:\cygwin
