@@ -64,8 +64,6 @@ set PATH=%BIN_DIR%;%JAVA_HOME%\bin;%WORKING_DIR%;%PATH%
 
 rem -----------------------------------------------------------------
 rem Define command aliases
-doskey mci=mvn clean install
-doskey mcp=mvn clean package
 doskey st=sourcetree.bat
 
 rem Add more aliases for your convenience...

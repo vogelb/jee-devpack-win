@@ -9,6 +9,6 @@ if not exist %IGNORE_SPEC% (
   echo File not found: %IGNORE_SPEC%
   exit 2
 )
-git rm --cached %IGNORE_SPEC% 2>NUL
+call git rm --cached %IGNORE_SPEC% 2>NUL
 
 echo %IGNORE_SPEC:\=/%>>.gitignore
