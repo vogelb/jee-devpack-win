@@ -3,7 +3,7 @@ rem ===================================================================
 rem DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=ANSICON JDK10 OPENJDK10 JDK8 OPENJDK8 JDK8_32 JDK7 OPENJDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES POSTGRES_JDBC NODE GRADLE ANT SQUIRREL
+set DEVPACK_PACKAGES=ANSICON JDK11 OPENJDK11 JDK10 OPENJDK10 JDK8 OPENJDK8 JDK8_32 JDK7 OPENJDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES POSTGRES_JDBC NODE GRADLE ANT SQUIRREL
 set DEVPACK_NO_PURGE=ECLIPSE_WORKSPACE
 
 set ANSICON_NAME=Ansic0n
@@ -33,12 +33,12 @@ set OPENJDK10_EXPLODED=jdk-10.0.2
 set OPENJDK10_FOLDER=openjdk_10
 
 set OPENJDK8_NAME=Open JDK 8
-set OPENJDK8_VERSION=1.8.0.181
-set OPENJDK8_URL=https://github.com/ojdkbuild/ojdkbuild/releases/download/1.8.0.181-1/java-1.8.0-openjdk-1.8.0.181-1.b13.ojdkbuild.windows.x86_64.zip
+set OPENJDK8_VERSION=1.8.0.212-1
+set OPENJDK8_URL=https://github.com/ojdkbuild/ojdkbuild/releases/download/1.8.0.212-1/java-1.8.0-openjdk-1.8.0.212-1.b04.ojdkbuild.windows.x86_64.zip
 set OPENJDK8_OPTIONS=
 set OPENJDK8_TYPE=ZIP
-set OPENJDK8_PACKAGE=java-1.8.0-openjdk-1.8.0.181-1.b13.ojdkbuild.windows.x86_64.zip
-set OPENJDK8_EXPLODED=java-1.8.0-openjdk-1.8.0.181-1.b13.ojdkbuild.windows.x86_64
+set OPENJDK8_PACKAGE=java-1.8.0-openjdk-1.8.0.212-1.b04.ojdkbuild.windows.x86_64.zip
+set OPENJDK8_EXPLODED=java-1.8.0-openjdk-1.8.0.212-1.b04.ojdkbuild.windows.x86_64
 set OPENJDK8_FOLDER=openjdk_8
 
 set OPENJDK7_NAME=Open JDK 7
@@ -50,17 +50,24 @@ set OPENJDK7_PACKAGE=openjdk-1.7.0-u80-unofficial-windows-i586-image.zip
 set OPENJDK7_EXPLODED=openjdk-1.7.0-u80-unofficial-windows-i586-image
 set OPENJDK7_FOLDER=openjdk_7
 
+set OPENJDK11_NAME=Open JDK 11
+set OPENJDK11_VERSION=11.28
+set OPENJDK11_URL=https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_windows-x64_bin.zip
+set OPENJDK11_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
+set OPENJDK11_TYPE=ZIP
+set OPENJDK11_PACKAGE=openjdk-11+28_windows-x64_bin.zip
+set OPENJDK11_EXPLODED=jdk-11
+set OPENJDK11_FOLDER=openjdk_11
+
 set JDK10_NAME=Oracle JDK 10
 set JDK10_VERSION=10.0.2
-set JDK10_URL=http://download.oracle.com/otn-pub/java/jdk/10.0.2+13/19aef61b38124481863b1413dce1855f/jdk-10.0.2_windows-x64_bin.exe
 set JDK10_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
 set JDK10_TYPE=JDK
 set JDK10_PACKAGE=jdk-%JDK10_VERSION%_windows-x64_bin.exe
 set JDK10_FOLDER=jdk_10
 
 set JDK8_NAME=Oracle JDK 8
-set JDK8_VERSION=8u181
-set JDK8_URL=http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-windows-x64.exe
+set JDK8_VERSION=8u212
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
 set JDK8_TYPE=JDK
 set JDK8_PACKAGE=jdk-%JDK8_VERSION%-windows-x64.exe
@@ -68,7 +75,6 @@ set JDK8_FOLDER=jdk_8
 
 set JDK8_APIDOC_NAME=Oracle JDK 8 Apidoc
 set JDK8_APIDOC_VERSION=8u181
-set JDK8_APIDOC_URL=http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-docs-all.zip
 set JDK8_APIDOC_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
 set JDK8_APIDOC_TYPE=ZIP
 set JDK8_APIDOC_EXPLODED=docs
@@ -77,7 +83,6 @@ set JDK8_APIDOC_FOLDER=%JDK8_FOLDER%\docs
 
 set JDK8_32_NAME=Oracle JDK 8x32
 set JDK8_32_VERSION=8u111
-set JDK8_32_URL=http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-windows-i586.exe
 set JDK8_32_TYPE=JDK
 set JDK8_32_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
 set JDK8_32_PACKAGE=jdk-8u111-windows-i586.exe
@@ -85,7 +90,6 @@ set JDK8_32_FOLDER=jdk_8_32
 
 set JDK7_NAME=Oracle JDK 7
 set JDK7_VERSION=7u79
-set JDK7_URL=http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-windows-x64.exe
 set JDK7_TYPE=JDK7
 set JDK7_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
 set JDK7_PACKAGE=jdk-7u79-windows-x64.exe
@@ -93,7 +97,6 @@ set JDK7_FOLDER=jdk_7
 
 set JDK6_NAME=Oracle JDK 6
 set JDK6_VERSION=6u45
-set JDK6_URL=http://download.oracle.com/otn/java/jdk/6u45-b06/jdk-6u45-windows-x64.exe
 set JDK6_TYPE=JDK6
 set JDK6_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
 set JDK6_PACKAGE=jdk-6u45-windows-x64.exe
@@ -244,11 +247,11 @@ set SBT_PACKAGE=%SBT_EXPLODED%.zip
 set SBT_FOLDER=sbt
 
 set CONSOLE_NAME=ConEmu
-set CONSOLE_VERSION=180626
-set CONSOLE_URL=https://www.fosshub.com/ConEmu.html?dwl=ConEmuPack.180626.7z
+set CONSOLE_VERSION=190526
+set CONSOLE_URL=https://datapacket.dl.sourceforge.net/project/conemu/Preview/ConEmuPack.%CONSOLE_VERSION%.7z
 set CONSOLE_TYPE=ZIP
 set CONSOLE_EXPLODED=--create--
-set CONSOLE_PACKAGE=ConEmuPack.180626.7z
+set CONSOLE_PACKAGE=ConEmuPack.%CONSOLE_VERSION%.7z
 set CONSOLE_FOLDER=console
 
 set SOURCETREE_NAME=SourceTree

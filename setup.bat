@@ -529,28 +529,6 @@ call :execute_downloads
 
 exit /B 0
 
-
-rem ======================================================================
-rem Download JDK6
-:download_jdk6
-if "%INSTALL_JDK6%" == "TRUE" (
-  echo | set /p=Package JDK 6... 
-  if not exist %TOOLS_DIR%\%JDK6_FOLDER% if not exist "%DOWNLOADS_DIR%\%JDK6_PACKAGE%" (
-    echo.
-    echo.
-    echo #####################################################################################################
-    echo JDK 6 cannot be automatically downloaded because it requires an Oracle web account.
-    echo Please Download it manually and place into the configured download folder %DOWNLOADS_DIR%.
-    echo Installation cancelled.
-    echo #####################################################################################################
-    echo.
-    exit /B 
-  )
-  echo already available.
-)
-
-exit /B 0
-
 rem ======================================================================
 rem Download a configured package
 :download_single_package <packageSpec>
@@ -1201,6 +1179,18 @@ if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
     if "%PACKAGE%" == "%GIT_REPO%" (
       call :checkout_git_repo %PACKAGE_URL% %TARGET%
     ) else (
+	  if "%PACKAGE_URL%" == "" (
+		echo.
+		echo.
+		echo #####################################################################################################
+		echo The package %PACKAGE% cannot be automatically downloaded.
+		echo Please Download it manually and place into the configured download folder %DOWNLOADS_DIR%.
+		echo Download cancelled.
+		echo #####################################################################################################
+		echo.	    
+		exit /B
+	  )
+	
       if [!WGET_OPTIONS!] == [] (
         echo %PACKAGE_URL% >> %DOWNLOADS%
         echo marked for download.
@@ -1528,7 +1518,7 @@ if not "%GENERATE_M2_TOOLCHAINS%" == "TRUE" (
 setlocal enabledelayedexpansion
 echo.
 echo Generating toolchains.xml...
-echo ^<?xml version=\"1.0\" encoding=\"UTF8\"?^> >%M2_TOOLCHAINS%
+echo ^<?xml version="1.0" encoding="UTF8"?^> >%M2_TOOLCHAINS%
 echo ^<toolchains^>>>%M2_TOOLCHAINS%
 
 call :get_installed_version JDK10 INSTALLED_VERSION

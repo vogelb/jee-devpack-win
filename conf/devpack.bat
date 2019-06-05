@@ -15,7 +15,7 @@ set WORK_DRIVE=W
 set DEVPACK_NAME=Java Dev Pack
 
 rem Set the default JDK
-set DEVPACK_DEFAULT_JDK=JDK10
+set DEVPACK_DEFAULT_JDK=OPENJDK8
 
 rem Extend command prompt with git branch
 set DEVPACK_GIT_PROMPT=TRUE
@@ -53,9 +53,9 @@ set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\npp\notepad++.exe
 rem Configure your favorite file explorer here
 set DEVPACK_EXPLORER=explorer
 
-set DEVPACK_GIT_USER=BVogel
+set DEVPACK_GIT_USER=your.git.user
 
-set DEVPACK_GIT_EMAIL=benno.vogel@gebit.de
+set DEVPACK_GIT_EMAIL=your.email.address
 
 rem Set your Cygwin home to enable cygwin integration
 set CYGWIN_HOME=c:\cygwin
