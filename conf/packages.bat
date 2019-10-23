@@ -205,8 +205,8 @@ set GLASSFISH_FOLDER=glassfish
 set GLASSFISH_TOOL_1=start_glassfish.bat
 
 set NOTEPAD_NAME=Notepad++
-set NOTEPAD_VERSION=7.5.9
-set NOTEPAD_URL=https://notepad-plus-plus.org/repository/7.x/7.5.9/npp.7.5.9.bin.zip
+set NOTEPAD_VERSION=7.8
+set NOTEPAD_URL=http://download.notepad-plus-plus.org/repository/7.x/7.8/npp.7.8.bin.zip
 set NOTEPAD_TYPE=ZIP
 set NOTEPAD_EXPLODED=--create--
 set NOTEPAD_PACKAGE=npp.%NOTEPAD_VERSION%.bin.zip
@@ -247,8 +247,8 @@ set SBT_PACKAGE=%SBT_EXPLODED%.zip
 set SBT_FOLDER=sbt
 
 set CONSOLE_NAME=ConEmu
-set CONSOLE_VERSION=190526
-set CONSOLE_URL=https://datapacket.dl.sourceforge.net/project/conemu/Preview/ConEmuPack.%CONSOLE_VERSION%.7z
+set CONSOLE_VERSION=180528
+set CONSOLE_URL=https://netix.dl.sourceforge.net/project/conemu/Preview/ConEmuPack.%CONSOLE_VERSION%.7z
 set CONSOLE_TYPE=ZIP
 set CONSOLE_EXPLODED=--create--
 set CONSOLE_PACKAGE=ConEmuPack.%CONSOLE_VERSION%.7z
