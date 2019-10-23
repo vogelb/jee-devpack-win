@@ -121,11 +121,11 @@ set ECLIPSE_EE_FOLDER=eclipse_ee
 set ECLIPSE_EE_TOOL_1=start_eclipse_ee.bat
 
 set ECLIPSE_JAVA_NAME=Eclipse Java
-set ECLIPSE_JAVA_VERSION=Photon.R
-set ECLIPSE_JAVA_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/photon/R/eclipse-java-photon-R-win32-x86_64.zip
+set ECLIPSE_JAVA_VERSION=2019-09
+set ECLIPSE_JAVA_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/2019-09/R/eclipse-java-2019-09-R-win32-x86_64.zip
 set ECLIPSE_JAVA_TYPE=ZIP
 set ECLIPSE_JAVA_EXPLODED=eclipse
-set ECLIPSE_JAVA_PACKAGE=eclipse-java-photon-R-win32-x86_64.zip
+set ECLIPSE_JAVA_PACKAGE=eclipse-java-2019-09-R-win32-x86_64.zip
 set ECLIPSE_JAVA_FOLDER=eclipse
 set ECLIPSE_JAVA_TOOL_1=start_eclipse.bat
 
