@@ -15,7 +15,7 @@ set WORK_DRIVE=W
 set DEVPACK_NAME=Java Dev Pack
 
 rem Set the default JDK
-set DEVPACK_DEFAULT_JDK=OPENJDK8
+set DEVPACK_DEFAULT_JDK=OPENJDK11
 
 rem Extend command prompt with git branch
 set DEVPACK_GIT_PROMPT=TRUE

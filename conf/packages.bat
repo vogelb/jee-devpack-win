@@ -3,7 +3,7 @@ rem ===================================================================
 rem DevPack Package definitions
 rem ===================================================================
 
-set DEVPACK_PACKAGES=ANSICON JDK11 OPENJDK11 JDK10 OPENJDK10 JDK8 OPENJDK8 JDK8_32 JDK7 OPENJDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES POSTGRES_JDBC NODE GRADLE ANT SQUIRREL
+set DEVPACK_PACKAGES=ANSICON OPENJDK11 JDK10 OPENJDK10 JDK8 OPENJDK8 JDK8_32 JDK7 OPENJDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES POSTGRES_JDBC NODE GRADLE ANT SQUIRREL
 set DEVPACK_NO_PURGE=ECLIPSE_WORKSPACE
 
 set ANSICON_NAME=Ansic0n
@@ -22,6 +22,15 @@ set ANT_PACKAGE=apache-ant-1.10.5-bin.zip
 set ANT_EXPLODED=apache-ant-1.10.5
 set ANT_FOLDER=ant
 set ANT_CONFIG=ant
+
+set OPENJDK11_NAME=Open JDK 11
+set OPENJDK11_VERSION=11.28
+set OPENJDK11_URL=https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_windows-x64_bin.zip
+set OPENJDK11_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
+set OPENJDK11_TYPE=ZIP
+set OPENJDK11_PACKAGE=openjdk-11+28_windows-x64_bin.zip
+set OPENJDK11_EXPLODED=jdk-11
+set OPENJDK11_FOLDER=openjdk_11
 
 set OPENJDK10_NAME=Open JDK 10
 set OPENJDK10_VERSION=10.0.2
@@ -49,15 +58,6 @@ set OPENJDK7_TYPE=ZIP
 set OPENJDK7_PACKAGE=openjdk-1.7.0-u80-unofficial-windows-i586-image.zip
 set OPENJDK7_EXPLODED=openjdk-1.7.0-u80-unofficial-windows-i586-image
 set OPENJDK7_FOLDER=openjdk_7
-
-set OPENJDK11_NAME=Open JDK 11
-set OPENJDK11_VERSION=11.28
-set OPENJDK11_URL=https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_windows-x64_bin.zip
-set OPENJDK11_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set OPENJDK11_TYPE=ZIP
-set OPENJDK11_PACKAGE=openjdk-11+28_windows-x64_bin.zip
-set OPENJDK11_EXPLODED=jdk-11
-set OPENJDK11_FOLDER=openjdk_11
 
 set JDK10_NAME=Oracle JDK 10
 set JDK10_VERSION=10.0.2
@@ -273,11 +273,11 @@ set GIT_FOLDER=git
 set GIT_CONFIG=git
 
 set MELD_NAME=Meld Merge
-set MELD_VERSION=3.16.2
-set MELD_URL=https://download.gnome.org/binaries/win32/meld/3.16/Meld-3.16.2-win32.msi
+set MELD_VERSION=3.20.0
+set MELD_URL=https://download.gnome.org/binaries/win32/meld/3.20/Meld-3.20.0-mingw.msi
 set MELD_TYPE=MSI
 set MELD_EXPLODED=
-set MELD_PACKAGE=Meld-3.16.2-win32.msi
+set MELD_PACKAGE=Meld-3.20.0-mingw.msi
 set MELD_FOLDER=meld
 set MELD_CONFIG=meld
 

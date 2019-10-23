@@ -56,3 +56,4 @@ tools/openjdk_10/
 tools/squirrel/
 start_squirrel.bat
 conf/toolchains.xml
+tools/openjdk_11/
