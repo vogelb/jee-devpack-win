@@ -135,3 +135,4 @@ Tools:
 - The toolchains.xml is packaged in \conf and copied to the user/.m2 directory in init_workspace.bat (if enabled)
 
 In order to share installed tools and local maven config & repository between several instances of the dev pack (e.g. one dev pack per project), configure TOOLS_DIR, PUBLIC_M2_CONFIG and PRIVATE_M2_CONFIG in conf\devpack.bat to point to a global location.
+
