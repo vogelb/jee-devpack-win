@@ -285,6 +285,7 @@ echo List of available packages:
 echo.
 echo Package ID%TAB%%TAB%Package%TAB%%TAB%%TAB%Version
 echo =============================================================
+
 for %%p in ( %DEVPACK_PACKAGES% )  do (
   set PACKAGE=%%p
   set SELECTED=!INSTALL_%%p!
@@ -541,7 +542,7 @@ set PACKAGE_PACKAGE=!PACKAGE_INFO_PACKAGE!
 set PACKAGE_FOLDER=!PACKAGE_INFO_FOLDER!
 set PACKAGE_OPTIONS=!PACKAGE_INFO_OPTIONS!
 
-echo URL=!%PACKAGE%_URL!
+echo URL=!PACKAGE_INFO_URL!
 echo | set /p=Package !PACKAGE_NAME!... 
 if not exist %TOOLS_DIR%\!PACKAGE_FOLDER! if not exist "%DOWNLOADS_DIR%\%PACKAGE_PACKAGE%" (
   echo %WGET% !%PACKAGE%_OPTIONS! --directory-prefix %DOWNLOADS_DIR% !%PACKAGE%_URL!
@@ -1521,9 +1522,14 @@ echo Generating toolchains.xml...
 echo ^<?xml version="1.0" encoding="UTF8"?^> >%M2_TOOLCHAINS%
 echo ^<toolchains^>>>%M2_TOOLCHAINS%
 
+call :get_installed_version OPENJDK11 INSTALLED_VERSION
+if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  call :generate_toolchain OpenJDK OpenJDK 11 %TOOLS_DIR%\%OPENJDK11_FOLDER% >>%M2_TOOLCHAINS%
+)
+
 call :get_installed_version JDK10 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
-  call :generate_toolchain JavaSE oracle 1.10 %TOOLS_DIR%\%JDK10_FOLDER% >>%M2_TOOLCHAINS%
+  call :generate_toolchain JavaSE oracle 10 %TOOLS_DIR%\%JDK10_FOLDER% >>%M2_TOOLCHAINS%
 )
 
 call :get_installed_version OPENJDK10 INSTALLED_VERSION

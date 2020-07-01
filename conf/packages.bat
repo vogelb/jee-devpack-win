@@ -1,6 +1,7 @@
 @echo off
 rem ===================================================================
 rem DevPack Package definitions
+rem  Be sure to escape % using %% in package URLs!
 rem ===================================================================
 
 set DEVPACK_PACKAGES=ANSICON OPENJDK11 JDK10 OPENJDK10 JDK8 OPENJDK8 JDK8_32 JDK7 OPENJDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE GIT MELD POSTGRES POSTGRES_JDBC NODE GRADLE ANT SQUIRREL
@@ -59,6 +60,15 @@ set OPENJDK7_PACKAGE=openjdk-1.7.0-u80-unofficial-windows-i586-image.zip
 set OPENJDK7_EXPLODED=openjdk-1.7.0-u80-unofficial-windows-i586-image
 set OPENJDK7_FOLDER=openjdk_7
 
+set OPENJDK11_NAME=Open JDK 11
+set OPENJDK11_VERSION=11.0.5
+set OPENJDK11_URL="https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.5%%2B10/OpenJDK11U-jdk_x64_windows_hotspot_11.0.5_10.zip"
+set OPENJDK11_OPTIONS=--no-check-certificate --no-cookies
+set OPENJDK11_TYPE=ZIP
+set OPENJDK11_PACKAGE=OpenJDK11U-jdk_x64_windows_hotspot_11.0.5_10.zip
+set OPENJDK11_EXPLODED=jdk-11.0.5+10
+set OPENJDK11_FOLDER=openjdk_11
+
 set JDK10_NAME=Oracle JDK 10
 set JDK10_VERSION=10.0.2
 set JDK10_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
@@ -102,15 +112,6 @@ set JDK6_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelic
 set JDK6_PACKAGE=jdk-6u45-windows-x64.exe
 set JDK6_FOLDER=jdk_6
 
-rem set ECLIPSE_EE_NAME=Eclipse EE
-rem set ECLIPSE_EE_VERSION=Photon.R
-rem set ECLIPSE_EE_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/photon/R/eclipse-jee-photon-R-win32-x86_64.zip
-rem set ECLIPSE_EE_TYPE=ZIP
-rem set ECLIPSE_EE_EXPLODED=eclipse
-rem set ECLIPSE_EE_PACKAGE=eclipse-jee-photon-R-win32-x86_64.zip
-rem set ECLIPSE_EE_FOLDER=eclipse_ee
-rem set ECLIPSE_EE_TOOL_1=start_eclipse_ee.bat
-
 set ECLIPSE_EE_NAME=Eclipse EE
 set ECLIPSE_EE_VERSION=Neon
 set ECLIPSE_EE_URL=http://ftp.fau.de/eclipse/technology/epp/downloads/release/neon/3/eclipse-jee-neon-3-win32-x86_64.zip
@@ -147,28 +148,36 @@ set ECLIPSE_WORKSPACE_PACKAGE=
 set ECLIPSE_WORKSPACE_EXPLODED=workspace
 set ECLIPSE_WORKSPACE_FOLDER=..\workspace
 
+rem The used version is set in the template!
 set MAVEN_NAME=Maven
 set MAVEN_3_3_VERSION=3.3.9
 set MAVEN_3_3_URL=https://archive.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
 set MAVEN_3_3_EXPLODED=apache-maven-%MAVEN_3_3_VERSION%
 set MAVEN_3_3_PACKAGE=apache-maven-%MAVEN_3_3_VERSION%-bin.zip
+set MAVEN_3_3_FOLDER=mvn_3.3
 set MAVEN_3_5_VERSION=3.5.4
 set MAVEN_3_5_URL=http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.zip
 set MAVEN_3_5_EXPLODED=apache-maven-%MAVEN_3_5_VERSION%
 set MAVEN_3_5_PACKAGE=apache-maven-%MAVEN_3_5_VERSION%-bin.zip
-set MAVEN_VERSION=%MAVEN_3_5_VERSION%
-set MAVEN_URL=%MAVEN_3_5_URL%
-set MAVEN_EXPLODED=%MAVEN_3_5_EXPLODED%
-set MAVEN_PACKAGE=%MAVEN_3_5_PACKAGE%
+set MAVEN_3_5_FOLDER=mvn_3.5
+set MAVEN_3_6_VERSION=3.6.3
+set MAVEN_3_6_URL=http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.zip
+set MAVEN_3_6_EXPLODED=apache-maven-%MAVEN_3_6_VERSION%
+set MAVEN_3_6_PACKAGE=apache-maven-%MAVEN_3_6_VERSION%-bin.zip
+set MAVEN_3_6_FOLDER=mvn_3.6
+set MAVEN_VERSION=%MAVEN_3_6_VERSION%
+set MAVEN_URL=%MAVEN_3_6_URL%
+set MAVEN_EXPLODED=%MAVEN_3_6_EXPLODED%
+set MAVEN_PACKAGE=%MAVEN_3_6_PACKAGE%
 set MAVEN_TYPE=ZIP
-set MAVEN_FOLDER=mvn
+set MAVEN_FOLDER=%MAVEN_3_6_FOLDER%
 
 set TOMCAT_NAME=Apache Tomcat
 set TOMCAT_VERSION=7.0.90
-set TOMCAT_URL=http://mirror.23media.de/apache/tomcat/tomcat-7/v7.0.90/bin/apache-tomcat-7.0.90-windows-x64.zip
+set TOMCAT_URL=http://us.mirrors.quenda.co/apache/tomcat/tomcat-9/v9.0.27/bin/apache-tomcat-9.0.27-windows-x64.zip
 set TOMCAT_TYPE=ZIP
-set TOMCAT_EXPLODED=apache-tomcat-7.0.90
-set TOMCAT_PACKAGE=apache-tomcat-7.0.90-windows-x64.zip
+set TOMCAT_EXPLODED=apache-tomcat-9.0.27
+set TOMCAT_PACKAGE=apache-tomcat-9.0.27-windows-x64.zip
 set TOMCAT_FOLDER=tomcat
 set TOMCAT_CONFIG=tomcat
 set TOMCAT_TOOL_1=start_tomcat.bat
