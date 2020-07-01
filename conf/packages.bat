@@ -255,7 +255,7 @@ set CONSOLE_PACKAGE=ConEmuPack.%CONSOLE_VERSION%.7z
 set CONSOLE_FOLDER=console
 
 set SOURCETREE_NAME=SourceTree
-set SOURCETREE_VERSION=2.6.9
+set SOURCETREE_VERSION=3.3.9
 set SOURCETREE_URL=https://downloads.atlassian.com/software/sourcetree/windows/ga/SourceTreeSetup-%SOURCETREE_VERSION%.exe
 set SOURCETREE_TYPE=NUPKG
 set SOURCETREE_EXPLODED=SourceTree-%SOURCETREE_VERSION%-full.nupkg
