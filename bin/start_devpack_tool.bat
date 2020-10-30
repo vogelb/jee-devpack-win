@@ -2,7 +2,7 @@
 rem ===================================================================
 rem Devpack Start Script
 rem ===================================================================
-call c:\dev\devpack\bin\mount_devpack.bat
+call %~dp0mount_devpack.bat
 cd /d %WORK_DRIVE%:\
 call setenv.bat
 

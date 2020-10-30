@@ -2,7 +2,7 @@
 rem ===================================================================
 rem Console Start Script
 rem ===================================================================
-call bin\mount_devpack.bat
+call %~dp0bin\mount_devpack.bat
 cd /d %WORK_DRIVE%:\
 call setenv.bat
 

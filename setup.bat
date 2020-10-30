@@ -405,8 +405,6 @@ if "%PACKAGE_NAME%" == "" (
 
 echo.
 echo Downloading...
-if exist %DOWNLOADS% del %DOWNLOADS%
-if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 call :download_package %1
 call :execute_downloads
 echo.
@@ -481,6 +479,11 @@ set PACKAGE_PACKAGE=!PACKAGE_INFO_PACKAGE!
 set PACKAGE_TARGET=!PACKAGE_INFO_FOLDER!
 set PACKAGE_VERSION=!PACKAGE_INFO_VERSION!
 
+if "!PACKAGE_NAME!" == "" (
+	echo Unknown package: %PACKAGE$
+	exit /B 1
+)
+
 call :get_installed_version %PACKAGE% INSTALLED_VERSION
 
 echo | set /p=Package !PACKAGE_NAME!, requested version !PACKAGE_VERSION!... 
@@ -493,11 +496,13 @@ if not "!INSTALLED_VERSION!" == "!PACKAGE_VERSION!" (
   echo out of date [!INSTALLED_VERSION!]
   echo Updating from version !INSTALLED_VERSION! to !PACKAGE_VERSION!
   
+  call :download_package %PACKAGE%
+  
   call :uninstall_package %PACKAGE%
   if !errorlevel! gtr 0 (
     exit /B !errorlevel!
   )
-  call :download_and_install_single_package %PACKAGE%
+  call :install_single_package %PACKAGE%
   
 ) else (
   echo up to date: !INSTALLED_VERSION!
@@ -542,7 +547,6 @@ set PACKAGE_PACKAGE=!PACKAGE_INFO_PACKAGE!
 set PACKAGE_FOLDER=!PACKAGE_INFO_FOLDER!
 set PACKAGE_OPTIONS=!PACKAGE_INFO_OPTIONS!
 
-echo URL=!PACKAGE_INFO_URL!
 echo | set /p=Package !PACKAGE_NAME!... 
 if not exist %TOOLS_DIR%\!PACKAGE_FOLDER! if not exist "%DOWNLOADS_DIR%\%PACKAGE_PACKAGE%" (
   echo %WGET% !%PACKAGE%_OPTIONS! --directory-prefix %DOWNLOADS_DIR% !%PACKAGE%_URL!
@@ -1153,6 +1157,9 @@ rem Download routine
 rem Add download package to download list
 :download_package
 set PACKAGE_SPEC=%~1
+
+if exist %DOWNLOADS% del %DOWNLOADS%
+if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 
 if "%PACKAGE_SPEC%" == "JDK6" (
   call :download_jdk6

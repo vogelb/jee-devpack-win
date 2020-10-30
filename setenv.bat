@@ -11,16 +11,24 @@ set TEMPLATE_DIR=%WORKING_DIR%templates
 set BIN_DIR=%WORKING_DIR%bin
 set SOURCE_DIR=%WORKING_DIR%source
 
-set M2_HOME=%TOOLS_DIR%\mvn
+set M2_HOME=%TOOLS_DIR%\mvn.3.5.4
 
 for /f %%i in ('%BIN_DIR%\default_jdk.bat') do set JAVA_HOME=%%i
-if not exist %JAVA_HOME%\bin\java.exe goto default_jdk
+if not exist %JAVA_HOME%\bin\java.exe call :default_jdk
+
+for /f %%i in ('%BIN_DIR%\default_maven.bat') do set M2_HOME=%%i
+if not exist %M2_HOME%\bin\mvn.cmd call :default_maven
 goto main
 
 :default_jdk
 echo WARNING: Configured JDK %JAVA_HOME% is not installed.
 set JAVA_HOME=%TOOLS_DIR%\jdk_8
-goto main
+exit /B
+
+:default_maven
+echo WARNING: Configured Maven %M2_HOME% is not installed.
+set M2_HOME=%TOOLS_DIR%\mvn
+exit /B
 
 :include_config <configPath>
 if exist %CONF_DIR%\%1.bat call %CONF_DIR%\%1.bat
@@ -36,7 +44,7 @@ rem -------------------------------------------------
 
 title Dev Console [%DEVPACK_NAME%]
 
-echo Using JDK: %JAVA_HOME%
+echo Using Java %JAVA_HOME% / Maven %M2_HOME%
 
 if "%DEVPACK_OPATH%" == "" goto save_path
 set PATH=%DEVPACK_OPATH%
