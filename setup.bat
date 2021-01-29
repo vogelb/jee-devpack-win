@@ -480,7 +480,7 @@ set PACKAGE_TARGET=!PACKAGE_INFO_FOLDER!
 set PACKAGE_VERSION=!PACKAGE_INFO_VERSION!
 
 if "!PACKAGE_NAME!" == "" (
-	echo Unknown package: %PACKAGE$
+	echo Unknown package: %PACKAGE%
 	exit /B 1
 )
 
@@ -496,7 +496,7 @@ if not "!INSTALLED_VERSION!" == "!PACKAGE_VERSION!" (
   echo out of date [!INSTALLED_VERSION!]
   echo Updating from version !INSTALLED_VERSION! to !PACKAGE_VERSION!
   
-  call :download_package %PACKAGE%
+  call :download_package %PACKAGE% TRUE
   
   call :uninstall_package %PACKAGE%
   if !errorlevel! gtr 0 (
@@ -539,6 +539,10 @@ rem ======================================================================
 rem Download a configured package
 :download_single_package <packageSpec>
 set PACKAGE=%1
+set FOR_UPDATE=%2
+
+if "%FOR_UPDATE%" == "" FOR_UPDATE=FALSE
+
 setlocal enabledelayedexpansion
 call :get_package_info %PACKAGE%
 set SELECTED=!INSTALL_%PACKAGE%!
@@ -547,11 +551,14 @@ set PACKAGE_PACKAGE=!PACKAGE_INFO_PACKAGE!
 set PACKAGE_FOLDER=!PACKAGE_INFO_FOLDER!
 set PACKAGE_OPTIONS=!PACKAGE_INFO_OPTIONS!
 
-echo | set /p=Package !PACKAGE_NAME!... 
-if not exist %TOOLS_DIR%\!PACKAGE_FOLDER! if not exist "%DOWNLOADS_DIR%\%PACKAGE_PACKAGE%" (
-  echo %WGET% !%PACKAGE%_OPTIONS! --directory-prefix %DOWNLOADS_DIR% !%PACKAGE%_URL!
-  %WGET% !%PACKAGE%_OPTIONS! --directory-prefix %DOWNLOADS_DIR% !%PACKAGE%_URL!
-  exit /B 0
+if not exist "%DOWNLOADS_DIR%\%PACKAGE_PACKAGE%" (
+  if not exist %TOOLS_DIR%\!PACKAGE_FOLDER! set DO_DOWNLOAD=1
+  if "%FOR_UPDATE%" == "TRUE" set DO_DOWNLOAD=1
+  if defined DO_DOWNLOAD (
+    echo downloading now.
+    %WGET% !%PACKAGE%_OPTIONS! --directory-prefix %DOWNLOADS_DIR% !%PACKAGE%_URL!
+    exit /B 0
+  )
 )
 echo already available.
 
@@ -1157,6 +1164,9 @@ rem Download routine
 rem Add download package to download list
 :download_package
 set PACKAGE_SPEC=%~1
+set FOR_UPDATE=%2
+
+if "%FOR_UPDATE%" == "" FOR_UPDATE=FALSE
 
 if exist %DOWNLOADS% del %DOWNLOADS%
 if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
@@ -1183,6 +1193,8 @@ echo | set /p=Package %OPTION% [%PACKAGE%]...
 if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
   if "%TYPE%" == "FILE" set DO_DOWNLOAD=1
   if not exist "%TOOLS_DIR%\%TARGET%" set DO_DOWNLOAD=1
+  if "%FOR_UPDATE%" == "TRUE" set DO_DOWNLOAD=1
+
   if defined DO_DOWNLOAD (
     if "%PACKAGE%" == "%GIT_REPO%" (
       call :checkout_git_repo %PACKAGE_URL% %TARGET%
@@ -1203,7 +1215,7 @@ if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
         echo %PACKAGE_URL% >> %DOWNLOADS%
         echo marked for download.
       ) else (
-        call :download_single_package %PACKAGE_SPEC%
+        call :download_single_package %PACKAGE_SPEC% %FOR_UPDATE%
       )
     )
     exit /B
@@ -1739,6 +1751,14 @@ exit /B
 :call_debug
 call %*
 if "%DEBUG%" == "TRUE" echo on
+exit /B
+
+:getDate
+setlocal
+for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /format:list') do set datetime=%%I
+( endlocal
+	set "%1=%datetime:~0,8%"
+)
 exit /B
 
 :done
