@@ -58,3 +58,5 @@ start_squirrel.bat
 conf/toolchains.xml
 tools/openjdk_11/
 git/
+$RECYCLE.BIN/
+log/

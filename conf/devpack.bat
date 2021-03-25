@@ -23,6 +23,9 @@ set DEVPACK_DEFAULT_MAVEN=MAVEN_3_6
 rem Extend command prompt with git branch
 set DEVPACK_GIT_PROMPT=TRUE
 
+rem Select the development shell (console or cmd)
+set DEVPACK_CONSOLE=cmd
+
 rem Extend command shell with colour
 set DEVPACK_COLOUR=TRUE
 

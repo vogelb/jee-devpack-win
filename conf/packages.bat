@@ -24,15 +24,6 @@ set ANT_EXPLODED=apache-ant-1.10.5
 set ANT_FOLDER=ant
 set ANT_CONFIG=ant
 
-set OPENJDK11_NAME=Open JDK 11
-set OPENJDK11_VERSION=11.28
-set OPENJDK11_URL=https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_windows-x64_bin.zip
-set OPENJDK11_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set OPENJDK11_TYPE=ZIP
-set OPENJDK11_PACKAGE=openjdk-11+28_windows-x64_bin.zip
-set OPENJDK11_EXPLODED=jdk-11
-set OPENJDK11_FOLDER=openjdk_11
-
 set OPENJDK10_NAME=Open JDK 10
 set OPENJDK10_VERSION=10.0.2
 set OPENJDK10_URL=https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_windows-x64_bin.tar.gz
@@ -256,7 +247,7 @@ set SBT_PACKAGE=%SBT_EXPLODED%.zip
 set SBT_FOLDER=sbt
 
 set CONSOLE_NAME=ConEmu
-set CONSOLE_VERSION=180528
+set CONSOLE_VERSION=210206
 set CONSOLE_URL=https://netix.dl.sourceforge.net/project/conemu/Preview/ConEmuPack.%CONSOLE_VERSION%.7z
 set CONSOLE_TYPE=ZIP
 set CONSOLE_EXPLODED=--create--

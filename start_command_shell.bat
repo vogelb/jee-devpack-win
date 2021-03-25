@@ -12,8 +12,10 @@ if exist %WORKSPACE% (
 	set START_DIR=%WORK_DRIVE%:\
 )
 
-if exist %TOOLS_DIR%\console (
+if "%DEVPACK_CONSOLE%" == "console" if exist %TOOLS_DIR%\console (
 	start %TOOLS_DIR%\console\conemu.exe -reuse -dir "%START_DIR%" -run cmd ""/K call %WORK_DRIVE%:\setenv.bat""
-) else (
-	cmd /K call %WORK_DRIVE%:\setenv.bat
+	goto :EOF
 )
+start "Dev Shell" cmd /K call %WORK_DRIVE%:\setenv.bat
+
+:EOF
