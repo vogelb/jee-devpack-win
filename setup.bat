@@ -497,6 +497,7 @@ if not "!INSTALLED_VERSION!" == "!PACKAGE_VERSION!" (
   echo Updating from version !INSTALLED_VERSION! to !PACKAGE_VERSION!
   
   call :download_package %PACKAGE% TRUE
+  call :execute_downloads
   
   call :uninstall_package %PACKAGE%
   if !errorlevel! gtr 0 (
@@ -541,7 +542,7 @@ rem Download a configured package
 set PACKAGE=%1
 set FOR_UPDATE=%2
 
-if "%FOR_UPDATE%" == "" FOR_UPDATE=FALSE
+if "%FOR_UPDATE%" == "" set FOR_UPDATE=FALSE
 
 setlocal enabledelayedexpansion
 call :get_package_info %PACKAGE%
@@ -567,6 +568,7 @@ exit /B 0
 rem ======================================================================
 rem Execute download of marked packages.
 :execute_downloads
+echo execute downloads
 if not exist %DOWNLOADS% goto done
 echo.
 echo Downloading files:
@@ -1166,9 +1168,9 @@ rem Add download package to download list
 set PACKAGE_SPEC=%~1
 set FOR_UPDATE=%2
 
-if "%FOR_UPDATE%" == "" FOR_UPDATE=FALSE
+if "%FOR_UPDATE%" == "" set FOR_UPDATE=FALSE
 
-if exist %DOWNLOADS% del %DOWNLOADS%
+if "%FOR_UPDATE%" == "TRUE" if exist %DOWNLOADS% del %DOWNLOADS%
 if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 
 if "%PACKAGE_SPEC%" == "JDK6" (

@@ -104,20 +104,20 @@ set JDK6_PACKAGE=jdk-6u45-windows-x64.exe
 set JDK6_FOLDER=jdk_6
 
 set ECLIPSE_EE_NAME=Eclipse EE
-set ECLIPSE_EE_VERSION=Neon
-set ECLIPSE_EE_URL=http://ftp.fau.de/eclipse/technology/epp/downloads/release/neon/3/eclipse-jee-neon-3-win32-x86_64.zip
+set ECLIPSE_EE_VERSION=2021-12
+set ECLIPSE_EE_URL=https://download.eclipse.org/technology/epp/downloads/release/2021-12/R/eclipse-jee-2021-12-R-win32-x86_64.zip
 set ECLIPSE_EE_TYPE=ZIP
 set ECLIPSE_EE_EXPLODED=eclipse
-set ECLIPSE_EE_PACKAGE=eclipse-jee-neon-3-win32-x86_64.zip
+set ECLIPSE_EE_PACKAGE=eclipse-jee-2021-12-R-win32-x86_64.zip
 set ECLIPSE_EE_FOLDER=eclipse_ee
 set ECLIPSE_EE_TOOL_1=start_eclipse_ee.bat
 
 set ECLIPSE_JAVA_NAME=Eclipse Java
-set ECLIPSE_JAVA_VERSION=2019-09
-set ECLIPSE_JAVA_URL=http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/2019-09/R/eclipse-java-2019-09-R-win32-x86_64.zip
+set ECLIPSE_JAVA_VERSION=2021-12
+set ECLIPSE_JAVA_URL=https://download.eclipse.org/technology/epp/downloads/release/2021-12/R/eclipse-java-2021-12-R-win32-x86_64.zip
 set ECLIPSE_JAVA_TYPE=ZIP
 set ECLIPSE_JAVA_EXPLODED=eclipse
-set ECLIPSE_JAVA_PACKAGE=eclipse-java-2019-09-R-win32-x86_64.zip
+set ECLIPSE_JAVA_PACKAGE=eclipse-java-2021-12-R-win32-x86_64.zip
 set ECLIPSE_JAVA_FOLDER=eclipse
 set ECLIPSE_JAVA_TOOL_1=start_eclipse.bat
 
@@ -205,11 +205,12 @@ set GLASSFISH_FOLDER=glassfish
 set GLASSFISH_TOOL_1=start_glassfish.bat
 
 set NOTEPAD_NAME=Notepad++
-set NOTEPAD_VERSION=7.8
-set NOTEPAD_URL=http://download.notepad-plus-plus.org/repository/7.x/7.8/npp.7.8.bin.zip
+set NOTEPAD_VERSION=8.2.1
+set NOTEPAD_URL=https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.2.1/npp.8.2.1.portable.x64.zip
+set NOTEPAD_OPTIONS=--no-check-certificate --no-cookies
 set NOTEPAD_TYPE=ZIP
 set NOTEPAD_EXPLODED=--create--
-set NOTEPAD_PACKAGE=npp.%NOTEPAD_VERSION%.bin.zip
+set NOTEPAD_PACKAGE=npp.%NOTEPAD_VERSION%.portable.x64.zip
 set NOTEPAD_FOLDER=npp
 
 set ATOM_NAME=Atom
