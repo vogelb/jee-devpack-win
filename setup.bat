@@ -1210,9 +1210,9 @@ if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
 		echo #####################################################################################################
 		echo.	    
 		exit /B
-	  )
+	)
 	
-	  if [ "%FOR_UPDATE%" == "TRUE" ] (
+	if "%FOR_UPDATE%" == "TRUE" (
 	    call :download_single_package %PACKAGE_SPEC% %FOR_UPDATE%
       ) else if [!WGET_OPTIONS!] == [] (
         echo %PACKAGE_URL% >> %DOWNLOADS%
