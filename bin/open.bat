@@ -10,5 +10,10 @@ if errorlevel 1 (
   start explorer %*
   exit /B
 )
-start %DEVPACK_EXPLORER% %*
+
+if "%1" == "" (
+	start %DEVPACK_EXPLORER% . %*
+) else (
+	start %DEVPACK_EXPLORER% %*
+)
 

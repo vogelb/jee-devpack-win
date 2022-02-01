@@ -12,4 +12,5 @@ if not "%1" == "" (
     set START_DIR="%WORK_DRIVE%:"\
   )
 )
-cmd /d %START_DIR% /k "%WORK_DRIVE%:\setenv.bat && cd /d %START_DIR% && echo Welcome to Windows DevPack"
+
+cmd /d %START_DIR% /k "%WORK_DRIVE%:\setenv.bat && cd /d %START_DIR% && echo Welcome to %DEVPACK_NAME%"

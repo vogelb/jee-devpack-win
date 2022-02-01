@@ -480,8 +480,8 @@ set PACKAGE_TARGET=!PACKAGE_INFO_FOLDER!
 set PACKAGE_VERSION=!PACKAGE_INFO_VERSION!
 
 if "!PACKAGE_NAME!" == "" (
-	echo Unknown package: %PACKAGE%
-	exit /B 1
+  echo Unknown package: %PACKAGE%
+  exit /B 1
 )
 
 call :get_installed_version %PACKAGE% INSTALLED_VERSION
@@ -1171,7 +1171,6 @@ set FOR_UPDATE=%2
 if "%FOR_UPDATE%" == "" set FOR_UPDATE=FALSE
 
 if "%FOR_UPDATE%" == "TRUE" if exist %DOWNLOADS% del %DOWNLOADS%
-if not exist %DOWNLOADS_DIR% mkdir %DOWNLOADS_DIR%
 
 if "%PACKAGE_SPEC%" == "JDK6" (
   call :download_jdk6
@@ -1213,7 +1212,9 @@ if not exist "%DOWNLOADS_DIR%\%PACKAGE%" (
 		exit /B
 	  )
 	
-      if [!WGET_OPTIONS!] == [] (
+	  if [ "%FOR_UPDATE%" == "TRUE" ] (
+	    call :download_single_package %PACKAGE_SPEC% %FOR_UPDATE%
+      ) else if [!WGET_OPTIONS!] == [] (
         echo %PACKAGE_URL% >> %DOWNLOADS%
         echo marked for download.
       ) else (
