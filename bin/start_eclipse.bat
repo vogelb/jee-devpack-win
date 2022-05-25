@@ -7,7 +7,9 @@ rem ===================================================================
 call %~dp0bin\mount_devpack.bat
 cd /d %WORK_DRIVE%:\
 call setenv.bat
-set ECLIPSE_HOME=%TOOLS_DIR%\eclipse
+if "%ECLIPSE_HOME%" == "" (
+  set ECLIPSE_HOME=%TOOLS_DIR%\eclipse
+)
 
 if not exist %ECLIPSE_HOME% (
 	echo.

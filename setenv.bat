@@ -11,13 +11,12 @@ set TEMPLATE_DIR=%WORKING_DIR%templates
 set BIN_DIR=%WORKING_DIR%bin
 set SOURCE_DIR=%WORKING_DIR%source
 
-set M2_HOME=%TOOLS_DIR%\mvn.3.5.4
-
 for /f %%i in ('%BIN_DIR%\default_jdk.bat') do set JAVA_HOME=%%i
 if not exist %JAVA_HOME%\bin\java.exe call :default_jdk
 
 for /f %%i in ('%BIN_DIR%\default_maven.bat') do set M2_HOME=%%i
 if not exist %M2_HOME%\bin\mvn.cmd call :default_maven
+
 goto main
 
 :default_jdk
@@ -34,10 +33,6 @@ exit /B
 if exist %CONF_DIR%\%1.bat call %CONF_DIR%\%1.bat
 exit /B
 
-:save_path 
-set DEVPACK_OPATH=%PATH%
-goto main 
-
 rem -------------------------------------------------
 :main
 rem -------------------------------------------------
@@ -46,7 +41,7 @@ title Dev Console [%DEVPACK_NAME%]
 
 echo Using Java %JAVA_HOME% / Maven %M2_HOME%
 
-if "%DEVPACK_OPATH%" == "" goto save_path
+if "%DEVPACK_OPATH%" == "" set DEVPACK_OPATH=%PATH%
 set PATH=%DEVPACK_OPATH%
 
 rem -----------------------------------------------------------------
@@ -77,5 +72,6 @@ doskey st=sourcetree.bat
 rem Add more aliases for your convenience...
 doskey ..=cd ..
 doskey ...=cd ..\..
+doskey -=go -
 
 exit /B

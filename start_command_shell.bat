@@ -4,7 +4,6 @@ rem Console Start Script
 rem ===================================================================
 call %~dp0bin\mount_devpack.bat
 cd /d %WORK_DRIVE%:\
-call setenv.bat
 
 if exist %WORKSPACE% (
 	set START_DIR=%WORKSPACE%
@@ -13,8 +12,7 @@ if exist %WORKSPACE% (
 )
 
 if "%1" == "-embed" (
-    shift
-    %BIN_DIR%\shell.bat %1 %2 %3 %4 %5
+     %WORK_DRIVE%:\bin\shell.bat %2 %3 %4 %5 %6
 )
 
 if "%DEVPACK_CONSOLE%" == "console" if exist %TOOLS_DIR%\console (
