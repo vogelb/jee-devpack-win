@@ -86,7 +86,7 @@ rem Set to TRUE if you want to install babun (cygwin shell)
 set INSTALL_BABUN=FALSE
 
 rem Set to TRUE if you want Console2 installed
-set INSTALL_CONSOLE=TRUE
+set INSTALL_CONSOLE=FALSE
 
 rem Set to TRUE if you want SourceTree installed
 set INSTALL_SOURCETREE=TRUE
@@ -95,7 +95,7 @@ rem Set to TRUE if you want the git client installed
 set INSTALL_GIT=TRUE
 
 rem set to TRUE is you want to install Meld Merge
-set INSTALL_MELD=TRUE
+set INSTALL_MELD=FALSE
 
 rem Set to TRUE is you want to install PostgreSQL
 set INSTALL_POSTGRES=FALSE
