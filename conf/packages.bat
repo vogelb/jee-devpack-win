@@ -347,8 +347,9 @@ set GRADLE_FOLDER=gradle
 set GRADLE_CONFIG=gradle
 
 set SQUIRREL_NAME=Squirrel SQL
-set SQUIRREL_VERSION=3.8.1
-set SQUIRREL_URL=https://netcologne.dl.sourceforge.net/project/squirrel-sql/1-stable/3.8.1-plainzip/squirrelsql-3.8.1-standard.zip
+set SQUIRREL_VERSION=4.4.0
+set SQUIRREL_URL=https://altushost-swe.dl.sourceforge.net/project/squirrel-sql/1-stable/4.4.0-plainzip/squirrelsql-4.4.0-standard.zip
+set SQUIRREL_OPTIONS=--no-check-certificate --no-cookies
 set SQUIRREL_TYPE=ZIP
 set SQUIRREL_PACKAGE=squirrelsql-%SQUIRREL_VERSION%-standard.zip
 set SQUIRREL_EXPLODED=squirrelsql-%SQUIRREL_VERSION%-standard
