@@ -5,9 +5,11 @@ rem - Use maven from the dev pack
 rem - Use maven setting from the dev pack
 rem =====================================
 
-set PRIVATE_M2_CONFIG=%HOME%\.m2\settings.xml
-if exist "%CONF_DIR%\mvn-private-settings.xml" (
-  set PRIVATE_M2_CONFIG=%CONF_DIR%\mvn-private-settings.xml 
+if "%PRIVATE_M2_CONFIG" == "" (
+	set PRIVATE_M2_CONFIG=%HOME%\.m2\settings.xml
+	if exist "%CONF_DIR%\mvn-private-settings.xml" (
+	  set PRIVATE_M2_CONFIG=%CONF_DIR%\mvn-private-settings.xml 
+	)
 )
 
 :loop_commandline
@@ -42,6 +44,7 @@ rem call maven
 echo Using global settings  : %PUBLIC_M2_CONFIG%
 echo Using private settings : %PRIVATE_M2_CONFIG%
 echo Using Toolchains       : %M2_TOOLCHAINS%
+echo Using Java             : %JAVA_HOME%
 call %M2_HOME%\bin\mvn %M2_SETTINGS% %*
 
 if "%DEVPACK_GIT_PROMPT%" == "TRUE" (

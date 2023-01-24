@@ -6,7 +6,9 @@ rem ===================================================================
 set DEVPACK_LAST_DIR=%DEVPACK_GO_DIR%
 set DEVPACK_GO_DIR=%CD%
 if "%1" == "-" (
-  cd /d "%DEVPACK_LAST_DIR%"
+  if NOT "%DEVPACK_LAST_DIR%" == "" (
+    cd /d "%DEVPACK_LAST_DIR%"
+  )
 ) else (
   cd %*
 )

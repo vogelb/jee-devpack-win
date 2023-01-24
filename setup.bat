@@ -17,7 +17,7 @@ rem
 rem Setup configuration
 
 rem Set DOWNLOADS_DIR in order to reuse existing downloads
-set DOWNLOADS_DIR=%~dp0downloads
+set DOWNLOADS_DIR=d:\downloads\devpack
 
 rem KEEP_PACKAGES: If set to true, downloaded packages will not be deleted after installation
 set KEEP_PACKAGES=TRUE
@@ -1546,30 +1546,42 @@ echo ^<toolchains^>>>%M2_TOOLCHAINS%
 
 call :get_installed_version OPENJDK11 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  echo Including OpenJDK 11
   call :generate_toolchain OpenJDK OpenJDK 11 %TOOLS_DIR%\%OPENJDK11_FOLDER% >>%M2_TOOLCHAINS%
+)
+
+call :get_installed_version OPENJDK17 INSTALLED_VERSION
+if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  echo Including OpenJDK 17
+  call :generate_toolchain OpenJDK OpenJDK 17 %TOOLS_DIR%\%OPENJDK17_FOLDER% >>%M2_TOOLCHAINS%
 )
 
 call :get_installed_version JDK10 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  echo Including JavaSE oracle 10
   call :generate_toolchain JavaSE oracle 10 %TOOLS_DIR%\%JDK10_FOLDER% >>%M2_TOOLCHAINS%
 )
 
 call :get_installed_version OPENJDK10 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  echo Including OpenJDK 1.10
   call :generate_toolchain OpenJDK OpenJDK 1.10 %TOOLS_DIR%\%OPENJDK10_FOLDER% >>%M2_TOOLCHAINS%
 )
 
 call :get_installed_version JDK8 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  echo Including OpenJDK 1.8
   call :generate_toolchain JavaSE oracle 1.8 %TOOLS_DIR%\%JDK8_FOLDER% >>%M2_TOOLCHAINS%
 )
 call :get_installed_version OPENJDK8 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  echo Including OpenJDK 1.8
   call :generate_toolchain OpenJDK OpenJDK 1.8 %TOOLS_DIR%\%OPENJDK8_FOLDER% >>%M2_TOOLCHAINS%
 )
 
 call :get_installed_version JDK7 INSTALLED_VERSION
 if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  echo Including OpenJDK 1.7
   call :generate_toolchain JavaSE oracle 1.7 %TOOLS_DIR%\%JDK7_FOLDER% >>%M2_TOOLCHAINS%
 )
 
