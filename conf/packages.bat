@@ -52,12 +52,12 @@ set OPENJDK7_EXPLODED=openjdk-1.7.0-u80-unofficial-windows-i586-image
 set OPENJDK7_FOLDER=openjdk_7
 
 set OPENJDK11_NAME=Open JDK 11
-set OPENJDK11_VERSION=11.0.10
-set OPENJDK11_URL=https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.10+9/OpenJDK11U-jdk_x64_windows_hotspot_11.0.10_9.zip
+set OPENJDK11_VERSION=11.0.18
+set OPENJDK11_URL=https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.10+9/OpenJDK11U-jdk_x64_windows_hotspot_11.0.18_10.zip
 set OPENJDK11_OPTIONS=--no-check-certificate --no-cookies
 set OPENJDK11_TYPE=ZIP
-set OPENJDK11_PACKAGE=OpenJDK11U-jdk_x64_windows_hotspot_11.0.10_9.zip
-set OPENJDK11_EXPLODED=jdk-11.0.10+9
+set OPENJDK11_PACKAGE=OpenJDK11U-jdk_x64_windows_hotspot_11.0.18_10.zip
+set OPENJDK11_EXPLODED=jdk-11.0.18+10
 set OPENJDK11_FOLDER=openjdk_11
 
 set OPENJDK17_NAME=Open JDK 17
