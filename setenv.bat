@@ -70,8 +70,8 @@ rem Define command aliases
 doskey st=sourcetree.bat
 
 rem Add more aliases for your convenience...
-doskey ..=cd ..
-doskey ...=cd ..\..
+doskey ..=go ..
+doskey ...=go ..\..
 doskey -=go -
 
 exit /B

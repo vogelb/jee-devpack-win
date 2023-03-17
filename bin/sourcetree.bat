@@ -8,5 +8,11 @@ if not exist %TOOLS_DIR%\sourcetree (
   exit /B
 )
 
-echo Starting SourceTree in folder %*
-start %TOOLS_DIR%\sourcetree\sourcetree %*
+setlocal
+set FOLDER=%1
+if "%FOLDER%"=="" (
+  set FOLDER=%CD%
+)
+
+echo Starting SourceTree in folder %FOLDER%
+start %TOOLS_DIR%\sourcetree\sourcetree %FOLDER%
