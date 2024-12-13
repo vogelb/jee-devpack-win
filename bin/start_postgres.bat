@@ -17,10 +17,15 @@ exit /B
 if not exist %PGDATA% (
 	echo Initializing data directory %PGDATA%...
 	initdb --encoding UTF8
-	if errorvelel 1 exit /B
+	if errorlevel 1 exit /B
 	echo.
 	echo done.
 	echo The default user is %USERNAME%. You can create a database using "createdb".
 )
+
+echo.
+echo | set /p= Postgres Server listening on port 
+grep port.= %PGDATA%\postgresql.conf | sed "s/.*port.=.\([0-9]*\).*/\1/"
+echo.
 
 %PG_HOME%\bin\pg_ctl -D "%PGDATA%" -l postgres.log start

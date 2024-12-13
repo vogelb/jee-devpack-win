@@ -4,7 +4,7 @@ rem DevPack Package definitions
 rem  Be sure to escape % using %% in package URLs!
 rem ===================================================================
 
-set DEVPACK_PACKAGES=ANSICON OPENJDK17 OPENJDK11 JDK10 OPENJDK10 JDK8 OPENJDK8 JDK8_32 JDK7 OPENJDK7 JDK6 JDK8_APIDOC ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE  GIT MELD POSTGRES POSTGRES_JDBC NODE GRADLE ANT SQUIRREL INTELLIJ
+set DEVPACK_PACKAGES=ANSICON OPENJDK8 OPENJDK11 OPENJDK17 JDK8 JDK8_32 JDK8_APIDOC JDK10 ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE  GIT MELD POSTGRES POSTGRES_JDBC NODE GRADLE ANT SQUIRREL INTELLIJ
 set DEVPACK_NO_PURGE=ECLIPSE_WORKSPACE
 
 set ANSICON_NAME=Ansic0n
@@ -24,57 +24,32 @@ set ANT_EXPLODED=apache-ant-1.10.5
 set ANT_FOLDER=ant
 set ANT_CONFIG=ant
 
-set OPENJDK10_NAME=Open JDK 10
-set OPENJDK10_VERSION=10.0.2
-set OPENJDK10_URL=https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_windows-x64_bin.tar.gz
-set OPENJDK10_OPTIONS=
-set OPENJDK10_TYPE=ZIP
-set OPENJDK10_PACKAGE=openjdk-10.0.2_windows-x64_bin.tar.gz
-set OPENJDK10_EXPLODED=jdk-10.0.2
-set OPENJDK10_FOLDER=openjdk_10
-
 set OPENJDK8_NAME=Open JDK 8
-set OPENJDK8_VERSION=1.8.0.212-1
-set OPENJDK8_URL=https://github.com/ojdkbuild/ojdkbuild/releases/download/1.8.0.212-1/java-1.8.0-openjdk-1.8.0.212-1.b04.ojdkbuild.windows.x86_64.zip
+set OPENJDK8_VERSION=1.8.0
+set OPENJDK8_URL=https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u362-b09/OpenJDK8U-jdk_x64_windows_hotspot_8u362b09.zip
 set OPENJDK8_OPTIONS=
 set OPENJDK8_TYPE=ZIP
-set OPENJDK8_PACKAGE=java-1.8.0-openjdk-1.8.0.212-1.b04.ojdkbuild.windows.x86_64.zip
-set OPENJDK8_EXPLODED=java-1.8.0-openjdk-1.8.0.212-1.b04.ojdkbuild.windows.x86_64
+set OPENJDK8_PACKAGE=OpenJDK8U-jdk_x64_windows_hotspot_8u362b09.zip
+set OPENJDK8_EXPLODED=jdk8u362-b09
 set OPENJDK8_FOLDER=openjdk_8
 
-set OPENJDK7_NAME=Open JDK 7
-set OPENJDK7_VERSION=1.7.0-u80
-set OPENJDK7_URL=https://bitbucket.org/alexkasko/openjdk-unofficial-builds/downloads/openjdk-1.7.0-u80-unofficial-windows-i586-image.zip
-set OPENJDK7_OPTIONS=
-set OPENJDK7_TYPE=ZIP
-set OPENJDK7_PACKAGE=openjdk-1.7.0-u80-unofficial-windows-i586-image.zip
-set OPENJDK7_EXPLODED=openjdk-1.7.0-u80-unofficial-windows-i586-image
-set OPENJDK7_FOLDER=openjdk_7
-
 set OPENJDK11_NAME=Open JDK 11
-set OPENJDK11_VERSION=11.0.18
-set OPENJDK11_URL=https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.10+9/OpenJDK11U-jdk_x64_windows_hotspot_11.0.18_10.zip
+set OPENJDK11_VERSION=11.0.20
+set OPENJDK11_URL=https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.20+8/OpenJDK11U-jdk_x64_windows_hotspot_11.0.20_8.zip
 set OPENJDK11_OPTIONS=--no-check-certificate --no-cookies
 set OPENJDK11_TYPE=ZIP
-set OPENJDK11_PACKAGE=OpenJDK11U-jdk_x64_windows_hotspot_11.0.18_10.zip
-set OPENJDK11_EXPLODED=jdk-11.0.18+10
+set OPENJDK11_PACKAGE=OpenJDK11U-jdk_x64_windows_hotspot_11.0.20_8.zip
+set OPENJDK11_EXPLODED=jdk-11.0.20+8
 set OPENJDK11_FOLDER=openjdk_11
 
 set OPENJDK17_NAME=Open JDK 17
-set OPENJDK17_VERSION=17.0.3
-set OPENJDK17_URL=https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.3+7/OpenJDK17U-jdk_x64_windows_hotspot_17.0.3_7.zip
+set OPENJDK17_VERSION=17.0.6
+set OPENJDK17_URL=https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.6+10/OpenJDK17U-jdk_x64_windows_hotspot_17.0.6_10.zip
 set OPENJDK17_OPTIONS=--no-check-certificate --no-cookies
 set OPENJDK17_TYPE=ZIP
-set OPENJDK17_PACKAGE=OpenJDK17U-jdk_x64_windows_hotspot_17.0.3_7.zip
-set OPENJDK17_EXPLODED=jdk-17.0.3+7
+set OPENJDK17_PACKAGE=OpenJDK17U-jdk_x64_windows_hotspot_17.0.6_10.zip
+set OPENJDK17_EXPLODED=jdk-17.0.6+10
 set OPENJDK17_FOLDER=openjdk_17
-
-set JDK10_NAME=Oracle JDK 10
-set JDK10_VERSION=10.0.2
-set JDK10_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK10_TYPE=JDK
-set JDK10_PACKAGE=jdk-%JDK10_VERSION%_windows-x64_bin.exe
-set JDK10_FOLDER=jdk_10
 
 set JDK8_NAME=Oracle JDK 8
 set JDK8_VERSION=8u212
@@ -98,19 +73,12 @@ set JDK8_32_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oracle
 set JDK8_32_PACKAGE=jdk-8u111-windows-i586.exe
 set JDK8_32_FOLDER=jdk_8_32
 
-set JDK7_NAME=Oracle JDK 7
-set JDK7_VERSION=7u79
-set JDK7_TYPE=JDK7
-set JDK7_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK7_PACKAGE=jdk-7u79-windows-x64.exe
-set JDK7_FOLDER=jdk_7
-
-set JDK6_NAME=Oracle JDK 6
-set JDK6_VERSION=6u45
-set JDK6_TYPE=JDK6
-set JDK6_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-set JDK6_PACKAGE=jdk-6u45-windows-x64.exe
-set JDK6_FOLDER=jdk_6
+set JDK10_NAME=Oracle JDK 10
+set JDK10_VERSION=10.0.2
+set JDK10_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
+set JDK10_TYPE=JDK
+set JDK10_PACKAGE=jdk-%JDK10_VERSION%_windows-x64_bin.exe
+set JDK10_FOLDER=jdk_10
 
 set ECLIPSE_EE_NAME=Eclipse EE
 set ECLIPSE_EE_VERSION=2021-12
@@ -168,12 +136,17 @@ set MAVEN_3_6_URL=http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dis
 set MAVEN_3_6_EXPLODED=apache-maven-%MAVEN_3_6_VERSION%
 set MAVEN_3_6_PACKAGE=apache-maven-%MAVEN_3_6_VERSION%-bin.zip
 set MAVEN_3_6_FOLDER=mvn_3.6
-set MAVEN_VERSION=%MAVEN_3_6_VERSION%
-set MAVEN_URL=%MAVEN_3_6_URL%
-set MAVEN_EXPLODED=%MAVEN_3_6_EXPLODED%
-set MAVEN_PACKAGE=%MAVEN_3_6_PACKAGE%
+set MAVEN_3_9_VERSION=3.9.7
+set MAVEN_3_9_URL=https://dlcdn.apache.org/maven/maven-3/3.9.7/binaries/apache-maven-3.9.7-bin.zip
+set MAVEN_3_9_EXPLODED=apache-maven-%MAVEN_3_9_VERSION%
+set MAVEN_3_9_PACKAGE=apache-maven-%MAVEN_3_9_VERSION%-bin.zip
+set MAVEN_3_9_FOLDER=mvn_3.9
+set MAVEN_VERSION=%MAVEN_3_9_VERSION%
+set MAVEN_URL=%MAVEN_3_9_URL%
+set MAVEN_EXPLODED=%MAVEN_3_9_EXPLODED%
+set MAVEN_PACKAGE=%MAVEN_3_9_PACKAGE%
 set MAVEN_TYPE=ZIP
-set MAVEN_FOLDER=%MAVEN_3_6_FOLDER%
+set MAVEN_FOLDER=%MAVEN_3_9_FOLDER%
 
 set TOMCAT_NAME=Apache Tomcat
 set TOMCAT_VERSION=7.0.90
@@ -217,8 +190,8 @@ set GLASSFISH_FOLDER=glassfish
 set GLASSFISH_TOOL_1=start_glassfish.bat
 
 set NOTEPAD_NAME=Notepad++
-set NOTEPAD_VERSION=8.2.1
-set NOTEPAD_URL=https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.2.1/npp.8.2.1.portable.x64.zip
+set NOTEPAD_VERSION=8.6.2
+set NOTEPAD_URL=https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.6.2/npp.8.6.2.portable.x64.zip
 set NOTEPAD_OPTIONS=--no-check-certificate --no-cookies
 set NOTEPAD_TYPE=ZIP
 set NOTEPAD_EXPLODED=--create--
@@ -268,7 +241,7 @@ set CONSOLE_PACKAGE=ConEmuPack.%CONSOLE_VERSION%.7z
 set CONSOLE_FOLDER=console
 
 set SOURCETREE_NAME=SourceTree
-set SOURCETREE_VERSION=3.4.9
+set SOURCETREE_VERSION=3.4.14
 set SOURCETREE_URL=https://downloads.atlassian.com/software/sourcetree/windows/ga/SourceTreeSetup-%SOURCETREE_VERSION%.exe
 set SOURCETREE_TYPE=NUPKG
 set SOURCETREE_EXPLODED=SourceTree-%SOURCETREE_VERSION%-full.nupkg
@@ -277,11 +250,13 @@ set SOURCETREE_FOLDER=sourcetree
 set SOURCETREE_TOOL_1=start_sourcetree.bat
 
 set GIT_NAME=Git
-set GIT_VERSION=2.20.1
-set GIT_URL=https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.1/PortableGit-%GIT_VERSION%-64-bit.7z.exe
+set GIT_VERSION=2.42.0
+set GIT_UPDATE=2
+set GIT_URL=https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.%GIT_UPDATE%/PortableGit-%GIT_VERSION%.%GIT_UPDATE%-64-bit.7z.exe
+set GIT_OPTIONS=--no-check-certificate --no-cookies
 set GIT_TYPE=ZIP
 set GIT_EXPLODED=--create--
-set GIT_PACKAGE=PortableGit-%GIT_VERSION%-64-bit.7z.exe
+set GIT_PACKAGE=PortableGit-%GIT_VERSION%.%GIT_UPDATE%-64-bit.7z.exe
 set GIT_FOLDER=git
 set GIT_CONFIG=git
 
@@ -296,19 +271,18 @@ set MELD_CONFIG=meld
 
 set POSTGRES_NAME=PostgreSQL
 set POSTGRES_9_4_VERSION=9.4.19-1
-set POSTGRES_9_4_URL=http://get.enterprisedb.com/postgresql/postgresql-%POSTGRES_9_4_VERSION%-windows-x64-binaries.zip
-set POSTGRES_9_4_PACKAGE=postgresql-%POSTGRES_9_4_VERSION%-windows-x64-binaries.zip
 set POSTGRES_9_6_VERSION=9.6.2-2
-set POSTGRES_9_6_URL=http://get.enterprisedb.com/postgresql/postgresql-%POSTGRES_9_6_VERSION%-windows-x64-binaries.zip
-set POSTGRES_9_6_PACKAGE=postgresql-%POSTGRES_9_6_VERSION%-windows-x64-binaries.zip
-set POSTGRES_VERSION=%POSTGRES_9_6_VERSION%
-set POSTGRES_URL=%POSTGRES_9_6_URL%
-set POSTGRES_PACKAGE=%POSTGRES_9_6_PACKAGE%
+set POSTGRES_14_15_VERSION=14.15-1
+
+set POSTGRES_VERSION=%POSTGRES_14_15_VERSION%
 set POSTGRES_TYPE=ZIP
 set POSTGRES_EXPLODED=pgsql
 set POSTGRES_FOLDER=postgres
 set POSTGRES_CONFIG=postgres
 set POSTGRES_TOOL_1=start_postgres.bat
+set POSTGRES_URL=http://get.enterprisedb.com/postgresql/postgresql-%POSTGRES_VERSION%-windows-x64-binaries.zip
+set POSTGRES_PACKAGE=postgresql-%POSTGRES_VERSION%-windows-x64-binaries.zip
+
 
 set POSTGRES_JDBC_NAME=PostgreSQL JDBC Driver
 set POSTGRES_JDBC_VERSION=42.2.50

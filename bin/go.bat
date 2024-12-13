@@ -10,7 +10,7 @@ if "%1" == "-" (
     cd /d "%DEVPACK_LAST_DIR%"
   )
 ) else (
-  cd %*
+  cd /d %*
 )
 
 if "%DEVPACK_GIT_PROMPT%" == "TRUE" (

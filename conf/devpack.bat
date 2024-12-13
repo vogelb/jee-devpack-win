@@ -15,7 +15,7 @@ set WORK_DRIVE=W
 set DEVPACK_NAME=Java Dev Pack
 
 rem Set the default JDK
-set DEVPACK_DEFAULT_JDK=OPENJDK11
+set DEVPACK_DEFAULT_JDK=OPENJDK17
 
 rem Set the default Maven
 set DEVPACK_DEFAULT_MAVEN=MAVEN_3_6
@@ -23,8 +23,12 @@ set DEVPACK_DEFAULT_MAVEN=MAVEN_3_6
 rem Extend command prompt with git branch
 set DEVPACK_GIT_PROMPT=TRUE
 
-rem Select the development shell (console or cmd)
-set DEVPACK_CONSOLE=cmd
+rem Select the development shell (terminal, console or cmd)
+set DEVPACK_CONSOLE=terminal
+rem The name of the development shell
+set DEVPACK_CONSOLE_NAME=Dev Shell
+rem The start folder of the development shell
+rem set DEVPACK_CONSOLE_FOLDER=%WORK_DRIVE%:\git
 
 rem Extend command shell with colour
 set DEVPACK_COLOUR=TRUE
@@ -54,7 +58,10 @@ set GENERATE_M2_TOOLCHAINS=TRUE
 
 rem Configure your favorite editor here
 rem set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\atom\atom.exe
-set DEVPACK_EDITOR=%WORK_DRIVE%:\tools\npp\notepad++.exe
+set DEVPACK_EDITOR=%WORK_DRIVE%:\bin\notepad++.bat
+
+rem Configure additional path elements here
+rem set DEVPACK_PATH_EXTENSION=d:\dev
 
 rem Configure your favorite file explorer here
 set DEVPACK_EXPLORER=explorer

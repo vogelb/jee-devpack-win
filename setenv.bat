@@ -63,7 +63,7 @@ call :include_config ant
 
 rem -----------------------------------------------------------------
 rem Add workspace parameters as required
-set PATH=%BIN_DIR%;%JAVA_HOME%\bin;%WORKING_DIR%;%PATH%
+set PATH=%BIN_DIR%;%DEVPACK_PATH_EXTENSION%;%JAVA_HOME%\bin;%WORKING_DIR%;%PATH%
 
 rem -----------------------------------------------------------------
 rem Define command aliases
