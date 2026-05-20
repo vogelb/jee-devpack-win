@@ -280,19 +280,16 @@ set MELD_FOLDER=meld
 set MELD_CONFIG=meld
 
 set POSTGRES_NAME=PostgreSQL
-set POSTGRES_9_4_VERSION=9.4.19-1
-set POSTGRES_9_6_VERSION=9.6.2-2
-set POSTGRES_14_15_VERSION=14.15-1
+set POSTGRES_18_VERSION=18.4-1
 
-set POSTGRES_VERSION=%POSTGRES_14_15_VERSION%
+set POSTGRES_VERSION=%POSTGRES_18_VERSION%
 set POSTGRES_TYPE=ZIP
 set POSTGRES_EXPLODED=pgsql
 set POSTGRES_FOLDER=postgres
 set POSTGRES_CONFIG=postgres
 set POSTGRES_TOOL_1=start_postgres.bat
-set POSTGRES_URL=http://get.enterprisedb.com/postgresql/postgresql-%POSTGRES_VERSION%-windows-x64-binaries.zip
+set POSTGRES_URL=https://get.enterprisedb.com/postgresql/postgresql-%POSTGRES_VERSION%-windows-x64-binaries.zip
 set POSTGRES_PACKAGE=postgresql-%POSTGRES_VERSION%-windows-x64-binaries.zip
-
 
 set POSTGRES_JDBC_NAME=PostgreSQL JDBC Driver
 set POSTGRES_JDBC_VERSION=42.2.50

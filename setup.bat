@@ -415,6 +415,14 @@ exit /B
 rem ======================================================================
 rem Install a single package
 :install_single_package <packageName>
+
+where 7z.exe >nul 2>nul
+IF NOT "%errorlevel%" == "0" (
+    call :warn 7z.exe not found in path. Installing now.
+    winget install 7z
+	set "PATH=%ProgramFiles%\7-Zip;%PATH%"
+)
+
 setlocal enabledelayedexpansion
 set PACKAGE_TYPE=%1_TYPE
 call :expand_variable PACKAGE_TYPE
@@ -900,7 +908,7 @@ echo installing now.
 call :clean_folder %DOWNLOADS_DIR%\%TEMP_FOLDER%
 mkdir %DOWNLOADS_DIR%\%TEMP_FOLDER%
 echo | set /p=Unpacking %OPTION% %VERSION% to %DOWNLOADS_DIR%\%TEMP_FOLDER%... 
-%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%DOWNLOADS_DIR%\%TEMP_FOLDER% >NUL
+7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o%DOWNLOADS_DIR%\%TEMP_FOLDER% >NUL
 echo %PROMPT_OK%.
 
 echo | set /p=Starting installer %DOWNLOADS_DIR%\%TEMP_FOLDER%\%INSTALLER%...
@@ -959,8 +967,8 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
   set OUTPUT_FOLDER=%TOOLS_DIR%
   if "%UNZIPPED%" == "--create--" set OUTPUT_FOLDER=%TOOLS_DIR%\%TARGET%
   
-  set UNZIP=%TOOLS_DIR%\7-Zip\7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o!OUTPUT_FOLDER!
-  if "%EXTENSION%" == ".gz" set UNZIP=!TOOLS_DIR!\7-Zip\7z x -bsp0 -y -so "!DOWNLOADS_DIR!\!PACKAGE!" ^| !TOOLS_DIR!\7-Zip\7z x -aoa -si -ttar -o!OUTPUT_FOLDER!
+  set UNZIP=7z x -y "%DOWNLOADS_DIR%\%PACKAGE%" -o!OUTPUT_FOLDER!
+  if "%EXTENSION%" == ".gz" set UNZIP=7z x -bsp0 -y -so "!DOWNLOADS_DIR!\!PACKAGE!" ^| 7z x -aoa -si -ttar -o!OUTPUT_FOLDER!
 
   echo | set /p=Unpacking %OPTION% %VERSION% [!PACKAGE!] to !OUTPUT_FOLDER!... 
   cmd /c !UNZIP! >NUL
@@ -1272,14 +1280,14 @@ echo installing now.
 echo | set /p=extracting package %PACKAGE% to %DOWNLOADS_DIR%\JDK...
 call :clean_folder %DOWNLOADS_DIR%\JDK
 md %DOWNLOADS_DIR%\JDK
-%TOOLS_DIR%\7-Zip\7z x -y %DOWNLOADS_DIR%\%PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
+7z x -y %DOWNLOADS_DIR%\%PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
 pushd %DOWNLOADS_DIR%\JDK
 
 extrac32 .rsrc\JAVA_CAB10\111
 echo done.
 
 echo | set /p=extracting tools... 
-%TOOLS_DIR%\7-Zip\7z x tools.zip -otools >NUL
+7z x tools.zip -otools >NUL
 echo done.
 
 echo | set /p=unpacking jars... 
@@ -1351,7 +1359,7 @@ echo extract package done.
 pushd %DOWNLOADS_DIR%\extract
 
 echo | set /p=extracting tools... 
-%TOOLS_DIR%\7-Zip\7z x tools.zip >NUL
+7z x tools.zip >NUL
 del tools.zip
 echo done.
 
@@ -1411,8 +1419,8 @@ call :clean_folder %EXTRACT%
 mkdir %EXTRACT%
 pushd %EXTRACT%
 
-%TOOLS_DIR%\7-Zip\7z x %DOWNLOADS_DIR%\%PACKAGE% >NUL
-%TOOLS_DIR%\7-Zip\7z x %UNZIPPED% >NUL
+7z x %DOWNLOADS_DIR%\%PACKAGE% >NUL
+7z x %UNZIPPED% >NUL
 echo ok.
 
 echo | set /p=Copying files to %TOOLS_DIR%\%TARGET%...
@@ -1468,19 +1476,19 @@ if exist %TOOLS_DIR%\%TARGET% (
 
 echo ... extracting package ...
 call :clean_folder %DOWNLOADS_DIR%\JDK
-%TOOLS_DIR%\7-Zip\7z x -y %DOWNLOADS_DIR%\%PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
+7z x -y %DOWNLOADS_DIR%\%PACKAGE% -o%DOWNLOADS_DIR%\JDK >NUL
 pushd %DOWNLOADS_DIR%\JDK
 
 echo ... extracting cab files ...
 for /d /r %%x in (JAVA_CAB*) do (
   echo ... - extracting %%x...
   for %%y in (%%x\*.*) do (
-    %TOOLS_DIR%\7-Zip\7z x -y %%y >NUL
+    7z x -y %%y >NUL
   )
 )
 
 echo ... extracting tools ...
-%TOOLS_DIR%\7-Zip\7z x -y tools.zip >NUL
+7z x -y tools.zip >NUL
 if errorlevel 1 (
   echo.
   echo Error extracting files. Installation aborted.
