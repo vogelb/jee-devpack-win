@@ -15,10 +15,10 @@ set WORK_DRIVE=W
 set DEVPACK_NAME=Java Dev Pack
 
 rem Set the default JDK
-set DEVPACK_DEFAULT_JDK=OPENJDK17
+set DEVPACK_DEFAULT_JDK=OPENJDK25
 
 rem Set the default Maven
-set DEVPACK_DEFAULT_MAVEN=MAVEN_3_6
+set DEVPACK_DEFAULT_MAVEN=MAVEN_3_9
 
 rem Extend command prompt with git branch
 set DEVPACK_GIT_PROMPT=TRUE

@@ -4,7 +4,7 @@ rem DevPack Package definitions
 rem  Be sure to escape % using %% in package URLs!
 rem ===================================================================
 
-set DEVPACK_PACKAGES=ANSICON OPENJDK8 OPENJDK11 OPENJDK17 JDK8 JDK8_32 JDK8_APIDOC JDK10 ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE  GIT MELD POSTGRES POSTGRES_JDBC NODE GRADLE ANT SQUIRREL INTELLIJ
+set DEVPACK_PACKAGES=ANSICON OPENJDK8 OPENJDK11 OPENJDK17 OPENJDK25 JDK8 JDK8_32 JDK8_APIDOC JDK10 ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE  GIT MELD POSTGRES POSTGRES_JDBC NODE GRADLE ANT SQUIRREL INTELLIJ
 set DEVPACK_NO_PURGE=ECLIPSE_WORKSPACE
 
 set ANSICON_NAME=Ansic0n
@@ -51,6 +51,15 @@ set OPENJDK17_PACKAGE=OpenJDK17U-jdk_x64_windows_hotspot_17.0.6_10.zip
 set OPENJDK17_EXPLODED=jdk-17.0.6+10
 set OPENJDK17_FOLDER=openjdk_17
 
+set OPENJDK25_NAME=Adoptium Temurin 25
+set OPENJDK25_VERSION=25.0.3+9
+set OPENJDK25_URL=https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.1+8/OpenJDK25U-jdk_x64_windows_hotspot_25.0.3_9.zip
+set OPENJDK25_OPTIONS=--no-check-certificate --no-cookies
+set OPENJDK25_TYPE=ZIP
+set OPENJDK25_PACKAGE=OpenJDK25U-jdk_x64_windows_hotspot_25.0.3_9.zip
+set OPENJDK25_EXPLODED=jdk-25.0.3+9
+set OPENJDK25_FOLDER=jdk_25
+
 set JDK8_NAME=Oracle JDK 8
 set JDK8_VERSION=8u212
 set JDK8_OPTIONS=--no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
@@ -81,22 +90,22 @@ set JDK10_PACKAGE=jdk-%JDK10_VERSION%_windows-x64_bin.exe
 set JDK10_FOLDER=jdk_10
 
 set ECLIPSE_EE_NAME=Eclipse EE
-set ECLIPSE_EE_VERSION=2021-12
-set ECLIPSE_EE_URL=https://download.eclipse.org/technology/epp/downloads/release/2021-12/R/eclipse-jee-2021-12-R-win32-x86_64.zip
+set ECLIPSE_EE_VERSION=2025-12
+set ECLIPSE_EE_URL=https://download.eclipse.org/technology/epp/downloads/release/2025-12/R/eclipse-jee-2025-12-R-win32-x86_64.zip
 set ECLIPSE_EE_OPTIONS=--no-check-certificate
 set ECLIPSE_EE_TYPE=ZIP
 set ECLIPSE_EE_EXPLODED=eclipse
-set ECLIPSE_EE_PACKAGE=eclipse-jee-2021-12-R-win32-x86_64.zip
+set ECLIPSE_EE_PACKAGE=eclipse-jee-2025-12-R-win32-x86_64.zip
 set ECLIPSE_EE_FOLDER=eclipse_ee
 set ECLIPSE_EE_TOOL_1=start_eclipse_ee.bat
 
 set ECLIPSE_JAVA_NAME=Eclipse Java
-set ECLIPSE_JAVA_VERSION=2021-12
-set ECLIPSE_JAVA_URL=https://download.eclipse.org/technology/epp/downloads/release/2021-12/R/eclipse-java-2021-12-R-win32-x86_64.zip
+set ECLIPSE_JAVA_VERSION=2026-06
+set ECLIPSE_JAVA_URL=https://mirrors.dotsrc.org/eclipse//technology/epp/downloads/release/2026-06/M1/eclipse-java-2026-06-M1-win32-x86_64.zip
 set ECLIPSE_JAVA_OPTIONS=--no-check-certificate
 set ECLIPSE_JAVA_TYPE=ZIP
 set ECLIPSE_JAVA_EXPLODED=eclipse
-set ECLIPSE_JAVA_PACKAGE=eclipse-java-2021-12-R-win32-x86_64.zip
+set ECLIPSE_JAVA_PACKAGE=eclipse-java-2026-06-M1-win32-x86_64.zip
 set ECLIPSE_JAVA_FOLDER=eclipse
 set ECLIPSE_JAVA_TOOL_1=start_eclipse.bat
 
@@ -136,13 +145,14 @@ set MAVEN_3_6_URL=http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dis
 set MAVEN_3_6_EXPLODED=apache-maven-%MAVEN_3_6_VERSION%
 set MAVEN_3_6_PACKAGE=apache-maven-%MAVEN_3_6_VERSION%-bin.zip
 set MAVEN_3_6_FOLDER=mvn_3.6
-set MAVEN_3_9_VERSION=3.9.7
-set MAVEN_3_9_URL=https://dlcdn.apache.org/maven/maven-3/3.9.7/binaries/apache-maven-3.9.7-bin.zip
+set MAVEN_3_9_VERSION=3.9.16
+set MAVEN_3_9_URL=https://dlcdn.apache.org/maven/maven-3/3.9.16/binaries/apache-maven-3.9.16-bin.zip
 set MAVEN_3_9_EXPLODED=apache-maven-%MAVEN_3_9_VERSION%
 set MAVEN_3_9_PACKAGE=apache-maven-%MAVEN_3_9_VERSION%-bin.zip
 set MAVEN_3_9_FOLDER=mvn_3.9
 set MAVEN_VERSION=%MAVEN_3_9_VERSION%
 set MAVEN_URL=%MAVEN_3_9_URL%
+set MAVEN_OPTIONS=--no-check-certificate --no-cookies
 set MAVEN_EXPLODED=%MAVEN_3_9_EXPLODED%
 set MAVEN_PACKAGE=%MAVEN_3_9_PACKAGE%
 set MAVEN_TYPE=ZIP
@@ -190,8 +200,8 @@ set GLASSFISH_FOLDER=glassfish
 set GLASSFISH_TOOL_1=start_glassfish.bat
 
 set NOTEPAD_NAME=Notepad++
-set NOTEPAD_VERSION=8.6.2
-set NOTEPAD_URL=https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.6.2/npp.8.6.2.portable.x64.zip
+set NOTEPAD_VERSION=8.9.3
+set NOTEPAD_URL=https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.9.3/npp.8.9.3.portable.x64.zip
 set NOTEPAD_OPTIONS=--no-check-certificate --no-cookies
 set NOTEPAD_TYPE=ZIP
 set NOTEPAD_EXPLODED=--create--
@@ -241,8 +251,8 @@ set CONSOLE_PACKAGE=ConEmuPack.%CONSOLE_VERSION%.7z
 set CONSOLE_FOLDER=console
 
 set SOURCETREE_NAME=SourceTree
-set SOURCETREE_VERSION=3.4.14
-set SOURCETREE_URL=https://downloads.atlassian.com/software/sourcetree/windows/ga/SourceTreeSetup-%SOURCETREE_VERSION%.exe
+set SOURCETREE_VERSION=3.4.30
+set SOURCETREE_URL=https://product-downloads.atlassian.com/software/sourcetree/windows/ga/SourceTreeSetup-%SOURCETREE_VERSION%.exe
 set SOURCETREE_TYPE=NUPKG
 set SOURCETREE_EXPLODED=SourceTree-%SOURCETREE_VERSION%-full.nupkg
 set SOURCETREE_PACKAGE=SourceTreeSetup-%SOURCETREE_VERSION%.exe
