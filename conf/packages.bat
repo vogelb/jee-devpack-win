@@ -52,12 +52,12 @@ set OPENJDK17_EXPLODED=jdk-17.0.6+10
 set OPENJDK17_FOLDER=openjdk_17
 
 set OPENJDK25_NAME=Adoptium Temurin 25
-set OPENJDK25_VERSION=25.0.4+7
-set OPENJDK25_URL=https://github.com/adoptium/temurin25-binaries/releases/download/jdk-%OPENJDK25_VERSION%/OpenJDK25U-jdk_x64_windows_hotspot_25.0.4_7.zip
+set OPENJDK25_VERSION=25.0.3+9
+set OPENJDK25_URL=https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.3+9/OpenJDK25U-jdk_x64_windows_hotspot_25.0.3_9.zip
 set OPENJDK25_OPTIONS=--no-check-certificate --no-cookies
 set OPENJDK25_TYPE=ZIP
-set OPENJDK25_PACKAGE=OpenJDK25U-jdk_x64_windows_hotspot_25.0.4_7.zip
-set OPENJDK25_EXPLODED=jdk-%OPENJDK25_VERSION%
+set OPENJDK25_PACKAGE=OpenJDK25U-jdk_x64_windows_hotspot_25.0.3_9.zip
+set OPENJDK25_EXPLODED=jdk-25.0.3+9
 set OPENJDK25_FOLDER=jdk_25
 
 set JDK8_NAME=Oracle JDK 8
@@ -253,7 +253,6 @@ set CONSOLE_FOLDER=console
 set SOURCETREE_NAME=SourceTree
 set SOURCETREE_VERSION=3.4.30
 set SOURCETREE_URL=https://product-downloads.atlassian.com/software/sourcetree/windows/ga/SourceTreeSetup-%SOURCETREE_VERSION%.exe
-set SOURCETREE_OPTIONS=--no-check-certificate --no-cookies
 set SOURCETREE_TYPE=NUPKG
 set SOURCETREE_EXPLODED=SourceTree-%SOURCETREE_VERSION%-full.nupkg
 set SOURCETREE_PACKAGE=SourceTreeSetup-%SOURCETREE_VERSION%.exe
