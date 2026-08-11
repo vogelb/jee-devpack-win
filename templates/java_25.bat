@@ -22,7 +22,7 @@ rem   FALSE: Dont install eclipse
 rem   EE: Install Eclipse for Java EE developers
 rem   JAVA: Install Eclipse for Java developers
 rem   CPP: Install Eclipse for C/C++ developers
-set INSTALL_ECLIPSE=JAVA
+set INSTALL_ECLIPSE=FALSE
 
 rem Set to TRUE if you want to install a preconfigured workspace
 rem Additional settings required in package configuration (or here)
