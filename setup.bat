@@ -445,11 +445,166 @@ if "!PACKAGE_TYPE!" == "JDK6" (
     call :install_file %1
 ) else if "!PACKAGE_TYPE!" == "NPM" (
     call :install_npm_package %1
+) else if "!PACKAGE_TYPE!" == "SCOOP" (
+    call :install_scoop_package %1
 ) else (
     echo Error installing package %1: Unknown package type "!PACKAGE_TYPE!"
 )
 endlocal
 exit /B
+
+rem ======================================================================
+rem Install Scoop
+:install_scoop
+setlocal EnableExtensions
+echo Installing Scoop package manager
+echo [1/3] Setting PowerShell execution policy...
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force"
+
+echo [2/3] Downloading and installing Scoop...
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression"
+
+echo [3/3] Refreshing environment variables...
+set "PATH=%USERPROFILE%\scoop\shims;%PATH%"
+
+echo.
+echo Verification:
+call scoop --version
+
+echo.
+echo Scoop installation process complete!
+endlocal & set "PATH=%USERPROFILE%\scoop\shims;%PATH%"
+exit /B
+
+rem ======================================================================
+rem Get the installed version of a Scoop-managed package
+:get_scoop_package_version
+setlocal EnableDelayedExpansion
+call :get_package_info %~1
+set "PACKAGE_NAME=!PACKAGE_INFO_URL!"
+set "PACKAGE_VERSION=NOT_INSTALLED"
+
+if defined PACKAGE_NAME (
+  for /F "skip=3 tokens=1,2" %%A in ('scoop list "%PACKAGE_NAME%" 2^>nul') do (
+    if /I "%%A"=="!PACKAGE_NAME!" set "PACKAGE_VERSION=%%B"
+  )
+)
+
+endlocal & set "%~2=%PACKAGE_VERSION%"
+exit /B 0
+
+rem ======================================================================
+rem Get the available version of a Scoop-managed package
+:get_available_version
+setlocal EnableDelayedExpansion
+call :get_package_info %~1
+set "PACKAGE_NAME=!PACKAGE_INFO_URL!"
+set "AVAILABLE_VERSION=UNKNOWN"
+
+if defined PACKAGE_NAME (
+  call :get_scoop_package_version %~1 INSTALLED_SCOOP_VERSION
+  if not "!INSTALLED_SCOOP_VERSION!" == "NOT_INSTALLED" set "AVAILABLE_VERSION=!INSTALLED_SCOOP_VERSION!"
+  for /F "skip=3 tokens=1,3" %%A in ('scoop status 2^>nul') do (
+    if /I "%%A"=="!PACKAGE_NAME!" set "AVAILABLE_VERSION=%%B"
+  )
+)
+
+endlocal & set "%~2=%AVAILABLE_VERSION%"
+exit /B 0
+
+rem ======================================================================
+rem Install a package using Scoop
+:install_scoop_package
+where scoop >nul 2>nul
+if errorlevel 1 (
+  call :install_scoop
+  where scoop >nul 2>nul
+  if errorlevel 1 (
+    echo Error installing Scoop.
+    exit /B 1
+  )
+)
+
+setlocal EnableDelayedExpansion
+call :get_package_info %~1
+set "PACKAGE_NAME=!PACKAGE_INFO_URL!"
+set "PACKAGE_BUCKET=!PACKAGE_INFO_FOLDER!"
+echo Installing %~1 via Scoop
+
+if defined PACKAGE_BUCKET (
+  set "BUCKET_INSTALLED=FALSE"
+  for /F "skip=2 tokens=1" %%A in ('scoop bucket list 2^>nul') do (
+    if /I "%%A"=="!PACKAGE_BUCKET!" set "BUCKET_INSTALLED=TRUE"
+  )
+  if "!BUCKET_INSTALLED!" == "FALSE" (
+    echo Adding Scoop bucket !PACKAGE_BUCKET!...
+    call scoop bucket add "!PACKAGE_BUCKET!"
+    if errorlevel 1 (
+      set "INSTALL_RESULT=!ERRORLEVEL!"
+      endlocal & exit /B !INSTALL_RESULT!
+    )
+  )
+)
+
+echo Updating Scoop...
+call scoop update >nul 2>nul
+
+echo Installing package !PACKAGE_NAME!...
+call scoop install "!PACKAGE_NAME!"
+
+set "INSTALL_RESULT=!ERRORLEVEL!"
+endlocal & exit /B %INSTALL_RESULT%
+
+rem ======================================================================
+rem Update a Scoop-managed package
+:update_scoop_package
+setlocal EnableDelayedExpansion
+call :get_package_info %~1
+set "PACKAGE_NAME=!PACKAGE_INFO_URL!"
+echo Updating %~1 via Scoop
+
+echo Updating Scoop...
+call scoop update >nul 2>nul
+
+echo Updating package !PACKAGE_NAME!...
+call scoop update "!PACKAGE_NAME!"
+
+set "UPDATE_RESULT=!ERRORLEVEL!"
+endlocal & exit /B %UPDATE_RESULT%
+
+rem ======================================================================
+rem Uninstall a package using Scoop
+:uninstall_scoop_package
+setlocal EnableDelayedExpansion
+call :get_package_info %~1
+set "PACKAGE_NAME=!PACKAGE_INFO_URL!"
+
+if not defined PACKAGE_NAME (
+  endlocal
+  exit /B 1
+)
+
+where scoop >nul 2>nul
+if errorlevel 1 (
+  endlocal
+  exit /B 2
+)
+
+call :get_scoop_package_version %~1 INSTALLED_VERSION
+if "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  endlocal
+  exit /B 2
+)
+
+call scoop uninstall "!PACKAGE_NAME!"
+call :get_scoop_package_version %~1 INSTALLED_VERSION
+if not "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+  endlocal
+  exit /B 1
+)
+
+endlocal
+exit /B 0
 
 rem ======================================================================
 rem Get installed version
@@ -459,6 +614,10 @@ call :get_package_info %PACKAGE%
 set PACKAGE_TARGET=!PACKAGE_INFO_FOLDER!
 set PACKAGE_URL=!PACKAGE_INFO_URL!
 set PACKAGE_TYPE=!PACKAGE_INFO_TYPE!
+if "!PACKAGE_TYPE!" == "SCOOP" (
+  call :get_scoop_package_version %PACKAGE% %2
+  exit /B
+)
 
 set PACKAGE_VERSION_FILE=%TOOLS_DIR%\!PACKAGE_TARGET!\%VERSION_FILE%
 if "!PACKAGE_TYPE!" == "NPM" (
@@ -481,6 +640,8 @@ rem Update a single package
 :update_single_package <packageName>
 setlocal enabledelayedexpansion
 set PACKAGE=%1
+set PACKAGE_TYPE=%1_TYPE
+call :expand_variable PACKAGE_TYPE
 call :get_package_info %PACKAGE%
 set PACKAGE_NAME=!PACKAGE_INFO_NAME!
 set PACKAGE_PACKAGE=!PACKAGE_INFO_PACKAGE!
@@ -490,6 +651,11 @@ set PACKAGE_VERSION=!PACKAGE_INFO_VERSION!
 if "!PACKAGE_NAME!" == "" (
   echo Unknown package: %PACKAGE%
   exit /B 1
+)
+
+if "!PACKAGE_TYPE!" == "SCOOP" (
+  call :update_scoop_package %PACKAGE%
+  exit /B !ERRORLEVEL!
 )
 
 call :get_installed_version %PACKAGE% INSTALLED_VERSION
@@ -731,9 +897,18 @@ set SELECTED=!INSTALL_%PACKAGE_SPEC%!
 set OPTION=!PACKAGE_INFO_NAME!
 set PACKAGE=!PACKAGE_INFO_PACKAGE!
 set TARGET=!PACKAGE_INFO_FOLDER!
+set TYPE=!PACKAGE_INFO_TYPE!
 set VERSION=!PACKAGE_INFO_VERSION!
+set IS_LATEST=FALSE
 
 if "%SELECTED%" == "" set SELECTED=FALSE
+
+if /I "!VERSION!" == "latest" (
+  if NOT "%SELECTED%" == "FALSE" (
+    set IS_LATEST=TRUE
+    call :get_available_version %PACKAGE_SPEC% VERSION
+  )
+)
 
 call :strlen OPTION_LEN OPTION 
 call :strlen VERSION_LEN VERSION
@@ -754,6 +929,29 @@ if "%SELECTED%" == "FALSE" (
   ) else (
     echo | set /p=%VERSION%%TAB%
   )
+)
+
+if "!TYPE!" == "SCOOP" (
+  call :get_scoop_package_version %PACKAGE_SPEC% INSTALLED_VERSION
+  if "!INSTALLED_VERSION!" == "NOT_INSTALLED" (
+    if NOT "%SELECTED%" == "FALSE" (
+      echo %PROMPT_NOT_INSTALLED%
+    ) else (
+      echo not installed
+    )
+  ) else if "!INSTALLED_VERSION!" == "!VERSION!" (
+    if NOT "%SELECTED%" == "FALSE" (
+      echo %PROMPT_INSTALLED% [!INSTALLED_VERSION!]
+    ) else (
+      echo %PROMPT_MANUALLY_INSTALLED% [!INSTALLED_VERSION!]
+    )
+  ) else if NOT "%SELECTED%" == "FALSE" (
+    echo %PROMPT_OUTDATED% [!INSTALLED_VERSION!]
+  ) else (
+    echo present [!INSTALLED_VERSION!]
+  )
+  endlocal
+  exit /B
 )
 
 if not exist "%TOOLS_DIR%\%TARGET%" (
@@ -1113,6 +1311,15 @@ if "%TYPE%" == "NPM" (
     exit /B 0
   )
   call npm uninstall -g %URL%
+) else if "%TYPE%" == "SCOOP" (
+  call :uninstall_scoop_package %PACKAGE_SPEC%
+  if !ERRORLEVEL! == 2 (
+    echo not installed.
+    exit /B 0
+  )
+  if !ERRORLEVEL! neq 0 (
+    exit /B !ERRORLEVEL!
+  )
 ) else if "%TYPE%" == "FILE" (
   pushd %TOOLS_DIR%
   call :clean_file "%TOOLS_DIR%\%TARGET%\%PACKAGE%"
@@ -1706,6 +1913,7 @@ set PACKAGE_INFO_SELECTION=%PACKAGE_SELECTION%
 if "%PACKAGE_SELECTION%" == "TRUE" (
   set PACKAGE_INFO_NAME=!%PACKAGE_SPEC%_NAME!
   set PACKAGE_INFO_VERSION=!%PACKAGE_SPEC%_VERSION!
+  set PACKAGE_INFO_TYPE=!%PACKAGE_SPEC%_TYPE!
   set PACKAGE_INFO_PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
   set PACKAGE_INFO_URL=!%PACKAGE_SPEC%_URL!
   set PACKAGE_INFO_EXPLODED=!%PACKAGE_SPEC%_EXPLODED!
@@ -1719,6 +1927,8 @@ if "%PACKAGE_SELECTION%" == "TRUE" (
   if "!PACKAGE_INFO_NAME!" == "" set PACKAGE_INFO_NAME=!%PACKAGE_SPEC%_NAME!
   set PACKAGE_INFO_VERSION=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_VERSION!
   if "!PACKAGE_INFO_VERSION!" == "" set PACKAGE_INFO_VERSION=!%PACKAGE_SPEC%_VERSION!
+  set PACKAGE_INFO_TYPE=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_TYPE!
+  if "!PACKAGE_INFO_TYPE!" == "" set PACKAGE_INFO_TYPE=!%PACKAGE_SPEC%_TYPE!
   set PACKAGE_INFO_PACKAGE=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_PACKAGE!
   if "!PACKAGE_INFO_PACKAGE!" == "" set PACKAGE_INFO_PACKAGE=!%PACKAGE_SPEC%_PACKAGE!
   set PACKAGE_INFO_URL=!%PACKAGE_SPEC%_%PACKAGE_SELECTION%_URL!
@@ -1786,5 +1996,3 @@ for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /format:list') do 
 exit /B
 
 :done
-
-

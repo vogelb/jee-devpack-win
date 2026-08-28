@@ -247,12 +247,10 @@ set CONSOLE_PACKAGE=ConEmuPack.%CONSOLE_VERSION%.7z
 set CONSOLE_FOLDER=console
 
 set SOURCETREE_NAME=SourceTree
-set SOURCETREE_VERSION=3.4.30
-set SOURCETREE_URL=https://product-downloads.atlassian.com/software/sourcetree/windows/ga/SourceTreeSetup-%SOURCETREE_VERSION%.exe
-set SOURCETREE_TYPE=NUPKG
-set SOURCETREE_EXPLODED=SourceTree-%SOURCETREE_VERSION%-full.nupkg
-set SOURCETREE_PACKAGE=SourceTreeSetup-%SOURCETREE_VERSION%.exe
-set SOURCETREE_FOLDER=sourcetree
+set SOURCETREE_VERSION=latest
+set SOURCETREE_URL=sourcetree
+set SOURCETREE_TYPE=SCOOP
+set SOURCETREE_FOLDER=extras
 set SOURCETREE_TOOL_1=start_sourcetree.bat
 
 set GIT_NAME=Git
