@@ -9,8 +9,7 @@ cd /d %WORK_DRIVE%:\
 call setenv.bat
 
 if "%INTELLIJ_HOME%" == "" (
-  set INTELLIJ_HOME=C:\Users\BVogel\AppData\Local\JetBrains\IntelliJ IDEA 2024.1.3
-  rem set INTELLIJ_HOME=%TOOLS_DIR%\intellij
+  set INTELLIJ_HOME=%TOOLS_DIR%\intellij
 )
 
 if not exist "%INTELLIJ_HOME%" (

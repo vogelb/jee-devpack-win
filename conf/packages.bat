@@ -200,13 +200,9 @@ set GLASSFISH_FOLDER=glassfish
 set GLASSFISH_TOOL_1=start_glassfish.bat
 
 set NOTEPAD_NAME=Notepad++
-set NOTEPAD_VERSION=8.9.3
-set NOTEPAD_URL=https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.9.3/npp.8.9.3.portable.x64.zip
-set NOTEPAD_OPTIONS=--no-check-certificate --no-cookies
-set NOTEPAD_TYPE=ZIP
-set NOTEPAD_EXPLODED=--create--
-set NOTEPAD_PACKAGE=npp.%NOTEPAD_VERSION%.portable.x64.zip
-set NOTEPAD_FOLDER=npp
+set NOTEPAD_VERSION=latest
+set NOTEPAD_URL=notepadplusplus
+set NOTEPAD_TYPE=SCOOP
 
 set ATOM_NAME=Atom
 set ATOM_VERSION=1.16.0

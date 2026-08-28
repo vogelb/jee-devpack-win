@@ -8,5 +8,5 @@ if not exist %DEVPACK_EDITOR% (
   echo Defaulting to notepad
   start notepad %*
 ) else (
- start %DEVPACK_EDITOR% %*
+  start %DEVPACK_EDITOR% %*
 )
