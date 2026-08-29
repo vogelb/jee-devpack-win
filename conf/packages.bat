@@ -4,25 +4,8 @@ rem DevPack Package definitions
 rem  Be sure to escape % using %% in package URLs!
 rem ===================================================================
 
-set DEVPACK_PACKAGES=ANSICON OPENJDK8 OPENJDK11 OPENJDK17 OPENJDK25 JDK8 JDK8_32 JDK8_APIDOC JDK10 ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN TOMCAT TOMEE WILDFLY GLASSFISH DOTNET VS NOTEPAD ATOM FORGE SCALA CONSOLE SOURCETREE  GIT MELD POSTGRES POSTGRES_JDBC NODE GRADLE ANT SQUIRREL INTELLIJ
+set DEVPACK_PACKAGES=OPENJDK8 OPENJDK11 OPENJDK17 OPENJDK25 JDK8 JDK8_32 JDK8_APIDOC JDK10 ECLIPSE_EE ECLIPSE_JAVA ECLIPSE_CPP ECLIPSE_WORKSPACE MAVEN DOTNET VS NOTEPAD ATOM SCALA SOURCETREE GIT MELD POSTGRES POSTGRES_JDBC NODE SQUIRREL INTELLIJ
 set DEVPACK_NO_PURGE=ECLIPSE_WORKSPACE
-
-set ANSICON_NAME=Ansic0n
-set ANSICON_VERSION=1.85
-set ANSICON_URL=https://github.com/adoxa/ansicon/releases/download/v1.85/ansi185-bin.zip
-set ANSICON_TYPE=ZIP
-set ANSICON_PACKAGE=ansi185-bin.zip
-set ANSICON_EXPLODED=--create--
-set ANSICON_FOLDER=ansic0n
-
-set ANT_NAME=Apache Ant
-set ANT_VERSION=1.10.5
-set ANT_URL=http://www.pirbot.com/mirrors/apache//ant/binaries/apache-ant-1.10.5-bin.zip
-set ANT_TYPE=ZIP
-set ANT_PACKAGE=apache-ant-1.10.5-bin.zip
-set ANT_EXPLODED=apache-ant-1.10.5
-set ANT_FOLDER=ant
-set ANT_CONFIG=ant
 
 set OPENJDK8_NAME=Open JDK 8
 set OPENJDK8_VERSION=1.8.0
@@ -158,47 +141,6 @@ set MAVEN_PACKAGE=%MAVEN_3_9_PACKAGE%
 set MAVEN_TYPE=ZIP
 set MAVEN_FOLDER=%MAVEN_3_9_FOLDER%
 
-set TOMCAT_NAME=Apache Tomcat
-set TOMCAT_VERSION=7.0.90
-set TOMCAT_URL=http://us.mirrors.quenda.co/apache/tomcat/tomcat-9/v9.0.27/bin/apache-tomcat-9.0.27-windows-x64.zip
-set TOMCAT_TYPE=ZIP
-set TOMCAT_EXPLODED=apache-tomcat-9.0.27
-set TOMCAT_PACKAGE=apache-tomcat-9.0.27-windows-x64.zip
-set TOMCAT_FOLDER=tomcat
-set TOMCAT_CONFIG=tomcat
-set TOMCAT_TOOL_1=start_tomcat.bat
-
-set TOMEE_NAME=Tom EE
-set TOMEE_VERSION=1.7.2
-set TOMEE_URL=http://apache.openmirror.de/tomee/tomee-1.7.2/apache-tomee-1.7.2-plus.zip
-set TOMEE_TYPE=ZIP
-set TOMEE_EXPLODED=apache-tomee-plus-1.7.2
-set TOMEE_PACKAGE=apache-tomee-1.7.2-plus.zip
-set TOMEE_FOLDER=tomee
-set TOMEE_CONFIG=tomee
-set TOMEE_TOOL_1=start_tomee.bat
-
-set WILDFLY_NAME=Wildfly
-set WILDFLY_VERSION=9.0.2
-set WILDFLY_VERSION=9.0.2.Final
-set WILDFLY_URL=http://download.jboss.org/wildfly/%WILDFLY_VERSION%/wildfly-%WILDFLY_VERSION%.zip
-set WILDFLY_TYPE=ZIP
-set WILDFLY_EXPLODED=wildfly-%WILDFLY_VERSION%
-set WILDFLY_PACKAGE=%WILDFLY_EXPLODED%.zip
-set WILDFLY_FOLDER=wildfly
-set WILDFLY_CONFIG=jboss
-set WILDFLY_TOOL_1=start_wildfly.bat
-set WILDFLY_TOOL_2=start_h2_database.bat
-
-set GLASSFISH_NAME=Glassfish
-set GLASSFISH_VERSION=4.1
-set GLASSFISH_URL=http://download.java.net/glassfish/4.1/release/glassfish-4.1.zip
-set GLASSFISH_TYPE=ZIP
-set GLASSFISH_EXPLODED=glassfish-4
-set GLASSFISH_PACKAGE=glassfish-4.1.zip
-set GLASSFISH_FOLDER=glassfish
-set GLASSFISH_TOOL_1=start_glassfish.bat
-
 set NOTEPAD_NAME=Notepad++
 set NOTEPAD_VERSION=latest
 set NOTEPAD_URL=notepadplusplus
@@ -211,15 +153,6 @@ set ATOM_TYPE=ZIP
 set ATOM_EXPLODED=Atom
 set ATOM_PACKAGE=atom-windows.zip
 set ATOM_FOLDER=atom
-
-set FORGE_NAME=JBoss Forge
-set FORGE_VERSION=2.15.2
-set FORGE_URL=https://repository.jboss.org/nexus/service/local/repositories/releases/content/org/jboss/forge/forge-distribution/2.15.2.Final/forge-distribution-2.15.2.Final-offline.zip
-set FORGE_TYPE=ZIP
-set FORGE_EXPLODED=forge-distribution-2.15.2.Final
-set FORGE_PACKAGE=%FORGE_EXPLODED%-offline.zip
-set FORGE_FOLDER=forge
-set FORGE_CONFIG=forge
 
 set SCALA_NAME=Scala
 set SCALA_VERSION=2.11.7
@@ -238,14 +171,6 @@ set SBT_EXPLODED=sbt-0.13.9
 set SBT_PACKAGE=%SBT_EXPLODED%.zip
 set SBT_FOLDER=sbt
 
-set CONSOLE_NAME=ConEmu
-set CONSOLE_VERSION=210206
-set CONSOLE_URL=https://netix.dl.sourceforge.net/project/conemu/Preview/ConEmuPack.%CONSOLE_VERSION%.7z
-set CONSOLE_TYPE=ZIP
-set CONSOLE_EXPLODED=--create--
-set CONSOLE_PACKAGE=ConEmuPack.%CONSOLE_VERSION%.7z
-set CONSOLE_FOLDER=console
-
 set SOURCETREE_NAME=SourceTree
 set SOURCETREE_VERSION=latest
 set SOURCETREE_URL=sourcetree
@@ -254,15 +179,9 @@ set SOURCETREE_FOLDER=extras
 set SOURCETREE_TOOL_1=start_sourcetree.bat
 
 set GIT_NAME=Git
-set GIT_VERSION=2.42.0
-set GIT_UPDATE=2
-set GIT_URL=https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.%GIT_UPDATE%/PortableGit-%GIT_VERSION%.%GIT_UPDATE%-64-bit.7z.exe
-set GIT_OPTIONS=--no-check-certificate --no-cookies
-set GIT_TYPE=ZIP
-set GIT_EXPLODED=--create--
-set GIT_PACKAGE=PortableGit-%GIT_VERSION%.%GIT_UPDATE%-64-bit.7z.exe
-set GIT_FOLDER=git
-set GIT_CONFIG=git
+set GIT_VERSION=latest
+set GIT_URL=git
+set GIT_TYPE=SCOOP
 
 set MELD_NAME=Meld Merge
 set MELD_VERSION=3.20.0
@@ -313,31 +232,14 @@ set VS_TOOL_1=start_visual_studio.bat
 set VS_CONFIG=vstudio
 
 set NODE_NAME=Node.js
-set NODE_VERSION=6.10.3
-set NODE_URL=https://nodejs.org/dist/v6.10.3/node-v6.10.3-win-x64.zip
-set NODE_TYPE=ZIP
-set NODE_PACKAGE=node-v%NODE_VERSION%-win-x64.zip
-set NODE_EXPLODED=node-v%NODE_VERSION%-win-x64
-set NODE_FOLDER=nodejs
-set NODE_CONFIG=node
-
-set GRADLE_NAME=Gradle
-set GRADLE_VERSION=2.2
-set GRADLE_URL=https://services.gradle.org/distributions/gradle-%GRADLE_VERSION%-all.zip
-set GRADLE_TYPE=ZIP
-set GRADLE_PACKAGE=gradle-%GRADLE_VERSION%-all.zip
-set GRADLE_EXPLODED=gradle-%GRADLE_VERSION%
-set GRADLE_FOLDER=gradle
-set GRADLE_CONFIG=gradle
+set NODE_VERSION=latest
+set NODE_URL=nodejs
+set NODE_TYPE=SCOOP
 
 set SQUIRREL_NAME=Squirrel SQL
-set SQUIRREL_VERSION=4.4.0
-set SQUIRREL_URL=https://altushost-swe.dl.sourceforge.net/project/squirrel-sql/1-stable/4.4.0-plainzip/squirrelsql-4.4.0-standard.zip
-set SQUIRREL_OPTIONS=--no-check-certificate --no-cookies
-set SQUIRREL_TYPE=ZIP
-set SQUIRREL_PACKAGE=squirrelsql-%SQUIRREL_VERSION%-standard.zip
-set SQUIRREL_EXPLODED=squirrelsql-%SQUIRREL_VERSION%-standard
-set SQUIRREL_FOLDER=squirrel
+set SQUIRREL_VERSION=latest
+set SQUIRREL_URL=squirrel-sql
+set SQUIRREL_TYPE=SCOOP
 set SQUIRREL_TOOL_1=start_squirrel.bat
 
 set INTELLIJ_NAME=IntelliJ IDEA

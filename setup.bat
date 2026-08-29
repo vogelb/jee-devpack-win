@@ -107,6 +107,7 @@ if "%DEVPACK_COLOUR%" == "TRUE" (
   set PROMPT_INSTALLED=[32minstalled[0m
   set PROMPT_OUTDATED=[31mout of date[0m
   set PROMPT_MANUALLY_INSTALLED=[33minstalled[0m
+  set PROMPT_PRESENT=[34mpresent[0m
   set PROMPT_UNINSTALLED=[33muninstalled[0m
   set PROMPT_WARN=[31mWarning[0m
   set PROMPT_ERROR=[31mError[0m
@@ -115,6 +116,7 @@ if "%DEVPACK_COLOUR%" == "TRUE" (
   set PROMPT_NOT_INSTALLED=not installed
   set PROMPT_INSTALLED=installed
   set PROMPT_OUTDATED=out of date
+  set PROMPT_PRESENT=present
   set PROMPT_UNINSTALLED=uninstalled
   set PROMPT_WARN=Warning
   set PROMPT_ERROR=Error
@@ -768,6 +770,8 @@ if exist %LAST_TEMPLATE% (
   echo.
   echo Base path: %DEVPACK_BASE%
   echo Workdrive: %WORK_DRIVE%
+  echo.
+  echo Download folder: %DOWNLOADS_DIR%
 ) else (
   echo DevPack is currently not installed!
   echo.
@@ -780,9 +784,12 @@ echo.
 echo Package%TAB%%TAB%%TAB%Version%TAB%%TAB%Status
 echo ======================================================================
 
-for %%p in ( %DEVPACK_PACKAGES% )  do (
-  call :query_package %%p
+setlocal EnableDelayedExpansion
+for %%p in (%DEVPACK_PACKAGES%) do set "PACKAGE_STATUS_!%%p_NAME! =%%p"
+for /F "tokens=1,* delims==" %%p in ('set PACKAGE_STATUS_ ^| sort') do (
+  call :query_package %%q
 )
+endlocal
 exit /B
 
 rem ======================================================================
@@ -948,7 +955,7 @@ if "!TYPE!" == "SCOOP" (
   ) else if NOT "%SELECTED%" == "FALSE" (
     echo %PROMPT_OUTDATED% [!INSTALLED_VERSION!]
   ) else (
-    echo present [!INSTALLED_VERSION!]
+    echo %PROMPT_PRESENT% [!INSTALLED_VERSION!]
   )
   endlocal
   exit /B
@@ -989,7 +996,7 @@ if not exist "%TOOLS_DIR%\%TARGET%" (
     )
     echo downloaded
   ) else (
-    echo present [!INSTALLED_VERSION!]
+    echo %PROMPT_PRESENT% [!INSTALLED_VERSION!]
   )
 )
 

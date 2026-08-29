@@ -67,7 +67,7 @@ set PATH=%BIN_DIR%;%DEVPACK_PATH_EXTENSION%;%JAVA_HOME%\bin;%WORKING_DIR%;%PATH%
 
 rem -----------------------------------------------------------------
 rem Define command aliases
-doskey st=sourcetree.bat
+doskey st=sourcetree
 
 rem Add more aliases for your convenience...
 doskey ..=go ..
