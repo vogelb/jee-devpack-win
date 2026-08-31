@@ -51,6 +51,15 @@ set OPENJDK17_PACKAGE=OpenJDK17U-jdk_x64_windows_hotspot_17.0.6_10.zip
 set OPENJDK17_EXPLODED=jdk-17.0.6+10
 set OPENJDK17_FOLDER=openjdk_17
 
+set OPENJDK21_NAME=Open JDK 21
+set OPENJDK21_VERSION=21.0.12+8
+set OPENJDK21_URL=https://github.com/adoptium/temurin21-binaries/releases/download/jdk-%OPENJDK21_VERSION%/OpenJDK21U-jdk_x64_windows_hotspot_21.0.12_8.zip
+set OPENJDK21_OPTIONS=--no-check-certificate --no-cookies
+set OPENJDK21_TYPE=ZIP
+set OPENJDK21_PACKAGE=OpenJDK21U-jdk_x64_windows_hotspot_21.0.12_8.zip
+set OPENJDK21_EXPLODED=jdk-%OPENJDK21_VERSION%
+set OPENJDK21_FOLDER=openjdk_21
+
 set OPENJDK25_NAME=Adoptium Temurin 25
 set OPENJDK25_VERSION=25.0.3+9
 set OPENJDK25_URL=https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.3+9/OpenJDK25U-jdk_x64_windows_hotspot_25.0.3_9.zip
